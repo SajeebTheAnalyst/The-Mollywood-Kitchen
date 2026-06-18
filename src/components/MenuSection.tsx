@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, Search, SlidersHorizontal, Flame, Star, ShoppingCart, Info } from 'lucide-react';
 import { MenuItem } from '../types';
-import { MENU_ITEMS } from '../data';
+import { useStore } from '../context/StoreContext';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface MenuSectionProps {
@@ -13,6 +13,7 @@ export default function MenuSection({
   onSelectMenuItem,
   onQuickAddToCart
 }: MenuSectionProps) {
+  const { menuItems } = useStore();
   const [selectedCategory, setSelectedCategory] = useState<string>('bengali');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [onlyPopular, setOnlyPopular] = useState<boolean>(false);
@@ -25,7 +26,7 @@ export default function MenuSection({
   ];
 
   // Filtering Logic
-  const filteredItems = MENU_ITEMS.filter((item) => {
+  const filteredItems = menuItems.filter((item) => {
     const matchesCategory = searchQuery ? true : (item.category === selectedCategory);
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           item.description.toLowerCase().includes(searchQuery.toLowerCase());

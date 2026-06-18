@@ -1,9 +1,10 @@
 import React from 'react';
 import { Camera, Film, Play, Sparkles } from 'lucide-react';
-import { GALLERY_ITEMS } from '../data';
+import { useStore } from '../context/StoreContext';
 import { motion } from 'motion/react';
 
 export default function GallerySection() {
+  const { galleryItems } = useStore();
   return (
     <section id="gallery" className="py-20 lg:py-28 bg-black scroll-mt-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -31,7 +32,7 @@ export default function GallerySection() {
 
         {/* Bento Grid layout with variable column spans for rhythm */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {GALLERY_ITEMS.map((item, index) => {
+          {galleryItems.map((item, index) => {
             // Give different aesthetic grid layouts
             const isLarge = index === 2 || index === 5;
             return (

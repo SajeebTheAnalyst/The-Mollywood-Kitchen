@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Tag, Sparkles, Ticket, Check, Film, Flame } from 'lucide-react';
-import { OFFERS_DATA } from '../data';
+import { useStore } from '../context/StoreContext';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function OffersSection() {
+  const { offers } = useStore();
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const handleCopyCode = (code: string) => {
@@ -11,6 +12,9 @@ export default function OffersSection() {
     setCopiedCode(code);
     setTimeout(() => setCopiedCode(null), 1500);
   };
+
+  // Only render active elements
+  const activeOffers = offers.filter(o => o.active);
 
   return (
     <section id="offers" className="py-20 lg:py-28 bg-black/95 border-t border-zinc-900 scroll-mt-10">
@@ -39,7 +43,7 @@ export default function OffersSection() {
 
         {/* Promo Cards Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {OFFERS_DATA.map((offer, idx) => (
+          {activeOffers.map((offer, idx) => (
             <motion.div
               key={offer.id}
               initial={{ opacity: 0, y: 30 }}

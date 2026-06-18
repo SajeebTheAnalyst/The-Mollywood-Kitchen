@@ -1,0 +1,304 @@
+{
+  "menuItems": [
+    {
+      "id": "bm1",
+      "name": "Plain Rice",
+      "price": 40,
+      "description": "Perfectly fluffy steamed white aged Miniket rice, the comfort staple for all Bengali bowls.",
+      "rating": 4.5,
+      "popular": false,
+      "category": "bengali",
+      "image": "https://images.unsplash.com/photo-1516685018646-549198525c1b?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Aged Miniket Rice", "Purified Water"],
+      "spiceLevel": 0,
+      "specialty": "Light, fluffy, and steamed fresh for every sitting."
+    },
+    {
+      "id": "bm2",
+      "name": "Ghee Rice",
+      "price": 80,
+      "description": "Fragrant steamed rice gently tossed with pure local grass-fed deshi ghee and sweet fried onions.",
+      "rating": 4.8,
+      "popular": true,
+      "category": "bengali",
+      "image": "https://images.unsplash.com/photo-1626824982604-0997193dedf7?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Chinigura Rice", "Pure Deshi Ghee", "Crispy Mawa Onions"],
+      "spiceLevel": 0,
+      "specialty": "The elegant golden standard of simple buttered rice."
+    },
+    {
+      "id": "bm3",
+      "name": "Beef Kala Bhuna",
+      "price": 280,
+      "description": "Smoky, intensely roasted dark beef caramelized to perfection with Chittagong traditional Radhuni spices.",
+      "rating": 4.9,
+      "popular": true,
+      "category": "bengali",
+      "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Selected Beef", "Kala Bhuna Masala Mix", "Onions", "Mustard Oil"],
+      "spiceLevel": 2,
+      "specialty": "Legendary dark roast slow beef classic."
+    },
+    {
+      "id": "in1",
+      "name": "Mutton Biriyani",
+      "price": 320,
+      "description": "Fragrant Basmati rice cooked with tender mutton chunks, saffron milk, and premium spices, served with egg.",
+      "rating": 4.9,
+      "popular": true,
+      "category": "indian",
+      "image": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Basmati Rice", "Mutton", "Mawa", "Saffron", "Boiled Egg"],
+      "spiceLevel": 2,
+      "specialty": "Our best-selling ultimate royal indulgence."
+    },
+    {
+      "id": "in2",
+      "name": "Butter Chicken",
+      "price": 260,
+      "description": "Clay-oven-grilled chicken simmered in smooth, creamy tomato, butter, and cashew sauces.",
+      "rating": 4.7,
+      "popular": false,
+      "category": "indian",
+      "image": "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Boneless Chicken", "Whip Cream", "Butter", "Tomato Graving", "Cashews"],
+      "spiceLevel": 1,
+      "specialty": "Mild and deeply comforting sweet-savory curry."
+    },
+    {
+      "id": "ch1",
+      "name": "Chicken Szechuan Style",
+      "price": 240,
+      "description": "Fiery stir-fried chicken tossed with spicy Szechuan peppers, sweet bell peppers, and scallions.",
+      "rating": 4.6,
+      "popular": false,
+      "category": "chinese",
+      "image": "https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Sliced Chicken Breast", "Szechuan Pepper", "Soy Sauce", "Bell Peppers"],
+      "spiceLevel": 3,
+      "specialty": "Classic fiery kick cooked in hot blazing woks."
+    },
+    {
+      "id": "ch2",
+      "name": "Sizzling Beef Platter",
+      "price": 280,
+      "description": "Super hot sizzler plate containing tender marinated beef, button mushrooms, and sweet caramelized onions.",
+      "rating": 4.8,
+      "popular": true,
+      "category": "chinese",
+      "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Beef Tenderloin", "Oyster Sauce", "Garlic Butter", "Fresh Capsicum"],
+      "spiceLevel": 2,
+      "specialty": "Table-side sizzling music, filled with rich steak aromas."
+    },
+    {
+      "id": "sb1",
+      "name": "Traditional Sweet Lassi",
+      "price": 80,
+      "description": "Thick, satisfying blended sweet yogurt beverage crowned with grated pistachios and rose water drops.",
+      "rating": 4.7,
+      "popular": true,
+      "category": "snacks-beverages",
+      "image": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Thick Sweet Curd", "Rose Water", "Cracked Pistachios"],
+      "spiceLevel": 0,
+      "specialty": "Unbelievably rich and smooth, the ultimate palate cooler."
+    },
+    {
+      "id": "sb2",
+      "name": "Tea",
+      "price": 35,
+      "description": "Hot fragrant comforting milk tea cooked with sweet milk and cardamom pod.",
+      "rating": 4.8,
+      "popular": true,
+      "category": "snacks-beverages",
+      "image": "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Sylhet Premium Tea Leaf", "Evaporated Milk", "Cardamom Seed"],
+      "spiceLevel": 0,
+      "specialty": "The classic daily sweet warm fuel loved across the country."
+    },
+    {
+      "id": "sb3",
+      "name": "Regular Coffee",
+      "price": 80,
+      "description": "Rich warm cup of freshly roasted Arabica bean espresso shots folded with hot milk froth.",
+      "rating": 4.5,
+      "popular": false,
+      "category": "snacks-beverages",
+      "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Espresso Shot", "Aerated Milky Foam", "Cocoa Dust"],
+      "spiceLevel": 0,
+      "specialty": "Perfect daily sweet fuel to elevate your thoughts."
+    },
+    {
+      "id": "sb4",
+      "name": "Black Coffee",
+      "price": 70,
+      "description": "Freshly brewed aromatic rich black coffee made with premium dark roasted Arabica beans.",
+      "rating": 4.6,
+      "popular": false,
+      "category": "snacks-beverages",
+      "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Dark roast Arabica beans", "Pure hot water"],
+      "spiceLevel": 0,
+      "specialty": "Strong, bold and energetic morning or evening pick-me-up."
+    },
+    {
+      "id": "sb5",
+      "name": "Cappuccino",
+      "price": 140,
+      "description": "Premium hot espresso containing equal proportions of steaming milk, foam, and cocoa dust.",
+      "rating": 4.8,
+      "popular": true,
+      "category": "snacks-beverages",
+      "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&q=80&w=600",
+      "ingredients": ["Double Espresso Shot", "Dense Silk microfoam", "Warm milk"],
+      "spiceLevel": 0,
+      "specialty": "Artistic layout milk foam top and strong warm body."
+    }
+  ],
+  "offers": [
+    {
+      "id": "of1",
+      "title": "First Order Delight",
+      "tagline": "Save on your introductory meal",
+      "discount": "20% OFF",
+      "description": "Unlock a fabulous 20% flat discount on your very first order at Mollywood Kitchen. Excludes beverages.",
+      "badge": "NEW CUSTOMER",
+      "category": "student",
+      "image": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=600",
+      "code": "MOLLYNEW"
+    },
+    {
+      "id": "of2",
+      "title": "Royal Biriyani Feast Combo",
+      "tagline": "Dine like loyalty with group combos",
+      "discount": "15% discount",
+      "description": "Get free drinks and salad when buying 3 sets of Mutton Biriyanis together, perfect for family reunions.",
+      "badge": "RECOMMENDED COMBO",
+      "category": "combo",
+      "image": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600",
+      "code": "BIRIYANI15"
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rv1",
+      "name": "Tanvir Hasan",
+      "role": "Local Guide",
+      "rating": 5,
+      "content": "The Beef Kala Bhuna and Plain Ghee Rice here is an absolute culinary revolution in Pirganj! Standard of cleanliness and visual appeal is elite.",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
+    },
+    {
+      "id": "rv2",
+      "name": "Nusrat Jahan",
+      "role": "Family Diner",
+      "rating": 5,
+      "content": "A perfect cozy spot with visual luxury! The staff is incredibly friendly, and their Mutton Biriyani is so aromatic. My kids loved the Sweet Lassi.",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200"
+    }
+  ],
+  "gallery": [
+    {
+      "id": "gal1",
+      "title": "Tandoor Fire roasting",
+      "category": "Kitchen",
+      "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "gal2",
+      "title": "Cozy dining halls with family settings",
+      "category": "Ambiance",
+      "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600"
+    },
+    {
+      "id": "gal3",
+      "title": "Aromatic Biriyani garnish plates",
+      "category": "Dishes",
+      "image": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600"
+    }
+  ],
+  "reservations": [
+    {
+      "id": "res1",
+      "name": "MD. Solaiman",
+      "phone": "+8801711223344",
+      "email": "solaiman@gmail.com",
+      "guests": 4,
+      "date": "2026-06-20",
+      "time": "19:30",
+      "specialRequest": "Need a high chair for my baby daughter, and custom-spice chicken bhuna.",
+      "status": "Pending"
+    },
+    {
+      "id": "res2",
+      "name": "Lutfar Rahman Shanto",
+      "phone": "+8801799887766",
+      "email": "shanto@engr.com",
+      "guests": 2,
+      "date": "2026-06-18",
+      "time": "20:00",
+      "specialRequest": "Window table requested for anniversary celebration.",
+      "status": "Confirmed"
+    },
+    {
+      "id": "res3",
+      "name": "Farhana Yasmin",
+      "phone": "+8801812345678",
+      "email": "farhana@outlook.com",
+      "guests": 6,
+      "date": "2026-06-17",
+      "time": "13:30",
+      "specialRequest": "Corporate group birthday lunch project. Please pre-serve beverages.",
+      "status": "Completed"
+    }
+  ],
+  "heroSettings": {
+    "restaurantName": "Mollywood Kitchen",
+    "headline": "Vibrant Bengali Flavors & Modern Sizzling Delights",
+    "subheading": "A premium culinary journey in Pirganj, Rangpur. Enjoy slow-cooked traditional deshi recipes and premium fusion wok items in an ambient, luxury setting.",
+    "heroImage": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1200",
+    "buttonText": "Explore Royal Menu",
+    "buttonLink": "#menu",
+    "backgroundImage": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1920"
+  },
+  "aboutSettings": {
+    "story": "Mollywood Kitchen opened its doors in Pirganj, Rangpur with one simple vision: to bring a premium yet cozy dining experience to our local community. Though we have a humble capacity of 20 to 25 seats, every single seat is treated to visual and gustatory luxury. We specialize in slow-cooked traditional Bengali platters, rich clay-oven Indian items, and fresh fiery-wok Chinese food, all prepared by seasoned hands.",
+    "mission": "To serve exceptionally delicious, hygienic, deshi-flavored food with modern professional service and visual warmth.",
+    "vision": "To establish our royal deshi-fusion kitchen as Rangpur Division's leading culinary landmark for families and food lovers.",
+    "founders": "Owner & Founder, S. S. Shuvo",
+    "images": [
+      "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3e?auto=format&fit=crop&q=80&w=600"
+    ]
+  },
+  "contactSettings": {
+    "restaurantName": "Mollywood Kitchen",
+    "address": "Pirganj Bus Stand (Above Agrani Bank), Rangpur, Bangladesh",
+    "phone": "+880 1712-345678",
+    "whatsapp": "+880 1712-345678",
+    "email": "info@mollywoodkitchen.com",
+    "googleMapUrl": "https://maps.google.com/?q=Pirganj+Agrani+Bank+Rangpur",
+    "facebook": "https://facebook.com/mollywoodkitchen",
+    "instagram": "https://instagram.com/mollywoodkitchen",
+    "openingHours": "Daily: 11:30 AM – 10:30 PM (Friday break: 1:00 PM - 2:00 PM)"
+  },
+  "websiteSettings": {
+    "logo": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=120",
+    "favicon": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=32",
+    "primaryColor": "#F59E0B",
+    "secondaryColor": "#8B0101",
+    "footerText": "Mollywood Kitchen delivers royalty in every single deshi and wok-kissed bite.",
+    "copyright": "© 2026 Mollywood Kitchen. All Rights Reserved. Crafted with Glassmorphism.",
+    "seoTitle": "Mollywood Kitchen - Best Royal Bangladeshi, Indian & Chinese Restaurant in Pirganj, Rangpur",
+    "seoDescription": "Dine and experience premium slow-cooked biriyanis, authentic Bengali meals, hot tandoor, and sizzling Chinese platters.",
+    "seoKeywords": "Mollywood Kitchen, Pirganj Restaurant, Rangpur Food, Bengali Meal, Biriyani, Indian Food, Chinese Food",
+    "ogImage": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1200"
+  },
+  "profileSettings": {
+    "ownerName": "S. S. Shuvo",
+    "email": "owner@mollywoodkitchen.com",
+    "profilePhoto": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
+  }
+}

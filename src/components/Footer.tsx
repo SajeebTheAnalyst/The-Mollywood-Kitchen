@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Utensils, Facebook, Instagram, Youtube, Send, Check, Heart, Shield, ArrowUp } from 'lucide-react';
+import { useStore } from '../context/StoreContext';
 
 interface FooterProps {
   setActiveTab: (tab: string) => void;
@@ -8,6 +9,7 @@ interface FooterProps {
 export default function Footer({ setActiveTab }: FooterProps) {
   const [emailSubbed, setEmailSubbed] = useState(false);
   const [email, setEmail] = useState('');
+  const { setView } = useStore();
 
   const handleSub = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,6 +23,18 @@ export default function Footer({ setActiveTab }: FooterProps) {
   const handleLinkClick = (tabId: string) => {
     setActiveTab(tabId);
     document.getElementById(tabId)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleAdminClick = () => {
+    const isSetupComplete = localStorage.getItem('mollywood_admin_setup_complete') === 'true';
+    const storedAuth = localStorage.getItem('mollywood_isLoggedIn') === 'true';
+    if (storedAuth && isSetupComplete) {
+      setView('admin-dashboard');
+      window.location.hash = '#admin';
+    } else {
+      setView('admin-login');
+      window.location.hash = '#admin';
+    }
   };
 
   const socialLinks = [
@@ -104,6 +118,7 @@ export default function Footer({ setActiveTab }: FooterProps) {
               <button onClick={() => handleLinkClick('menu')} className="hover:text-gold text-left font-sans transition-colors w-fit bg-transparent border-0 cursor-pointer">Explore Menu</button>
               <button onClick={() => handleLinkClick('offers')} className="hover:text-gold text-left font-sans transition-colors w-fit bg-transparent border-0 cursor-pointer">Special Offers</button>
               <button onClick={() => handleLinkClick('contact')} className="hover:text-gold text-left font-sans transition-colors w-fit bg-transparent border-0 cursor-pointer">Reservations</button>
+              <button onClick={handleAdminClick} className="hover:text-gold text-left font-sans transition-colors w-fit bg-transparent border-0 cursor-pointer">Admin Panel</button>
             </div>
           </div>
 

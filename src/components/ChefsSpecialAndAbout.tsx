@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Award, Star, Quote, Sparkles, Film, Heart, Compass, ShieldCheck } from 'lucide-react';
-import { REVIEWS_DATA } from '../data';
+import { useStore } from '../context/StoreContext';
 import { MenuItem } from '../types';
-import { MENU_ITEMS } from '../data';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface ChefsSpecialProps {
@@ -10,10 +9,14 @@ interface ChefsSpecialProps {
 }
 
 export default function ChefsSpecialAndAbout({ onSelectMenuItem }: ChefsSpecialProps) {
+  const { menuItems, reviews } = useStore();
   const [activeReviewIdx, setActiveReviewIdx] = useState(0);
 
   // Get the two premium fish dishes for Chef's Special
-  const chefSpecialDishes = MENU_ITEMS.filter(it => it.category === 'bengali').slice(0, 2);
+  const chefSpecialDishes = menuItems.filter(it => it.category === 'bengali').slice(0, 2);
+
+  // Ensure index remains in bounds when reviews list changes
+  const activeReview = reviews.length > 0 ? reviews[activeReviewIdx % reviews.length] : null;
 
   const benefits = [
     {
@@ -174,51 +177,57 @@ export default function ChefsSpecialAndAbout({ onSelectMenuItem }: ChefsSpecialP
           </div>
 
           <AnimatePresence mode="wait">
-            <motion.div 
-              key={activeReviewIdx}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.28, ease: "easeOut" }}
-              className="space-y-6 relative z-10"
-            >
-              <div className="flex justify-center items-center space-x-0.5">
-                {[...Array(REVIEWS_DATA[activeReviewIdx].rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-gold text-gold" />
-                ))}
-              </div>
+            {activeReview ? (
+              <motion.div 
+                key={activeReviewIdx}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.28, ease: "easeOut" }}
+                className="space-y-6 relative z-10"
+              >
+                <div className="flex justify-center items-center space-x-0.5">
+                  {[...Array(activeReview.rating)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-gold text-gold" />
+                  ))}
+                </div>
 
-              <p className="font-sans text-sm sm:text-base md:text-lg text-zinc-300 leading-relaxed font-light italic max-w-2xl mx-auto">
-                "{REVIEWS_DATA[activeReviewIdx].content}"
-              </p>
-
-              <div className="flex flex-col items-center">
-                <img 
-                  src={REVIEWS_DATA[activeReviewIdx].avatar} 
-                  alt={REVIEWS_DATA[activeReviewIdx].name} 
-                  className="h-12 w-12 rounded-full border border-gold object-cover shadow-md mb-2"
-                  referrerPolicy="no-referrer"
-                />
-                <h5 className="font-heading text-sm font-bold text-zinc-100 tracking-wider font-mono">
-                  {REVIEWS_DATA[activeReviewIdx].name}
-                </h5>
-                <p className="text-[10px] text-zinc-500 font-medium tracking-wide uppercase mt-0.5">
-                  {REVIEWS_DATA[activeReviewIdx].role}
+                <p className="font-sans text-sm sm:text-base md:text-lg text-zinc-300 leading-relaxed font-light italic max-w-2xl mx-auto">
+                  "{activeReview.content}"
                 </p>
+
+                <div className="flex flex-col items-center">
+                  <img 
+                    src={activeReview.avatar} 
+                    alt={activeReview.name} 
+                    className="h-12 w-12 rounded-full border border-gold object-cover shadow-md mb-2"
+                    referrerPolicy="no-referrer"
+                  />
+                  <h5 className="font-heading text-sm font-bold text-zinc-100 tracking-wider font-mono">
+                    {activeReview.name}
+                  </h5>
+                  <p className="text-[10px] text-zinc-500 font-medium tracking-wide uppercase mt-0.5">
+                    {activeReview.role}
+                  </p>
+                </div>
+              </motion.div>
+            ) : (
+              <div className="py-6 relative z-10">
+                <p className="text-zinc-500 text-xs font-mono tracking-widest uppercase">No customer reviews published</p>
               </div>
-            </motion.div>
+            )}
           </AnimatePresence>
 
           {/* Bullet Nav dots */}
           <div className="flex justify-center space-x-2 mt-8 z-10 relative">
-            {REVIEWS_DATA.map((_, i) => (
+            {reviews.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActiveReviewIdx(i)}
                 className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${
                   activeReviewIdx === i 
                     ? 'w-7 bg-gold' 
-                    : 'bg-zinc-805 bg-zinc-800'
+                    : 'bg-zinc-800'
                 }`}
               />
             ))}

@@ -15,13 +15,21 @@ import ContactAndReservation from './components/ContactAndReservation';
 import Footer from './components/Footer';
 import { MenuItem, CartItem } from './types';
 
-export default function App() {
+// CRM Store Context imports
+import { StoreProvider, useStore } from './context/StoreContext';
+import LoginView from './admin/LoginView';
+import AdminLayout from './admin/AdminLayout';
+
+function AppContent() {
+  const { currentView } = useStore();
   const [activeTab, setActiveTab] = useState<string>('home');
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
 
   // Smooth scroll tracking to highlight active navigation tab automatically
   useEffect(() => {
+    if (currentView !== 'client') return; // Only track scroll on client visitor side
+
     const handleScroll = () => {
       const sections = ['home', 'menu', 'offers', 'contact'];
       const scrollPosition = window.scrollY + 180;
@@ -41,7 +49,7 @@ export default function App() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [currentView]);
 
   // Cart operations managers
   const handleAddToCart = (item: MenuItem, spiceLevel: number, qty: number) => {
@@ -83,6 +91,15 @@ export default function App() {
     setActiveTab(id);
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // Switch display grids depending on logged context
+  if (currentView === 'admin-login') {
+    return <LoginView />;
+  }
+
+  if (currentView === 'admin-dashboard') {
+    return <AdminLayout />;
+  }
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-gold selection:text-black antialiased relative">
@@ -138,5 +155,13 @@ export default function App() {
       )}
 
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <StoreProvider>
+      <AppContent />
+    </StoreProvider>
   );
 }

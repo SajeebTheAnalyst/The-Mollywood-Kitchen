@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Menu as MenuIcon, X, Film, Flame, Trash2, CalendarDays } from 'lucide-react';
+import { ShoppingBag, Menu as MenuIcon, X, Film, Flame, Trash2, CalendarDays, ChevronDown, Shield } from 'lucide-react';
 import { CartItem } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
+import { useStore } from '../context/StoreContext';
 
 interface NavbarProps {
   activeTab: string;
@@ -20,6 +21,7 @@ export default function Navbar({
 }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { setView } = useStore();
 
   const cartCount = cart.reduce((acc, curr) => acc + curr.quantity, 0);
   const cartTotal = cart.reduce((acc, curr) => acc + curr.menuItem.price * curr.quantity, 0);
@@ -270,7 +272,7 @@ export default function Navbar({
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="md:hidden border-t border-zinc-900 bg-black py-4 px-4 space-y-3 overflow-hidden"
+            className="md:hidden border-t border-zinc-900 bg-black py-4 px-4 space-y-3 overflow-hidden animate-none"
           >
             {navItems.map((item) => (
               <button
@@ -283,8 +285,12 @@ export default function Navbar({
                 {item.label}
               </button>
             ))}
+
             <motion.button
-              onClick={() => handleNavClick('contact')}
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+              }}
               whileTap={{ scale: 0.98 }}
               className="w-full flex justify-center items-center space-x-2 py-2.5 bg-gradient-to-r from-accent-red to-accent-red-hover border border-accent-red hover:bg-gold rounded-lg text-xs font-bold tracking-widest text-white uppercase cursor-pointer"
             >

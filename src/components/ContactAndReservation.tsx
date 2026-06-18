@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { CalendarDays, Clock, Phone, MapPin, Mail, Ticket, CheckCircle2, Star, Sliders, Play, Award, Film } from 'lucide-react';
 import { Reservation } from '../types';
+import { useStore } from '../context/StoreContext';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function ContactAndReservation() {
+  const { addReservation } = useStore();
   const [formData, setFormData] = useState<Reservation>({
     name: '',
     phone: '',
@@ -58,6 +60,19 @@ export default function ContactAndReservation() {
       // Simulate ticket generation
       const randomTicketNum = 'MOLLY-' + Math.floor(100000 + Math.random() * 900000);
       setTicketNumber(randomTicketNum);
+      
+      // Save directly into global database context for live admin alerts
+      addReservation({
+        name: formData.name.trim(),
+        phone: formData.phone.trim(),
+        email: formData.email.trim(),
+        guests: formData.guests,
+        date: formData.date,
+        time: formData.time,
+        specialRequest: formData.specialRequest.trim(),
+        status: 'Pending'
+      });
+
       setSuccessTicket(true);
     }
   };
