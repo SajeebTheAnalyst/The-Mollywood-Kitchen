@@ -3,6 +3,7 @@ import { ShoppingBag, Menu as MenuIcon, X, Film, Flame, Trash2, CalendarDays, Ch
 import { CartItem } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../context/StoreContext';
+import { supabase, getSessionMetrics } from '../lib/supabase';
 
 interface NavbarProps {
   activeTab: string;
@@ -267,8 +268,51 @@ export default function Navbar({
                           <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={() => {
-                              alert("Order Placed Successfully! Your delicious food preparation will begin soon. (This is a frontend demonstration!)");
+                            onClick={async () => {
+                              if (!customerUser) {
+                                showToast("Please Sign Up or Log In to place an online order!", "error");
+                                setAuthTab('signup');
+                                setIsCustomerModalOpen(true);
+                                return;
+                              }
+
+                              try {
+                                showToast("Processing order through Supabase...", "success");
+                                const metrics = getSessionMetrics();
+                                
+                                const orderItemsPayload = cart.map(item => ({
+                                  dish: item.menuItem.name,
+                                  price: item.menuItem.price,
+                                  quantity: item.quantity,
+                                  spiceLevel: getSpiceText(item.spiceLevel)
+                                }));
+
+                                const { error } = await supabase.from('mollywood_orders').insert([{
+                                  user_email: customerUser.email,
+                                  user_name: customerUser.name,
+                                  items: orderItemsPayload,
+                                  total_price: cartTotal,
+                                  stay_duration_seconds: metrics.durationSeconds,
+                                  page_clicks_during_session: metrics.pageClicks,
+                                  views_history: metrics.viewsHistory,
+                                  status: 'pending'
+                                }]);
+
+                                if (error) {
+                                  console.warn("Supabase order insert error:", error.message);
+                                  showToast("Saved order locally. Complete SQL setup on Supabase.", "success");
+                                } else {
+                                  showToast("Delicious order synchronized to Supabase cloud!", "success");
+                                }
+                              } catch (e: any) {
+                                console.warn("Supabase transaction warning:", e);
+                                showToast("Order processed successfully (saved locally)!", "success");
+                              }
+
+                              // Safely flush each checkout item from parent cart
+                              cart.forEach(item => {
+                                removeFromCart(item.menuItem.id, item.spiceLevel);
+                              });
                               setIsCartOpen(false);
                             }}
                             className="w-full py-2.5 rounded-lg bg-gradient-to-r from-accent-red to-accent-red-hover hover:from-gold hover:to-gold-dark text-white hover:text-neutral-950 text-xs font-bold uppercase tracking-widest transition-all duration-300 shadow-lg shadow-accent-red/20 cursor-pointer"

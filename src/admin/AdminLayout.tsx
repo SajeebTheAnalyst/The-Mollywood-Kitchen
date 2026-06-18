@@ -19,7 +19,8 @@ import {
   Menu,
   X,
   UserCheck,
-  Home
+  Home,
+  Database
 } from 'lucide-react';
 
 // Import all subviews dynamically
@@ -34,6 +35,7 @@ import TestimonialsView from './TestimonialsView';
 import ContactInfoView from './ContactInfoView';
 import WebsiteSettingsView from './WebsiteSettingsView';
 import ProfileView from './ProfileView';
+import SupabaseSettingsView from './SupabaseSettingsView';
 
 interface SidebarItem {
   id: string;
@@ -53,6 +55,7 @@ export default function AdminLayout() {
   // Unified items list
   const navigationItems: SidebarItem[] = [
     { id: 'dashboard', label: 'Overview Dashboard', icon: LayoutDashboard, component: DashboardView },
+    { id: 'supabase', label: 'Supabase Database', icon: Database, component: SupabaseSettingsView },
     { id: 'menu', label: 'Recipes Catalog', icon: UtensilsCrossed, component: MenuManagementView },
     { id: 'offers', label: 'Specials & Coupons', icon: Tag, component: OffersManagementView },
     { id: 'reservations', label: 'Table Bookings', icon: CalendarDays, component: ReservationManagementView },

@@ -13,6 +13,7 @@ import OffersSection from './components/OffersSection';
 import GallerySection from './components/GallerySection';
 import ContactAndReservation from './components/ContactAndReservation';
 import Footer from './components/Footer';
+import GuestDashboard from './components/GuestDashboard';
 import { MenuItem, CartItem } from './types';
 
 // CRM Store Context imports
@@ -21,14 +22,24 @@ import LoginView from './admin/LoginView';
 import AdminLayout from './admin/AdminLayout';
 
 function AppContent() {
-  const { currentView } = useStore();
+  const { currentView, customerUser } = useStore();
   const [activeTab, setActiveTab] = useState<string>('home');
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
 
+  // Transition views on user auth sequence
+  useEffect(() => {
+    if (customerUser) {
+      setActiveTab('profile');
+    } else {
+      setActiveTab('home');
+    }
+  }, [customerUser]);
+
   // Smooth scroll tracking to highlight active navigation tab automatically
   useEffect(() => {
     if (currentView !== 'client') return; // Only track scroll on client visitor side
+    if (activeTab === 'profile') return; // Profile uses dedicated screen
 
     const handleScroll = () => {
       const sections = ['home', 'menu', 'offers', 'contact'];
@@ -49,7 +60,7 @@ function AppContent() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [currentView]);
+  }, [currentView, activeTab]);
 
   // Cart operations managers
   const handleAddToCart = (item: MenuItem, spiceLevel: number, qty: number) => {

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import initialData from '../data/mockData.json';
 import { MenuItem, OfferItem, ReviewItem, Reservation } from '../types';
+import { supabase, getSessionMetrics } from '../lib/supabase';
 
 // Extend types to include more specific categories and settings for the CMS
 export interface AdminReservation extends Reservation {
@@ -206,6 +207,28 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  // Passive Client-Side Analytics (Bounce status & Duration)
+  useEffect(() => {
+    if (!localStorage.getItem('mollywood_session_start_time')) {
+      localStorage.setItem('mollywood_session_start_time', Date.now().toString());
+    }
+    
+    const handleGlobalClick = () => {
+      const clicks = parseInt(localStorage.getItem('mollywood_interaction_clicks') || '0', 10);
+      localStorage.setItem('mollywood_interaction_clicks', (clicks + 1).toString());
+    };
+    
+    window.addEventListener('click', handleGlobalClick);
+    
+    const visited = JSON.parse(localStorage.getItem('mollywood_visited_views') || '[]');
+    if (visited.length === 0) {
+      visited.push('home');
+      localStorage.setItem('mollywood_visited_views', JSON.stringify(visited));
+    }
+
+    return () => window.removeEventListener('click', handleGlobalClick);
+  }, []);
+
   // Save changes to localStorage on states update
   const persist = (key: string, val: any) => {
     localStorage.setItem(key, JSON.stringify(val));
@@ -224,17 +247,45 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('mollywood_isLoggedIn', status ? 'true' : 'false');
   };
 
-  const signUpCustomer = (name: string, email: string) => {
+  const signUpCustomer = async (name: string, email: string) => {
     const user = { name, email };
     setCustomerUser(user);
     localStorage.setItem('mollywood_customerUser', JSON.stringify(user));
-    showToast(`Welcome, ${name}! Your account is safe and ready for Supabase sync!`, 'success');
+
+    const metrics = getSessionMetrics();
+    try {
+      const { error } = await supabase.from('mollywood_users').insert([{
+        name,
+        email,
+        bounce_info: metrics
+      }]);
+      if (error) {
+        console.warn('Supabase users save error (Make sure SQL script is executed):', error.message);
+        showToast(`Welcome, ${name}! Logged in successfully (awaiting Supabase tables).`, 'success');
+      } else {
+        showToast(`Welcome, ${name}! Your account is securely synchronized with Supabase database.`, 'success');
+      }
+    } catch (e: any) {
+      console.warn('Supabase connectivity warning:', e);
+      showToast(`Welcome, ${name}! Logged in successfully (awaiting Supabase tables).`, 'success');
+    }
   };
 
-  const logInCustomer = (name: string, email: string) => {
+  const logInCustomer = async (name: string, email: string) => {
     const user = { name, email };
     setCustomerUser(user);
     localStorage.setItem('mollywood_customerUser', JSON.stringify(user));
+
+    const metrics = getSessionMetrics();
+    try {
+      await supabase.from('mollywood_users').insert([{
+        name,
+        email,
+        bounce_info: metrics
+      }]);
+    } catch (e) {
+      // Graceful fallback
+    }
     showToast(`Welcome back, ${name}! Ready to order.`, 'success');
   };
 
@@ -358,7 +409,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   // ==================== RESERVATIONS CRUD INTERFACES ====================
-  const addReservation = (res: Omit<Reservation, 'status'>) => {
+  const addReservation = async (res: Omit<Reservation, 'status'>) => {
     const newRes: AdminReservation = {
       ...res,
       id: 'res_' + Date.now(),
@@ -367,7 +418,29 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     const next = [newRes, ...reservations];
     setReservations(next);
     persist('mollywood_reservations', next);
-    showToast(`Table reserved successfully for ${newRes.name}!`, 'success');
+
+    // Save Table Booking to Supabase Cloud Database!
+    try {
+      const { error } = await supabase.from('mollywood_bookings').insert([{
+        user_email: res.email,
+        user_name: res.name,
+        phone: res.phone,
+        booking_date: res.date,
+        booking_time: res.time,
+        guests: res.guests,
+        special_requests: res.specialRequest || '',
+        status: 'Pending'
+      }]);
+      if (error) {
+        console.warn('Supabase booking insert error:', error.message);
+        showToast(`Table reserved successfully for ${res.name} (saved locally)!`, 'success');
+      } else {
+        showToast(`Table reserved successfully and synchronized to Supabase!`, 'success');
+      }
+    } catch (e) {
+      console.warn('Supabase reservation warning:', e);
+      showToast(`Table reserved successfully for ${res.name}!`, 'success');
+    }
   };
 
   const updateReservationStatus = (id: string, status: AdminReservation['status']) => {
