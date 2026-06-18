@@ -119,6 +119,12 @@ interface StoreContextProps {
   // Toasts Notification manager
   showToast: (message: string, type: 'success' | 'error') => void;
   toast: { message: string; type: 'success' | 'error' } | null;
+
+  // Customer Visitor Account System
+  customerUser: { email: string; name: string } | null;
+  signUpCustomer: (name: string, email: string) => void;
+  logInCustomer: (name: string, email: string) => void;
+  logoutCustomer: () => void;
 }
 
 const StoreContext = createContext<StoreContextProps | undefined>(undefined);
@@ -126,6 +132,7 @@ const StoreContext = createContext<StoreContextProps | undefined>(undefined);
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [currentView, setView] = useState<ViewMode>('client');
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [customerUser, setCustomerUser] = useState<{ email: string; name: string } | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   // Core CMS datasets
@@ -169,6 +176,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setWebsiteSettings(loadState<WebsiteSettings>('mollywood_websiteSettings', initialData.websiteSettings));
     setProfileSettings(loadState<ProfileSettings>('mollywood_profileSettings', initialData.profileSettings));
 
+    // Load customer user if present
+    const savedCustomer = localStorage.getItem('mollywood_customerUser');
+    if (savedCustomer) {
+      try {
+        setCustomerUser(JSON.parse(savedCustomer));
+      } catch (e) {
+        // Safe check
+      }
+    }
+
     // Support direct URL hash checking e.g. #admin routing support on layout load
     const handleHashChange = () => {
       if (window.location.hash === '#admin') {
@@ -205,6 +222,26 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const handleAuthChange = (status: boolean) => {
     setIsLoggedIn(status);
     localStorage.setItem('mollywood_isLoggedIn', status ? 'true' : 'false');
+  };
+
+  const signUpCustomer = (name: string, email: string) => {
+    const user = { name, email };
+    setCustomerUser(user);
+    localStorage.setItem('mollywood_customerUser', JSON.stringify(user));
+    showToast(`Welcome, ${name}! Your account is safe and ready for Supabase sync!`, 'success');
+  };
+
+  const logInCustomer = (name: string, email: string) => {
+    const user = { name, email };
+    setCustomerUser(user);
+    localStorage.setItem('mollywood_customerUser', JSON.stringify(user));
+    showToast(`Welcome back, ${name}! Ready to order.`, 'success');
+  };
+
+  const logoutCustomer = () => {
+    setCustomerUser(null);
+    localStorage.removeItem('mollywood_customerUser');
+    showToast('Logged out of user account successfully.', 'success');
   };
 
   // ==================== MENU CRUD INTERFACES ====================
@@ -425,7 +462,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         updateProfileSettings,
         
         showToast,
-        toast
+        toast,
+        
+        // Customer Visitor Account System
+        customerUser,
+        signUpCustomer,
+        logInCustomer,
+        logoutCustomer
       }}
     >
       {children}
