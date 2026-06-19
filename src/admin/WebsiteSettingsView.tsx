@@ -31,7 +31,7 @@ export default function WebsiteSettingsView() {
 
   const handleRestoreDefaults = () => {
     setLocalSettings({
-      logo: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=120",
+      logo: "/src/assets/images/mollywood_logo_1781858834142.jpg",
       favicon: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=32",
       primaryColor: "#F59E0B",
       secondaryColor: "#8B0101",
