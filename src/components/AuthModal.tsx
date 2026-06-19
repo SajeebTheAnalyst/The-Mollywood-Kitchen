@@ -68,6 +68,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
             onClick={onClose}
             style={{
               position: 'fixed',
@@ -83,9 +84,10 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
           <motion.div
             key="modal"
-            initial={{ opacity: 0, scale: 0.9, x: '-50%', y: '-50%' }}
+            initial={{ opacity: 0, scale: 1.05, x: '-50%', y: '-50%' }}
             animate={{ opacity: 1, scale: 1, x: '-50%', y: '-50%' }}
-            exit={{ opacity: 0, scale: 0.9, x: '-50%', y: '-50%' }}
+            exit={{ opacity: 0, scale: 1.05, x: '-50%', y: '-50%' }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             style={{
               position: 'fixed',
               top: '50%',
@@ -95,7 +97,18 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             className="w-[90vw] max-w-md overflow-hidden rounded-3xl border border-gold/15 bg-[#111111]/70 p-8 shadow-2xl backdrop-blur-[16px] saturate-[180%]"
           >
             {/* Ambient Glowing Aura */}
-            <div className="absolute inset-0 bg-gradient-to-br from-red-900/10 to-gold/10 blur-3xl pointer-events-none" />
+            <motion.div
+              animate={{
+                opacity: [0.4, 0.7, 0.4],
+                background: [
+                  'linear-gradient(to bottom right, rgba(153, 27, 27, 0.25), rgba(212, 175, 55, 0.15))',
+                  'linear-gradient(to bottom right, rgba(212, 175, 55, 0.25), rgba(153, 27, 27, 0.15))',
+                  'linear-gradient(to bottom right, rgba(153, 27, 27, 0.25), rgba(212, 175, 55, 0.15))'
+                ]
+              }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute inset-0 blur-3xl pointer-events-none"
+            />
 
             <button
               onClick={onClose}
@@ -131,44 +144,44 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
             <form onSubmit={handleAuthSubmit} className="space-y-4 relative z-10">
               {authTab === 'signup' && (
-                <div className="relative">
-                  <User className="absolute left-3 top-3.5 h-5 w-5 text-zinc-500" />
+                <div className="relative group">
+                  <User className="absolute left-3 top-3.5 h-5 w-5 text-zinc-500 transition-colors group-hover:text-gold/80" />
                   <input
                     type="text"
                     placeholder="Full Name"
                     required
                     value={authName}
                     onChange={(e) => setAuthName(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-gold/50"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-gold/50 hover:-translate-y-[3px] hover:shadow-[0_0_12px_1px_rgba(212,175,55,0.4)] transition-all duration-300 ease-out"
                   />
                 </div>
               )}
-              <div className="relative">
-                <Mail className="absolute left-3 top-3.5 h-5 w-5 text-zinc-500" />
+              <div className="relative group">
+                <Mail className="absolute left-3 top-3.5 h-5 w-5 text-zinc-500 transition-colors group-hover:text-gold/80" />
                 <input
                   type="email"
                   placeholder="Email Address"
                   required
                   value={authEmail}
                   onChange={(e) => setAuthEmail(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-gold/50"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-gold/50 hover:-translate-y-[3px] hover:shadow-[0_0_12px_1px_rgba(212,175,55,0.4)] transition-all duration-300 ease-out"
                 />
               </div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3.5 h-5 w-5 text-zinc-500" />
+              <div className="relative group">
+                <Lock className="absolute left-3 top-3.5 h-5 w-5 text-zinc-500 transition-colors group-hover:text-gold/80" />
                 <input
                   type="password"
                   placeholder="Secret Password"
                   required
                   value={authPassword}
                   onChange={(e) => setAuthPassword(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-gold/50"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white focus:outline-none focus:border-gold/50 hover:-translate-y-[3px] hover:shadow-[0_0_12px_1px_rgba(212,175,55,0.4)] transition-all duration-300 ease-out"
                 />
               </div>
               <button
                 type="submit"
                 disabled={authLoading}
-                className="w-full bg-gold text-black font-bold py-3 rounded-xl hover:bg-gold-dark transition-colors"
+                className="w-full bg-gold text-black font-bold py-3 rounded-xl hover:-translate-y-[3px] hover:shadow-[0_0_12px_1px_rgba(212,175,55,0.4)] transition-all duration-300 ease-out"
               >
                 {authLoading ? 'Loading...' : authTab === 'signup' ? 'Sign Up' : 'Log In'}
               </button>
@@ -184,9 +197,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             </div>
 
             <div className="space-y-3 relative z-10">
-              <button onClick={() => handleOAuth('google')} type="button" className="w-full py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-bold transition-all">Continue with Google</button>
-              <button onClick={() => handleOAuth('facebook')} type="button" className="w-full py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-bold transition-all">Continue with Facebook</button>
-              <button onClick={() => handleOAuth('instagram')} type="button" className="w-full py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-bold transition-all">Continue with Instagram</button>
+              <button onClick={() => handleOAuth('google')} type="button" className="w-full py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-bold hover:-translate-y-[3px] hover:shadow-[0_0_12px_1px_rgba(212,175,55,0.4)] hover:border-gold/30 transition-all duration-300 ease-out">Continue with Google</button>
+              <button onClick={() => handleOAuth('facebook')} type="button" className="w-full py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-bold hover:-translate-y-[3px] hover:shadow-[0_0_12px_1px_rgba(212,175,55,0.4)] hover:border-gold/30 transition-all duration-300 ease-out">Continue with Facebook</button>
+              <button onClick={() => handleOAuth('instagram')} type="button" className="w-full py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-bold hover:-translate-y-[3px] hover:shadow-[0_0_12px_1px_rgba(212,175,55,0.4)] hover:border-gold/30 transition-all duration-300 ease-out">Continue with Instagram</button>
             </div>
           </motion.div>
         </>
