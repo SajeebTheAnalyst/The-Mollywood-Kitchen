@@ -212,20 +212,20 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   const syncToSupabase = async (id: string, content: any) => {
-    // 1. Instantly update local cache as THE source of truth
+    // 1. Instantly update local cache as THE primary source of truth
     persist(`mollywood_${id}`, content);
     
-    // 2. Clear cloud update - use non-blocking attempt
+    // 2. Perform background cloud sync
     try {
       const { error } = await supabase
         .from('mollywood_cms_content')
         .upsert([{ id, content, updated_at: new Date().toISOString() }], { onConflict: 'id' });
         
       if (error) {
-        console.warn(`Supabase Cloud Sync failed for ${id}. Data is safely stored in your browser LocalStorage though. Error:`, error.message);
+        console.warn(`Supabase Cloud Sync failed for ${id} (Connection/URL issue). Data is safely stored in your browser local storage though.`);
       }
     } catch (err) {
-      console.warn(`Supabase unreachable. ${id} saved to local browser storage only.`);
+      console.warn(`Database unreachable. ${id} saved to your browser local storage instead.`);
     }
   };
 

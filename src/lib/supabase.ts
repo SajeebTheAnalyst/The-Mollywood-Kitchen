@@ -4,8 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 const rawUrl = (import.meta as any).env.VITE_SUPABASE_URL || 'https://yylepyhpzctlzojholzf.supabase.co';
 const rawKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5bGVweWhwemN0bHpvamhvbHpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3ODM1MTgsImV4cCI6MjA5NzM1OTUxOH0.jgK9NKZFJPD58zSZfVOY2k41kvojsmhS5EAzAjCCex0';
 
-// Sanitize URL: Remove trailing slashes and /rest/v1 suffix if user accidentally included it
-const supabaseUrl = rawUrl.replace(/\/$/, '').replace(/\/rest\/v1$/, '');
+// Sanitize URL: Remove trailing slashes and /rest/v1 suffix which causes "Invalid Path" errors
+const supabaseUrl = rawUrl.replace(/\/$/, '').replace(/\/rest\/v1\/?$/, '');
 const supabaseAnonKey = rawKey.trim();
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -25,8 +25,8 @@ export const getSessionMetrics = () => {
   return {
     durationSeconds,
     pageClicks: clicks,
-    viewsHistory: viewsVisited.join(' -> '),
-    bounceRateIndicator: clicks < 3 ? 'High Bounce Risk' : 'Low Bounce engaged',
+    viewsHistory: viewsVisited.length > 0 ? viewsVisited.join(' -> ') : 'Entrance',
+    bounceRateIndicator: clicks < 3 ? 'Engagement: Low' : 'Engagement: High',
     userAgent: navigator.userAgent,
     screenSize: `${window.innerWidth}x${window.innerHeight}`,
     referrer: document.referrer || 'Direct Visit'
@@ -34,7 +34,8 @@ export const getSessionMetrics = () => {
 };
 
 /**
- * SQL for the user to execute inside their Supabase Queries page to set up the 3 tables perfectly:
+ * SQL for the user to execute inside their Supabase SQL Editor.
+ * IMPORTANT: This handles table creation and open RLS policies.
  */
 export const SUPABASE_SETUP_SQL = `-- 1. MOLLEYWOOD CUSTOMER USERS TABLE
 CREATE TABLE IF NOT EXISTS mollywood_users (
@@ -87,15 +88,23 @@ ALTER TABLE mollywood_bookings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE mollywood_cms_content ENABLE ROW LEVEL SECURITY;
 
 -- Simple policies allowing insert and select from the app
+DROP POLICY IF EXISTS "Allow public select" ON mollywood_users;
 CREATE POLICY "Allow public select" ON mollywood_users FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Allow public insert" ON mollywood_users;
 CREATE POLICY "Allow public insert" ON mollywood_users FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow public select orders" ON mollywood_orders;
 CREATE POLICY "Allow public select orders" ON mollywood_orders FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Allow public insert orders" ON mollywood_orders;
 CREATE POLICY "Allow public insert orders" ON mollywood_orders FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow public select bookings" ON mollywood_bookings;
 CREATE POLICY "Allow public select bookings" ON mollywood_bookings FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Allow public insert bookings" ON mollywood_bookings;
 CREATE POLICY "Allow public insert bookings" ON mollywood_bookings FOR INSERT WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow public select cms" ON mollywood_cms_content;
 CREATE POLICY "Allow public select cms" ON mollywood_cms_content FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Allow public upsert cms" ON mollywood_cms_content;
 CREATE POLICY "Allow public upsert cms" ON mollywood_cms_content FOR ALL USING (true);
 `;
