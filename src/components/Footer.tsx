@@ -9,7 +9,7 @@ interface FooterProps {
 export default function Footer({ setActiveTab }: FooterProps) {
   const [emailSubbed, setEmailSubbed] = useState(false);
   const [email, setEmail] = useState('');
-  const { setView } = useStore();
+  const { setView, websiteSettings, contactSettings } = useStore();
 
   const handleSub = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,8 +38,8 @@ export default function Footer({ setActiveTab }: FooterProps) {
   };
 
   const socialLinks = [
-    { icon: <Facebook className="h-4 w-4" />, href: 'https://facebook.com', label: 'Facebook' },
-    { icon: <Instagram className="h-4 w-4" />, href: 'https://instagram.com', label: 'Instagram' },
+    { icon: <Facebook className="h-4 w-4" />, href: contactSettings.facebook || 'https://facebook.com', label: 'Facebook' },
+    { icon: <Instagram className="h-4 w-4" />, href: contactSettings.instagram || 'https://instagram.com', label: 'Instagram' },
     { icon: <Youtube className="h-4 w-4" />, href: 'https://youtube.com', label: 'YouTube' },
     { icon: <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>, href: 'https://x.com', label: 'X' },
   ];
@@ -54,23 +54,28 @@ export default function Footer({ setActiveTab }: FooterProps) {
           {/* Logo brand */}
           <div className="lg:col-span-5 text-left space-y-4">
             <div className="flex items-center space-x-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/40 bg-zinc-950">
-                <Utensils className="h-4.5 w-4.5 text-gold" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/40 bg-zinc-950 overflow-hidden">
+                {websiteSettings.logo ? (
+                  <img src={websiteSettings.logo} alt="Logo" className="h-full w-full object-cover" />
+                ) : (
+                  <Utensils className="h-4.5 w-4.5 text-gold" />
+                )}
               </div>
               <div className="flex flex-col">
                 <span className="font-heading text-base font-black tracking-widest text-gold-metallic">
-                  MOLLYWOOD
+                  {websiteSettings.footerText || "MOLLYWOOD KITCHEN"}
                 </span>
-                <span className="font-sans text-[10px] font-bold tracking-[0.35em] text-zinc-400 leading-none">
-                  KITCHEN
+                <span className="font-sans text-[10px] font-bold tracking-[0.35em] text-zinc-400 leading-none uppercase">
+                  {contactSettings.restaurantName ? contactSettings.restaurantName.split(' ')[1] || "KITCHEN" : "KITCHEN"}
                 </span>
               </div>
             </div>
             
             <p className="text-xs text-zinc-500 font-light max-w-xs leading-relaxed">
-              Empowering Pirganj, Rangpur with authentic recipes. Experience premium Bengali, Indian, Chinese and fast food specialties cooked with pure deshi ghee.
+              {websiteSettings.seoDescription || "Empowering Pirganj, Rangpur with authentic recipes. Experience premium Bengali, Indian, Chinese and fast food specialties cooked with pure deshi ghee."}
             </p>
           </div>
+
 
           <div className="lg:col-span-1" />
 

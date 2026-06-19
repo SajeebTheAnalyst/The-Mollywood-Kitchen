@@ -51,10 +51,39 @@ export default function LoginView() {
       });
 
       if (authError) {
-        setError(authError.message === 'Invalid login credentials' 
-          ? 'Invalid email or password. Access denied.' 
-          : authError.message);
-        showToast('Login failed.', 'error');
+        // If login fails, check if this is the authorized email and try to sign up (provision)
+        if (authError.message === 'Invalid login credentials' && email.trim().toLowerCase() === authorizedEmail) {
+          const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+            email: email.trim().toLowerCase(),
+            password: password,
+            options: {
+              data: {
+                role: 'owner',
+                full_name: 'Owner Shuvo'
+              }
+            }
+          });
+
+          if (signUpError) {
+            setError(signUpError.message);
+            showToast('Setup failed. Please check Supabase dashboard.', 'error');
+          } else if (signUpData.user) {
+            // Check if email confirmation is required
+            if (signUpData.session) {
+              setIsLoggedIn(true);
+              setView('admin-dashboard');
+              showToast('Admin account created and logged in!', 'success');
+            } else {
+              setError('Account created! Please check your email inbox to confirm and activate your access.');
+              showToast('Confirmation email sent.', 'success');
+            }
+          }
+        } else {
+          setError(authError.message === 'Invalid login credentials' 
+            ? 'Invalid email or password. Access denied.' 
+            : authError.message);
+          showToast('Login failed.', 'error');
+        }
       } else if (data.user) {
         setIsLoggedIn(true);
         setView('admin-dashboard');
