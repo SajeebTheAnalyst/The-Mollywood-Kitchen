@@ -60,7 +60,7 @@ export default function LoginView() {
               emailRedirectTo: window.location.origin,
               data: {
                 role: 'owner',
-                full_name: 'Owner Shuvo'
+                full_name: 'Lead Owner'
               }
             }
           });
@@ -88,7 +88,7 @@ export default function LoginView() {
       } else if (data.user) {
         setIsLoggedIn(true);
         setView('admin-dashboard');
-        showToast('Welcome back, Owner Shuvo!', 'success');
+        showToast(`Welcome back, ${profileSettings.ownerName}!`, 'success');
       }
     } catch (err: any) {
       setError('An unexpected error occurred during authentication.');

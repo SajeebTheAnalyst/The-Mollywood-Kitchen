@@ -3,7 +3,7 @@ import { useStore, AboutSettings } from '../context/StoreContext';
 import { Save, Library, Award, Compass, Sparkles } from 'lucide-react';
 
 export default function AboutSectionView() {
-  const { aboutSettings, updateAboutSettings } = useStore();
+  const { aboutSettings, updateAboutSettings, profileSettings } = useStore();
   
   const [localSettings, setLocalSettings] = useState<AboutSettings>({
     story: '',
@@ -29,7 +29,7 @@ export default function AboutSectionView() {
       story: "Mollywood Kitchen opened its doors in Pirganj, Rangpur with one simple vision: to bring a premium yet cozy dining experience to our local community. Though we have a humble capacity of 20 to 25 seats, every single seat is treated to visual and gustatory luxury. We specialize in slow-cooked traditional Bengali platters, rich clay-oven Indian items, and fresh fiery-wok Chinese food, all prepared by seasoned hands.",
       mission: "To serve exceptionally delicious, hygienic, deshi-flavored food with modern professional service and visual warmth.",
       vision: "To establish our royal deshi-fusion kitchen as Rangpur Division's leading culinary landmark for families and food lovers.",
-      founders: "Owner & Founder, S. S. Shuvo",
+      founders: `Owner & Founder, ${profileSettings.ownerName}`,
       images: [
         "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600",
         "https://images.unsplash.com/photo-1604908176997-125f25cc6f3e?auto=format&fit=crop&q=80&w=600"
@@ -95,7 +95,7 @@ export default function AboutSectionView() {
               value={localSettings.founders}
               onChange={(e) => setLocalSettings({ ...localSettings, founders: e.target.value })}
               className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none"
-              placeholder="S. S. Shuvo, CEO Founder"
+              placeholder={`${profileSettings.ownerName}, CEO Founder`}
             />
           </div>
         </div>

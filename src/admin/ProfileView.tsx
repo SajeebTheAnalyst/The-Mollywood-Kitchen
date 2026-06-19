@@ -156,7 +156,7 @@ export default function ProfileView() {
             />
             <div className="space-y-1.5 text-center sm:text-left">
               <span className="text-[10px] font-mono font-bold text-gold uppercase bg-gold/10 px-2 py-0.5 rounded border border-gold/20">Executive Lead Owner</span>
-              <h4 className="text-sm font-bold text-zinc-100">{localSettings.ownerName || 'S. S. Shuvo'}</h4>
+              <h4 className="text-sm font-bold text-zinc-100">{localSettings.ownerName}</h4>
               <p className="text-[10px] text-zinc-500 font-mono tracking-wider">{localSettings.email || 'owner@mollywoodkitchen.com'}</p>
             </div>
           </div>
