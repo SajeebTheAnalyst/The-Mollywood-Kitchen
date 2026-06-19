@@ -14,6 +14,8 @@ export default function ContactInfoView() {
     googleMapUrl: '',
     facebook: '',
     instagram: '',
+    twitter: '',
+    youtube: '',
     openingHours: ''
   });
 
@@ -173,6 +175,26 @@ export default function ContactInfoView() {
                 required
                 value={localSettings.instagram}
                 onChange={(e) => setLocalSettings({ ...localSettings, instagram: e.target.value })}
+                className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono text-[10px]"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">YouTube channel URL</label>
+              <input
+                type="url"
+                required
+                value={localSettings.youtube}
+                onChange={(e) => setLocalSettings({ ...localSettings, youtube: e.target.value })}
+                className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono text-[10px]"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">X (Twitter) profile URL</label>
+              <input
+                type="url"
+                required
+                value={localSettings.twitter}
+                onChange={(e) => setLocalSettings({ ...localSettings, twitter: e.target.value })}
                 className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono text-[10px]"
               />
             </div>

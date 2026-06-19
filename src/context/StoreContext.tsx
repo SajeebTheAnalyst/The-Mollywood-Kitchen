@@ -43,6 +43,8 @@ export interface ContactSettings {
   googleMapUrl: string;
   facebook: string;
   instagram: string;
+  twitter: string;
+  youtube: string;
   openingHours: string;
 }
 
