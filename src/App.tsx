@@ -14,6 +14,7 @@ import GallerySection from './components/GallerySection';
 import ContactAndReservation from './components/ContactAndReservation';
 import Footer from './components/Footer';
 import GuestDashboard from './components/GuestDashboard';
+import AtmosphericGreenery from './components/AtmosphericGreenery';
 import { MenuItem, CartItem } from './types';
 
 // CRM Store Context imports
@@ -120,6 +121,9 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-black text-white selection:bg-gold selection:text-black antialiased relative">
       
+      {/* 0. ATMOSPHERIC ORGANIC LEAVES (Background layer) */}
+      <AtmosphericGreenery />
+
       {/* 1. STICKY NAVBAR - Cart lists, badges, and smooth scroll triggers */}
       <Navbar
         activeTab={activeTab}

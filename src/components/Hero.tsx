@@ -35,9 +35,9 @@ export default function Hero({
               x: [0, 10, 0]
             }}
             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[15%] left-[8%] text-emerald-600/30 blur-[1px]"
+            className="absolute top-[15%] left-[8%] text-[#10b981] blur-[1px] opacity-90"
           >
-            <Leaf className="h-10 w-10 rotate-12" strokeWidth={1} />
+            <Leaf className="h-10 w-10 rotate-12" strokeWidth={1.5} />
           </motion.div>
 
           <motion.div
@@ -47,9 +47,9 @@ export default function Hero({
               x: [0, -15, 0]
             }}
             transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-            className="absolute bottom-[25%] left-[45%] text-emerald-500/20 blur-[4px]"
+            className="absolute bottom-[25%] left-[45%] text-[#34d399] blur-[2px] opacity-80"
           >
-            <Leaf className="h-16 w-16 -rotate-12" strokeWidth={1} />
+            <Leaf className="h-16 w-16 -rotate-12" strokeWidth={1.5} />
           </motion.div>
 
           <motion.div
@@ -58,9 +58,9 @@ export default function Hero({
               rotate: [10, 40, 10]
             }}
             transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[40%] right-[5%] text-emerald-400/10 blur-[2px]"
+            className="absolute top-[40%] right-[5%] text-[#059669] blur-[2px] opacity-90"
           >
-            <Leaf className="h-8 w-8" strokeWidth={1} />
+            <Leaf className="h-8 w-8" strokeWidth={1.5} />
           </motion.div>
 
           <motion.div
@@ -69,9 +69,9 @@ export default function Hero({
               rotate: [-10, -30, -10]
             }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[10%] right-[20%] text-emerald-500/15 blur-[6px]"
+            className="absolute top-[10%] right-[20%] text-[#10b981] blur-[3px] opacity-70"
           >
-            <Leaf className="h-12 w-12" strokeWidth={1} />
+            <Leaf className="h-12 w-12" strokeWidth={1.5} />
           </motion.div>
         </div>
 
