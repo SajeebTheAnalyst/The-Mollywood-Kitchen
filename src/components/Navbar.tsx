@@ -370,11 +370,10 @@ export default function Navbar({
                   setAuthTab('signup');
                   setIsCustomerModalOpen(true);
                 }}
-                whileHover={{ scale: 1.05, y: -1, boxShadow: "0 0 20px rgba(245, 158, 11, 0.2)" }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="hidden sm:flex items-center space-x-1.5 px-4 py-2 border border-gold hover:bg-gold hover:text-black rounded-full text-xs font-bold tracking-widest text-gold transition-all duration-300 cursor-pointer"
+                className="hidden sm:flex items-center space-x-1.5 px-8 py-2.5 bg-accent-red hover:bg-accent-red-hover rounded-full text-xs font-bold tracking-widest text-white transition-all duration-300 cursor-pointer shadow-lg shadow-accent-red/20"
               >
-                <User className="h-3.5 w-3.5" />
                 <span>SIGN UP</span>
               </motion.button>
             )}

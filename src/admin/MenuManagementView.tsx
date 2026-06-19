@@ -616,7 +616,10 @@ export default function MenuManagementView() {
                   
                   {/* Food representation preview */}
                   <div className="space-y-1">
-                    <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Photo URL</label>
+                    <label className="text-[10px] font-mono uppercase font-bold text-zinc-400 flex justify-between items-center">
+                      <span>Photo URL</span>
+                      <span className="text-gold/50 text-[9px] lowercase">recommend: 1000x560px (16:9)</span>
+                    </label>
                     <input
                       type="url"
                       value={formData.image}

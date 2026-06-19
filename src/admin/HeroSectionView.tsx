@@ -141,7 +141,10 @@ export default function HeroSectionView() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Hero Slide Image (Graphic URL)</label>
+            <label className="text-[10px] font-mono uppercase font-bold text-zinc-400 flex justify-between items-center">
+              <span>Hero Slide Image (Graphic URL)</span>
+              <span className="text-gold/50 text-[9px] lowercase">Recommended: 1400x1400px (1:1), Min: 1200x1200px. JPG, PNG, WEBP</span>
+            </label>
             <input
               type="url"
               required
@@ -152,7 +155,10 @@ export default function HeroSectionView() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Background Ambiance Overlay Image URL</label>
+            <label className="text-[10px] font-mono uppercase font-bold text-zinc-400 flex justify-between items-center">
+              <span>Background Ambiance Image URL</span>
+              <span className="text-gold/50 text-[9px] lowercase">recommend: 1920x1080px</span>
+            </label>
             <input
               type="url"
               required
@@ -164,7 +170,10 @@ export default function HeroSectionView() {
 
           <div className="pt-4 border-t border-zinc-900 grid grid-cols-3 gap-4">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Google Rating (0-5)</label>
+              <label className="text-[10px] font-mono uppercase font-bold text-zinc-400 flex justify-between">
+                <span>Google Rating</span>
+                <span className="text-[8px] opacity-40 lowercase">0 to hide</span>
+              </label>
               <input
                 type="number"
                 step="0.1"
