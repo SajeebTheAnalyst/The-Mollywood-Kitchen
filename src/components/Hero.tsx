@@ -26,6 +26,53 @@ export default function Hero({
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <div className="absolute top-[10%] right-[-5%] w-[40rem] h-[40rem] rounded-full bg-accent-red/5 blur-[120px]" />
           <div className="absolute bottom-[10%] left-[-5%] w-[30rem] h-[30rem] rounded-full bg-gold/5 blur-[100px]" />
+          
+          {/* Floating Atmospheric Greenery */}
+          <motion.div
+            animate={{ 
+              y: [0, -20, 0],
+              rotate: [0, 15, 0],
+              x: [0, 10, 0]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            className="absolute top-[15%] left-[8%] text-emerald-600/30 blur-[1px]"
+          >
+            <Leaf className="h-10 w-10 rotate-12" strokeWidth={1} />
+          </motion.div>
+
+          <motion.div
+            animate={{ 
+              y: [0, 30, 0],
+              rotate: [0, -20, 0],
+              x: [0, -15, 0]
+            }}
+            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+            className="absolute bottom-[25%] left-[45%] text-emerald-500/20 blur-[4px]"
+          >
+            <Leaf className="h-16 w-16 -rotate-12" strokeWidth={1} />
+          </motion.div>
+
+          <motion.div
+            animate={{ 
+              y: [0, -15, 0],
+              rotate: [10, 40, 10]
+            }}
+            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+            className="absolute top-[40%] right-[5%] text-emerald-400/10 blur-[2px]"
+          >
+            <Leaf className="h-8 w-8" strokeWidth={1} />
+          </motion.div>
+
+          <motion.div
+            animate={{ 
+              y: [0, 40, 0],
+              rotate: [-10, -30, -10]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute top-[10%] right-[20%] text-emerald-500/15 blur-[6px]"
+          >
+            <Leaf className="h-12 w-12" strokeWidth={1} />
+          </motion.div>
         </div>
 
         <div className="mx-auto max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 lg:gap-0 items-center z-10">
@@ -59,7 +106,7 @@ export default function Hero({
                 </span>
               </motion.div>
 
-              <h1 className="font-heading text-6xl md:text-[5.5rem] font-bold text-white leading-[1] tracking-tight whitespace-pre-line">
+              <h1 className="font-heading text-6xl md:text-[6.5rem] font-bold text-white leading-[0.95] tracking-tight whitespace-pre-line italic">
                 {heroSettings.headline || "Experience the\nArt of Bengali\nDining"}
               </h1>
               
