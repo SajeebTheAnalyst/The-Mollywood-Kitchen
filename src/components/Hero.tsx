@@ -35,9 +35,9 @@ export default function Hero({
               x: [0, 10, 0]
             }}
             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[15%] left-[8%] blur-[1px] opacity-90"
+            className="absolute top-[15%] left-[8%] blur-[1px]"
           >
-            <Leaf className="h-10 w-10 rotate-12" strokeWidth={1.5} color="#10b981" fill="#10b981" />
+            <Leaf className="h-10 w-10 rotate-12" color="#16a34a" fill="#22c55e" strokeWidth={1.5} />
           </motion.div>
 
           <motion.div
@@ -47,9 +47,9 @@ export default function Hero({
               x: [0, -15, 0]
             }}
             transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-            className="absolute bottom-[25%] left-[45%] blur-[2px] opacity-80"
+            className="absolute bottom-[25%] left-[45%] blur-[2px]"
           >
-            <Leaf className="h-16 w-16 -rotate-12" strokeWidth={1.5} color="#34d399" fill="#34d399" />
+            <Leaf className="h-16 w-16 -rotate-12" color="#15803d" fill="#16a34a" strokeWidth={1.5} />
           </motion.div>
 
           <motion.div
@@ -58,9 +58,9 @@ export default function Hero({
               rotate: [10, 40, 10]
             }}
             transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[40%] right-[5%] blur-[2px] opacity-90"
+            className="absolute top-[40%] right-[5%] blur-[1px]"
           >
-            <Leaf className="h-8 w-8" strokeWidth={1.5} color="#059669" fill="#059669" />
+            <Leaf className="h-8 w-8" color="#16a34a" fill="#22c55e" strokeWidth={1.5} />
           </motion.div>
 
           <motion.div
@@ -69,9 +69,9 @@ export default function Hero({
               rotate: [-10, -30, -10]
             }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute top-[10%] right-[20%] blur-[3px] opacity-70"
+            className="absolute top-[10%] right-[20%] blur-[2px]"
           >
-            <Leaf className="h-12 w-12" strokeWidth={1.5} color="#10b981" fill="#10b981" />
+            <Leaf className="h-12 w-12" color="#15803d" fill="#16a34a" strokeWidth={1.5} />
           </motion.div>
         </div>
 
