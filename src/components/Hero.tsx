@@ -37,6 +37,28 @@ export default function Hero({
             className="lg:col-span-6 flex flex-col space-y-10"
           >
             <div className="space-y-8">
+              {/* Premium Badge */}
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="flex items-center space-x-3"
+              >
+                <motion.span 
+                  animate={{ 
+                    color: ["#D4AF37", "#DC2626", "#D4AF37"],
+                    opacity: [1, 0.4, 1]
+                  }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="text-xl font-bold"
+                >
+                  |
+                </motion.span>
+                <span className="text-[10px] font-bold tracking-[0.4em] text-text-secondary uppercase">
+                  Explore the premium food
+                </span>
+              </motion.div>
+
               <h1 className="font-heading text-6xl md:text-[5.5rem] font-bold text-white leading-[1] tracking-tight whitespace-pre-line">
                 {heroSettings.headline || "Experience the\nArt of Bengali\nDining"}
               </h1>
@@ -82,13 +104,29 @@ export default function Hero({
             transition={{ duration: 1 }}
             className="lg:col-span-6 flex justify-center lg:justify-start"
           >
-            <div className="relative w-full max-w-[350px] lg:max-w-[700px] aspect-square rounded-full border-[1.5rem] lg:border-[2.5rem] border-white/5 overflow-hidden shadow-2xl flex-shrink-0">
-              <img
-                src={heroSettings.heroImage || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=100&w=1400"}
-                alt="Main Dish"
-                className="w-full h-full object-cover object-center"
-                referrerPolicy="no-referrer"
+            <div className="relative w-full max-w-[320px] lg:max-w-[650px] aspect-square rounded-full flex-shrink-0 group">
+              {/* Luxury Glowing Aura */}
+              <motion.div 
+                animate={{ 
+                  boxShadow: [
+                    "0 0 30px 2px rgba(212, 175, 55, 0.1)", 
+                    "0 0 60px 15px rgba(212, 175, 55, 0.25)", 
+                    "0 0 30px 2px rgba(212, 175, 55, 0.1)"
+                  ],
+                  scale: [1, 1.02, 1]
+                }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute inset-0 rounded-full z-0"
               />
+              
+              <div className="relative w-full h-full rounded-full overflow-hidden border border-white/10 z-10">
+                <img
+                  src={heroSettings.heroImage || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=100&w=1400"}
+                  alt="Main Dish"
+                  className="w-full h-full object-cover object-center transition-transform duration-1000 group-hover:scale-110"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
             </div>
           </motion.div>
         </div>
