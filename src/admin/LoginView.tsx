@@ -57,6 +57,7 @@ export default function LoginView() {
             email: email.trim().toLowerCase(),
             password: password,
             options: {
+              emailRedirectTo: window.location.origin,
               data: {
                 role: 'owner',
                 full_name: 'Owner Shuvo'
