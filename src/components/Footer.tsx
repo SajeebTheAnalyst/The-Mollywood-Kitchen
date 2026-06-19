@@ -65,16 +65,16 @@ export default function Footer({ setActiveTab }: FooterProps) {
               </div>
               <div className="flex flex-col border-l border-white/10 pl-3">
                 <span className="font-heading text-xl font-bold tracking-[.2em] text-gold leading-none uppercase">
-                  Mollywood
+                  {contactSettings.restaurantName.split(' ')[0] || 'Mollywood'}
                 </span>
                 <span className="font-sans text-[9px] font-bold tracking-[.5em] text-text-secondary leading-none uppercase mt-1">
-                  Kitchen
+                  {contactSettings.restaurantName.split(' ')[1] || 'Kitchen'}
                 </span>
               </div>
             </div>
             
             <p className="text-xs text-zinc-500 font-light max-w-xs leading-relaxed">
-              {websiteSettings.seoDescription || "Empowering Pirganj, Rangpur with authentic recipes. Experience premium Bengali, Indian, Chinese and fast food specialties cooked with pure deshi ghee."}
+              {websiteSettings.seoDescription || "Empowering your dining experience with authentic recipes. Freshly prepared daily with premium ingredients."}
             </p>
           </div>
 
@@ -183,10 +183,10 @@ export default function Footer({ setActiveTab }: FooterProps) {
         <div className="border-t border-zinc-950 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-left font-mono text-[10px] text-zinc-500">
           
           <div className="flex flex-wrap items-center gap-1">
-            <span>&copy; {new Date().getFullYear()} MOLLYWOOD KITCHEN. ALL RIGHTS RESERVED.</span>
+            <span>&copy; {new Date().getFullYear()} {contactSettings.restaurantName.toUpperCase() || 'MOLLYWOOD KITCHEN'}. ALL RIGHTS RESERVED.</span>
             <span className="hidden sm:inline">|</span>
-            <span className="flex items-center text-zinc-650 gap-1">
-              SERVED WITH <Heart className="h-3 w-3 text-accent-red fill-current" /> IN PIRGANJ, RANGPUR
+            <span className="flex items-center text-zinc-650 gap-1 uppercase">
+              SERVED WITH <Heart className="h-3 w-3 text-accent-red fill-current" /> IN {contactSettings.address.split(',').slice(-2).join(', ') || 'PIRGANJ, RANGPUR'}
             </span>
           </div>
 

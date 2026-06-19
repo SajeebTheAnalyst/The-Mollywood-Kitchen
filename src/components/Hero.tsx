@@ -15,7 +15,7 @@ export default function Hero({
   onBookTable,
   onSelectMenuItem
 }: HeroProps) {
-  const { menuItems } = useStore();
+  const { menuItems, heroSettings } = useStore();
   const highlightDishes = menuItems.filter(it => it.popular).slice(0, 4);
 
   return (
@@ -44,13 +44,12 @@ export default function Hero({
               <span className="text-xs font-bold tracking-[0.3em] text-gold uppercase">Premium Dining Experience</span>
             </motion.div>
             
-            <h1 className="font-heading text-5xl md:text-7xl font-black text-text-primary leading-[1.1] tracking-tight">
-              Authentic <br />
-              <span className="text-gold">Bengali Flavours</span>
+            <h1 className="font-heading text-5xl md:text-7xl font-black text-white leading-[1.1] tracking-tight">
+              {heroSettings.headline || 'Authentic Bengali Flavours'}
             </h1>
             
             <p className="font-sans text-lg md:text-xl text-text-secondary max-w-lg leading-relaxed font-light">
-              Traditional Bengali recipes crafted with fresh ingredients, rich flavours, and warm hospitality.
+              {heroSettings.subheading || 'Traditional Bengali recipes crafted with fresh ingredients, rich flavours, and warm hospitality.'}
             </p>
           </div>
 
@@ -105,8 +104,8 @@ export default function Hero({
               className="relative z-10 w-full h-full"
             >
               <img
-                src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&q=100&w=800"
-                alt="Premium Bengali Kacchi Biryani"
+                src={heroSettings.heroImage || "https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&q=100&w=800"}
+                alt="Premium Dishes"
                 className="w-full h-full object-cover rounded-full shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] border-8 border-bg-premium"
                 referrerPolicy="no-referrer"
               />

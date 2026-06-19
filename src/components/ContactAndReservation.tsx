@@ -5,7 +5,7 @@ import { useStore } from '../context/StoreContext';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function ContactAndReservation() {
-  const { addReservation } = useStore();
+  const { addReservation, contactSettings, websiteSettings } = useStore();
   const [formData, setFormData] = useState<Reservation>({
     name: '',
     phone: '',
@@ -121,15 +121,15 @@ export default function ContactAndReservation() {
               </h3>
               
               <div className="space-y-6">
-                {openingHours.map((h, i) => (
-                  <div key={i} className="flex justify-between items-start border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                    <div className="flex flex-col space-y-1">
-                      <span className="text-sm font-bold text-text-primary uppercase tracking-widest">{h.days}</span>
-                      <span className="text-[10px] text-text-secondary font-medium tracking-wide uppercase">{h.footnote}</span>
-                    </div>
-                    <span className="text-[11px] font-bold text-gold tracking-widest uppercase">{h.times}</span>
+                <div className="flex justify-between items-start border-b border-white/5 pb-4 last:border-0 last:pb-0">
+                  <div className="flex flex-col space-y-1">
+                    <span className="text-sm font-bold text-text-primary uppercase tracking-widest">Operating Schedule</span>
+                    <span className="text-[10px] text-text-secondary font-medium tracking-wide uppercase">Kitchen Timings</span>
                   </div>
-                ))}
+                  <span className="text-[11px] font-bold text-gold tracking-widest uppercase text-right max-w-[180px]">
+                    {contactSettings.timingSchedule || 'Daily: 11:30 AM – 10:30 PM'}
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -146,9 +146,9 @@ export default function ContactAndReservation() {
                     <MapPin className="h-4 w-4 text-gold" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs font-bold text-text-primary tracking-widest uppercase">Mollywood Kitchen</p>
+                    <p className="text-xs font-bold text-text-primary tracking-widest uppercase">{contactSettings.restaurantName || 'Mollywood Kitchen'}</p>
                     <p className="text-xs text-text-secondary font-light mt-1 leading-relaxed">
-                      Main Highway Road, Pirganj, Rangpur, Bangladesh
+                      {contactSettings.address || 'Main Highway Road, Pirganj, Rangpur, Bangladesh'}
                     </p>
                   </div>
                 </div>
@@ -159,7 +159,7 @@ export default function ContactAndReservation() {
                   </div>
                   <div className="flex-1">
                     <p className="text-xs font-bold text-text-primary tracking-widest uppercase">Direct Hotline</p>
-                    <p className="text-xs text-text-secondary tracking-widest mt-1 font-bold">+880 1799 432582</p>
+                    <p className="text-xs text-text-secondary tracking-widest mt-1 font-bold">{contactSettings.primaryPhone || '+880 1799 432582'}</p>
                   </div>
                 </div>
 
@@ -169,7 +169,7 @@ export default function ContactAndReservation() {
                   </div>
                   <div className="flex-1">
                     <p className="text-xs font-bold text-text-primary tracking-widest uppercase">General Inquiry</p>
-                    <p className="text-xs text-text-secondary tracking-widest mt-1">info@mollywoodkitchen.com</p>
+                    <p className="text-xs text-text-secondary tracking-widest mt-1">{contactSettings.supportEmail || 'info@mollywoodkitchen.com'}</p>
                   </div>
                 </div>
               </div>

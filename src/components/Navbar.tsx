@@ -118,10 +118,10 @@ export default function Navbar({
             
             <div className="flex flex-col border-l border-white/10 pl-3">
               <span className="font-heading text-xl font-bold tracking-[.2em] text-gold leading-none uppercase">
-                Mollywood
+                {contactSettings.restaurantName.split(' ')[0] || 'Mollywood'}
               </span>
               <span className="font-sans text-[9px] font-bold tracking-[.5em] text-text-secondary leading-none uppercase mt-1">
-                Kitchen
+                {contactSettings.restaurantName.split(' ')[1] || 'Kitchen'}
               </span>
             </div>
           </motion.div>
