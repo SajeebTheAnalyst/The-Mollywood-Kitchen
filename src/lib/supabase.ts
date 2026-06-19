@@ -1,11 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Fallback to the authentic credentials provided directly by the developer
-const DEFAULT_SUPABASE_URL = 'https://yylepyhpzctlzojholzf.supabase.co';
-const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5bGVweWhwemN0bHpvamhvbHpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3ODM1MTgsImV4cCI6MjA5NzM1OTUxOH0.jgK9NKZFJPD58zSZfVOY2k41kvojsmhS5EAzAjCCex0';
+const rawUrl = (import.meta as any).env.VITE_SUPABASE_URL || 'https://yylepyhpzctlzojholzf.supabase.co';
+const rawKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl5bGVweWhwemN0bHpvamhvbHpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3ODM1MTgsImV4cCI6MjA5NzM1OTUxOH0.jgK9NKZFJPD58zSZfVOY2k41kvojsmhS5EAzAjCCex0';
 
-const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;
-const supabaseAnonKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
+// Sanitize URL: Remove trailing slashes and /rest/v1 suffix if user accidentally included it
+const supabaseUrl = rawUrl.replace(/\/$/, '').replace(/\/rest\/v1$/, '');
+const supabaseAnonKey = rawKey.trim();
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

@@ -139,68 +139,93 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   // Core CMS datasets
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(initialData.menuItems as MenuItem[]);
-  const [offers, setOffers] = useState<OfferItem[]>(initialData.offers as OfferItem[]);
-  const [reviews, setReviews] = useState<ReviewItem[]>(initialData.reviews as ReviewItem[]);
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(initialData.gallery as GalleryItem[]);
-  const [reservations, setReservations] = useState<AdminReservation[]>(initialData.reservations as AdminReservation[]);
-  const [heroSettings, setHeroSettings] = useState<HeroSettings>(() => initialData.heroSettings);
-  const [aboutSettings, setAboutSettings] = useState<AboutSettings>(() => initialData.aboutSettings);
-  const [contactSettings, setContactSettings] = useState<ContactSettings>(() => initialData.contactSettings);
-  const [websiteSettings, setWebsiteSettings] = useState<WebsiteSettings>(() => initialData.websiteSettings);
-  const [profileSettings, setProfileSettings] = useState<ProfileSettings>(() => initialData.profileSettings);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(() => {
+    const saved = localStorage.getItem('mollywood_menu');
+    return saved ? JSON.parse(saved) : initialData.menuItems as MenuItem[];
+  });
+  const [offers, setOffers] = useState<OfferItem[]>(() => {
+    const saved = localStorage.getItem('mollywood_offers');
+    return saved ? JSON.parse(saved) : initialData.offers as OfferItem[];
+  });
+  const [reviews, setReviews] = useState<ReviewItem[]>(() => {
+    const saved = localStorage.getItem('mollywood_reviews');
+    return saved ? JSON.parse(saved) : initialData.reviews as ReviewItem[];
+  });
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(() => {
+    const saved = localStorage.getItem('mollywood_gallery');
+    return saved ? JSON.parse(saved) : initialData.gallery as GalleryItem[];
+  });
+  const [reservations, setReservations] = useState<AdminReservation[]>(() => {
+    const saved = localStorage.getItem('mollywood_reservations');
+    return saved ? JSON.parse(saved) : initialData.reservations as AdminReservation[];
+  });
+  const [heroSettings, setHeroSettings] = useState<HeroSettings>(() => {
+    const saved = localStorage.getItem('mollywood_hero');
+    return saved ? JSON.parse(saved) : initialData.heroSettings;
+  });
+  const [aboutSettings, setAboutSettings] = useState<AboutSettings>(() => {
+    const saved = localStorage.getItem('mollywood_about');
+    return saved ? JSON.parse(saved) : initialData.aboutSettings;
+  });
+  const [contactSettings, setContactSettings] = useState<ContactSettings>(() => {
+    const saved = localStorage.getItem('mollywood_contact');
+    return saved ? JSON.parse(saved) : initialData.contactSettings;
+  });
+  const [websiteSettings, setWebsiteSettings] = useState<WebsiteSettings>(() => {
+    const saved = localStorage.getItem('mollywood_website');
+    return saved ? JSON.parse(saved) : initialData.websiteSettings;
+  });
+  const [profileSettings, setProfileSettings] = useState<ProfileSettings>(() => {
+    const saved = localStorage.getItem('mollywood_profile');
+    return saved ? JSON.parse(saved) : initialData.profileSettings;
+  });
 
   const fetchSupabaseContent = async () => {
     try {
       const { data, error } = await supabase.from('mollywood_cms_content').select('*');
-      if (error) throw error;
+      if (error) {
+        console.warn('Supabase fetch failed (Normal if tables are empty/missing). Error:', error.message);
+        return;
+      }
       
       if (data && data.length > 0) {
         data.forEach(item => {
+          // Only update if content exists and isn't empty
+          if (!item.content) return;
+
           switch (item.id) {
-            case 'menu': setMenuItems(item.content); break;
-            case 'offers': setOffers(item.content); break;
-            case 'reviews': setReviews(item.content); break;
-            case 'gallery': setGalleryItems(item.content); break;
-            case 'hero': setHeroSettings(item.content); break;
-            case 'about': setAboutSettings(item.content); break;
-            case 'contact': setContactSettings(item.content); break;
-            case 'website': setWebsiteSettings(item.content); break;
-            case 'profile': setProfileSettings(item.content); break;
+            case 'menu': setMenuItems(item.content); persist('mollywood_menu', item.content); break;
+            case 'offers': setOffers(item.content); persist('mollywood_offers', item.content); break;
+            case 'reviews': setReviews(item.content); persist('mollywood_reviews', item.content); break;
+            case 'gallery': setGalleryItems(item.content); persist('mollywood_gallery', item.content); break;
+            case 'hero': setHeroSettings(item.content); persist('mollywood_hero', item.content); break;
+            case 'about': setAboutSettings(item.content); persist('mollywood_about', item.content); break;
+            case 'contact': setContactSettings(item.content); persist('mollywood_contact', item.content); break;
+            case 'website': setWebsiteSettings(item.content); persist('mollywood_website', item.content); break;
+            case 'profile': setProfileSettings(item.content); persist('mollywood_profile', item.content); break;
           }
         });
-      } else {
-        // DB is empty, seed it with hardcoded data once
-        await seedSupabase();
       }
     } catch (err) {
-      console.error('Error fetching Supabase content:', err);
-    }
-  };
-
-  const seedSupabase = async () => {
-    const initialContent = [
-      { id: 'menu', content: initialData.menuItems },
-      { id: 'offers', content: initialData.offers },
-      { id: 'reviews', content: initialData.reviews },
-      { id: 'gallery', content: initialData.gallery },
-      { id: 'hero', content: initialData.heroSettings },
-      { id: 'about', content: initialData.aboutSettings },
-      { id: 'contact', content: initialData.contactSettings },
-      { id: 'website', content: initialData.websiteSettings },
-      { id: 'profile', content: initialData.profileSettings },
-    ];
-    
-    for (const item of initialContent) {
-      await supabase.from('mollywood_cms_content').upsert([item]);
+      console.warn('Supabase connectivity warning:', err);
     }
   };
 
   const syncToSupabase = async (id: string, content: any) => {
+    // 1. Instantly update local cache as THE source of truth
+    persist(`mollywood_${id}`, content);
+    
+    // 2. Clear cloud update - use non-blocking attempt
     try {
-      await supabase.from('mollywood_cms_content').upsert([{ id, content, updated_at: new Date().toISOString() }]);
+      const { error } = await supabase
+        .from('mollywood_cms_content')
+        .upsert([{ id, content, updated_at: new Date().toISOString() }], { onConflict: 'id' });
+        
+      if (error) {
+        console.warn(`Supabase Cloud Sync failed for ${id}. Data is safely stored in your browser LocalStorage though. Error:`, error.message);
+      }
     } catch (err) {
-      console.error(`Error syncing ${id} to Supabase:`, err);
+      console.warn(`Supabase unreachable. ${id} saved to local browser storage only.`);
     }
   };
 
