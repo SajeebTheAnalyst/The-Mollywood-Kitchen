@@ -24,6 +24,9 @@ export interface HeroSettings {
   buttonText: string;
   buttonLink: string;
   backgroundImage: string;
+  googleRating?: number;
+  ratingCount?: number;
+  yearsOfHeritage?: number;
 }
 
 export interface AboutSettings {

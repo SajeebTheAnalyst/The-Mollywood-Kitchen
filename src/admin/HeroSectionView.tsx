@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useStore, HeroSettings } from '../context/StoreContext';
-import { Sparkles, Save, Layout, Eye, RefreshCw } from 'lucide-react';
+import { Sparkles, Save, Layout, Eye, RefreshCw, Star } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export default function HeroSectionView() {
@@ -14,7 +14,10 @@ export default function HeroSectionView() {
     heroImage: '',
     buttonText: '',
     buttonLink: '',
-    backgroundImage: ''
+    backgroundImage: '',
+    googleRating: 0,
+    ratingCount: 0,
+    yearsOfHeritage: 0
   });
 
   // Sync from store once
@@ -37,7 +40,10 @@ export default function HeroSectionView() {
       heroImage: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1200",
       buttonText: "Explore Royal Menu",
       buttonLink: "#menu",
-      backgroundImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1920"
+      backgroundImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1920",
+      googleRating: 0,
+      ratingCount: 0,
+      yearsOfHeritage: 0
     });
   };
 
@@ -155,6 +161,41 @@ export default function HeroSectionView() {
               className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-202 outline-none font-mono"
             />
           </div>
+
+          <div className="pt-4 border-t border-zinc-900 grid grid-cols-3 gap-4">
+            <div className="space-y-1">
+              <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Google Rating (0-5)</label>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                max="5"
+                value={localSettings.googleRating}
+                onChange={(e) => setLocalSettings({ ...localSettings, googleRating: parseFloat(e.target.value) })}
+                className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Review Count</label>
+              <input
+                type="number"
+                min="0"
+                value={localSettings.ratingCount}
+                onChange={(e) => setLocalSettings({ ...localSettings, ratingCount: parseInt(e.target.value) })}
+                className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Business Heritage (Years)</label>
+              <input
+                type="number"
+                min="0"
+                value={localSettings.yearsOfHeritage}
+                onChange={(e) => setLocalSettings({ ...localSettings, yearsOfHeritage: parseInt(e.target.value) })}
+                className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none"
+              />
+            </div>
+          </div>
         </form>
 
         {/* Right Live Simulation Card: (5 cols) */}
@@ -202,6 +243,27 @@ export default function HeroSectionView() {
                 <p className="text-[9px] text-zinc-400 font-light leading-normal line-clamp-3">
                   {localSettings.subheading || "Experience finest deshi cooking specialties."}
                 </p>
+
+                {/* Simulated dynamic trust indicators */}
+                {(localSettings.googleRating && localSettings.googleRating > 0 || localSettings.yearsOfHeritage && localSettings.yearsOfHeritage > 0) && (
+                  <div className="flex items-center gap-3 pt-1">
+                    {localSettings.googleRating && localSettings.googleRating > 0 && (
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-0.5">
+                          <span className="text-[10px] font-bold text-gold">{localSettings.googleRating}</span>
+                          <Star className="h-2 w-2 text-gold fill-current" />
+                        </div>
+                        <span className="text-[6px] text-zinc-500 uppercase tracking-tighter">Rating</span>
+                      </div>
+                    )}
+                    {localSettings.yearsOfHeritage && localSettings.yearsOfHeritage > 0 && (
+                      <div className="flex flex-col border-l border-white/10 pl-3">
+                        <span className="text-[10px] font-bold text-gold">{localSettings.yearsOfHeritage}+</span>
+                        <span className="text-[6px] text-zinc-500 uppercase tracking-tighter">Heritage</span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Simulated button */}

@@ -73,18 +73,31 @@ export default function Hero({
             </motion.button>
           </div>
 
-          {/* Trust Indicators */}
-          <div className="flex items-center space-x-8 pt-4">
-            <div className="flex flex-col">
-              <span className="text-2xl font-heading font-bold text-gold">4.9/5</span>
-              <span className="text-[10px] tracking-widest text-text-secondary uppercase">Google Rating</span>
+          {/* Trust Indicators - Only shown if reviews/heritage exist */}
+          {(heroSettings.googleRating && heroSettings.googleRating > 0 || heroSettings.yearsOfHeritage && heroSettings.yearsOfHeritage > 0) && (
+            <div className="flex items-center space-x-8 pt-4">
+              {heroSettings.googleRating && heroSettings.googleRating > 0 && (
+                <div className="flex flex-col">
+                  <div className="flex items-center space-x-1">
+                    <span className="text-2xl font-heading font-bold text-gold">{heroSettings.googleRating}</span>
+                    <Star className="h-4 w-4 text-gold fill-current" />
+                  </div>
+                  <span className="text-[10px] tracking-widest text-text-secondary uppercase">
+                    Google Rating {heroSettings.ratingCount ? `(${heroSettings.ratingCount})` : ''}
+                  </span>
+                </div>
+              )}
+              {heroSettings.googleRating && heroSettings.googleRating > 0 && heroSettings.yearsOfHeritage && heroSettings.yearsOfHeritage > 0 && (
+                <div className="w-px h-10 bg-white/10" />
+              )}
+              {heroSettings.yearsOfHeritage && heroSettings.yearsOfHeritage > 0 && (
+                <div className="flex flex-col">
+                  <span className="text-2xl font-heading font-bold text-gold">{heroSettings.yearsOfHeritage}+</span>
+                  <span className="text-[10px] tracking-widest text-text-secondary uppercase">Years of Heritage</span>
+                </div>
+              )}
             </div>
-            <div className="w-px h-10 bg-white/10" />
-            <div className="flex flex-col">
-              <span className="text-2xl font-heading font-bold text-gold">15+</span>
-              <span className="text-[10px] tracking-widest text-text-secondary uppercase">Years of Heritage</span>
-            </div>
-          </div>
+          )}
         </motion.div>
 
         {/* Right Image */}
