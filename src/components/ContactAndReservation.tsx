@@ -127,7 +127,7 @@ export default function ContactAndReservation() {
                     <span className="text-[10px] text-text-secondary font-medium tracking-wide uppercase">Kitchen Timings</span>
                   </div>
                   <span className="text-[11px] font-bold text-gold tracking-widest uppercase text-right max-w-[180px]">
-                    {contactSettings.timingSchedule || 'Daily: 11:30 AM – 10:30 PM'}
+                    {contactSettings.openingHours || 'Daily: 11:30 AM – 10:30 PM'}
                   </span>
                 </div>
               </div>
@@ -159,7 +159,7 @@ export default function ContactAndReservation() {
                   </div>
                   <div className="flex-1">
                     <p className="text-xs font-bold text-text-primary tracking-widest uppercase">Direct Hotline</p>
-                    <p className="text-xs text-text-secondary tracking-widest mt-1 font-bold">{contactSettings.primaryPhone || '+880 1799 432582'}</p>
+                    <p className="text-xs text-text-secondary tracking-widest mt-1 font-bold">{contactSettings.phone || '+880 1799 432582'}</p>
                   </div>
                 </div>
 
@@ -169,17 +169,22 @@ export default function ContactAndReservation() {
                   </div>
                   <div className="flex-1">
                     <p className="text-xs font-bold text-text-primary tracking-widest uppercase">General Inquiry</p>
-                    <p className="text-xs text-text-secondary tracking-widest mt-1">{contactSettings.supportEmail || 'info@mollywoodkitchen.com'}</p>
+                    <p className="text-xs text-text-secondary tracking-widest mt-1">{contactSettings.email || 'info@mollywoodkitchen.com'}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Custom Interactive Google Map Mock Layout */}
-            <div className="relative rounded-sm border border-white/5 bg-zinc-950 overflow-hidden h-48 group shadow-2xl transition-all duration-500 hover:border-gold/30">
+            {/* Custom Interactive Google Map Link */}
+            <a 
+              href={contactSettings.googleMapUrl || "https://maps.google.com"} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="block relative rounded-sm border border-white/5 bg-zinc-950 overflow-hidden h-48 group shadow-2xl transition-all duration-500 hover:border-gold/30"
+            >
               <img
                 src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800"
-                alt="Dhaka Map Mockup"
+                alt="Map Preview"
                 className="h-full w-full object-cover grayscale opacity-20 transition-all duration-[2000ms] group-hover:scale-110 group-hover:grayscale-0 group-hover:opacity-40"
                 referrerPolicy="no-referrer"
               />
@@ -192,7 +197,7 @@ export default function ContactAndReservation() {
                 </div>
                 <span className="text-[10px] font-bold tracking-[0.3em] text-white uppercase group-hover:text-gold transition-colors">Digital Navigation</span>
               </div>
-            </div>
+            </a>
 
           </div>
 

@@ -151,13 +151,13 @@ export default function ContactInfoView() {
               required
               value={localSettings.googleMapUrl}
               onChange={(e) => setLocalSettings({ ...localSettings, googleMapUrl: e.target.value })}
-              className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-202 outline-none font-mono text-zinc-450"
+              className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-[10px] font-mono uppercase font-bold text-zinc-405">Facebook page URL</label>
+              <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Facebook page URL</label>
               <input
                 type="url"
                 required
@@ -167,7 +167,7 @@ export default function ContactInfoView() {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-[10px] font-mono uppercase font-bold text-zinc-405">Instagram page URL</label>
+              <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Instagram page URL</label>
               <input
                 type="url"
                 required
