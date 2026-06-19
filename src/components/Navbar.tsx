@@ -22,7 +22,7 @@ export default function Navbar({
 }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const { setView, customerUser, signUpCustomer, logInCustomer, logoutCustomer, showToast } = useStore();
+  const { setView, customerUser, signUpCustomer, logInCustomer, logoutCustomer, showToast, websiteSettings, contactSettings, isLoggedIn, adminEmail } = useStore();
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
   const [authTab, setAuthTab] = useState<'signup' | 'login'>('signup');
   const [authName, setAuthName] = useState('');
@@ -39,6 +39,9 @@ export default function Navbar({
     { id: 'offers', label: 'Offers' },
     { id: 'contact', label: 'Contact' },
   ];
+
+  // Logic to determine if current visitor is the authorized owner based on Supabase email
+  const isOwner = isLoggedIn && (adminEmail === 'iamsojib582@gmail.com');
 
   const handleNavClick = (tabId: string) => {
     setActiveTab(tabId);
@@ -103,17 +106,21 @@ export default function Navbar({
             whileTap={{ scale: 0.97 }}
             transition={{ type: 'spring', stiffness: 450, damping: 25 }}
           >
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-full border border-gold/40 bg-zinc-950 p-1 shadow-md shadow-gold/10">
-              <Film className="h-5 w-5 text-gold animate-pulse" />
+            <div className="relative flex h-11 w-11 items-center justify-center rounded-full border border-gold/40 bg-zinc-950 p-1 shadow-md shadow-gold/10 overflow-hidden">
+              {websiteSettings.logo ? (
+                <img src={websiteSettings.logo} alt="Logo" className="h-full w-full object-cover" />
+              ) : (
+                <Film className="h-5 w-5 text-gold animate-pulse" />
+              )}
               <div className="absolute -inset-0.5 rounded-full border border-accent-red/30 animate-ping opacity-25 pointer-events-none" />
             </div>
             
             <div className="flex flex-col">
-              <span className="font-heading text-lg font-black tracking-widest text-gold-metallic leading-none drop-shadow-sm">
-                THE MOLLYWOOD
+              <span className="font-heading text-lg font-black tracking-widest text-gold-metallic leading-none drop-shadow-sm uppercase">
+                {websiteSettings.footerText ? websiteSettings.footerText.split(' ')[0] : "THE MOLLYWOOD"}
               </span>
-              <span className="font-sans text-xs font-bold tracking-[0.35em] text-white leading-none">
-                KITCHEN
+              <span className="font-sans text-xs font-bold tracking-[0.35em] text-white leading-none uppercase">
+                {contactSettings.restaurantName ? contactSettings.restaurantName.split(' ')[1] || "KITCHEN" : "KITCHEN"}
               </span>
             </div>
           </motion.div>
@@ -143,6 +150,19 @@ export default function Navbar({
                 </button>
               );
             })}
+
+            {isOwner && (
+              <button
+                onClick={() => {
+                  window.location.hash = '#admin';
+                  setView('admin-dashboard');
+                }}
+                className="group flex items-center space-x-2 px-4 py-2 bg-zinc-950 border border-gold/40 rounded-full hover:bg-gold hover:border-gold transition-all duration-300 cursor-pointer shadow-lg shadow-gold/5"
+              >
+                <Shield className="h-3.5 w-3.5 text-gold group-hover:text-black" />
+                <span className="font-sans text-[10px] font-black tracking-widest text-gold group-hover:text-black uppercase">Admin Portal</span>
+              </button>
+            )}
           </div>
 
           {/* Action Buttons: Cart and Table Res */}

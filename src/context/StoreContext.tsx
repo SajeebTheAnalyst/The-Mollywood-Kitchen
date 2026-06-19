@@ -72,6 +72,7 @@ interface StoreContextProps {
   setView: (view: ViewMode) => void;
   isLoggedIn: boolean;
   setIsLoggedIn: (status: boolean) => void;
+  adminEmail: string | null;
   
   // States
   menuItems: MenuItem[];
@@ -133,59 +134,21 @@ const StoreContext = createContext<StoreContextProps | undefined>(undefined);
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [currentView, setView] = useState<ViewMode>('client');
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [adminEmail, setAdminEmail] = useState<string | null>(null);
   const [customerUser, setCustomerUser] = useState<{ email: string; name: string } | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   // Core CMS datasets
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [offers, setOffers] = useState<OfferItem[]>([]);
-  const [reviews, setReviews] = useState<ReviewItem[]>([]);
-  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
-  const [reservations, setReservations] = useState<AdminReservation[]>([]);
-  const [heroSettings, setHeroSettings] = useState<HeroSettings>(() => ({
-    restaurantName: 'Mollywood Kitchen',
-    headline: 'Authentic Bengali Cuisine',
-    subheading: 'Experience the rich heritage of Rangpur flavors in every bite.',
-    heroImage: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=1200',
-    buttonText: 'View Menu',
-    buttonLink: '#menu',
-    backgroundImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200'
-  }));
-  const [aboutSettings, setAboutSettings] = useState<AboutSettings>(() => ({
-    story: 'Established in the heart of Pirganj...',
-    mission: 'To serve authentic flavors.',
-    vision: 'Becoming the landmarks of Bengali taste.',
-    founders: 'S. S. Shuvo',
-    images: []
-  }));
-  const [contactSettings, setContactSettings] = useState<ContactSettings>(() => ({
-    restaurantName: 'Mollywood Kitchen',
-    address: 'Pirganj, Rangpur',
-    phone: '',
-    whatsapp: '',
-    email: '',
-    googleMapUrl: '',
-    facebook: '',
-    instagram: '',
-    openingHours: '10 AM - 10 PM'
-  }));
-  const [websiteSettings, setWebsiteSettings] = useState<WebsiteSettings>(() => ({
-    logo: '',
-    favicon: '',
-    primaryColor: '#d4af37',
-    secondaryColor: '#000000',
-    footerText: 'Authentic Bengali Restaurant',
-    copyright: '© 2026 Mollywood Kitchen',
-    seoTitle: 'Mollywood Kitchen | Authentic Bengali Restaurant',
-    seoDescription: 'Experience authentic Bengali cuisine at Mollywood Kitchen.',
-    seoKeywords: 'Bengali food, restaurant, Pirganj',
-    ogImage: ''
-  }));
-  const [profileSettings, setProfileSettings] = useState<ProfileSettings>(() => ({
-    ownerName: 'S. S. Shuvo',
-    email: 'iamsojib582@gmail.com',
-    profilePhoto: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150'
-  }));
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(initialData.menuItems as MenuItem[]);
+  const [offers, setOffers] = useState<OfferItem[]>(initialData.offers as OfferItem[]);
+  const [reviews, setReviews] = useState<ReviewItem[]>(initialData.reviews as ReviewItem[]);
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(initialData.gallery as GalleryItem[]);
+  const [reservations, setReservations] = useState<AdminReservation[]>(initialData.reservations as AdminReservation[]);
+  const [heroSettings, setHeroSettings] = useState<HeroSettings>(() => initialData.heroSettings);
+  const [aboutSettings, setAboutSettings] = useState<AboutSettings>(() => initialData.aboutSettings);
+  const [contactSettings, setContactSettings] = useState<ContactSettings>(() => initialData.contactSettings);
+  const [websiteSettings, setWebsiteSettings] = useState<WebsiteSettings>(() => initialData.websiteSettings);
+  const [profileSettings, setProfileSettings] = useState<ProfileSettings>(() => initialData.profileSettings);
 
   const fetchSupabaseContent = async () => {
     try {
@@ -216,17 +179,16 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   const seedSupabase = async () => {
-    const { MENU_ITEMS, OFFERS_DATA, REVIEWS_DATA, GALLERY_ITEMS } = await import('../data');
     const initialContent = [
-      { id: 'menu', content: MENU_ITEMS },
-      { id: 'offers', content: OFFERS_DATA },
-      { id: 'reviews', content: REVIEWS_DATA },
-      { id: 'gallery', content: GALLERY_ITEMS },
-      { id: 'hero', content: heroSettings },
-      { id: 'about', content: aboutSettings },
-      { id: 'contact', content: contactSettings },
-      { id: 'website', content: websiteSettings },
-      { id: 'profile', content: profileSettings },
+      { id: 'menu', content: initialData.menuItems },
+      { id: 'offers', content: initialData.offers },
+      { id: 'reviews', content: initialData.reviews },
+      { id: 'gallery', content: initialData.gallery },
+      { id: 'hero', content: initialData.heroSettings },
+      { id: 'about', content: initialData.aboutSettings },
+      { id: 'contact', content: initialData.contactSettings },
+      { id: 'website', content: initialData.websiteSettings },
+      { id: 'profile', content: initialData.profileSettings },
     ];
     
     for (const item of initialContent) {
@@ -247,8 +209,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     // 1. Auth Status check - use Supabase session
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session && session.user.email === 'iamsojib582@gmail.com') {
-        setIsLoggedIn(true);
+      if (session) {
+        setAdminEmail(session.user.email || null);
+        if (session.user.email === 'iamsojib582@gmail.com') {
+          setIsLoggedIn(true);
+        }
       }
       fetchSupabaseContent();
     };
@@ -274,9 +239,15 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session && session.user.email === 'iamsojib582@gmail.com') {
-        setIsLoggedIn(true);
+      if (session) {
+        setAdminEmail(session.user.email || null);
+        if (session.user.email === 'iamsojib582@gmail.com') {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
       } else {
+        setAdminEmail(null);
         setIsLoggedIn(false);
       }
     });
@@ -590,6 +561,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         setView,
         isLoggedIn,
         setIsLoggedIn: handleAuthChange,
+        adminEmail,
         
         menuItems,
         offers,
