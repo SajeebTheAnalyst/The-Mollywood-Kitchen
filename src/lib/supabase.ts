@@ -72,10 +72,18 @@ CREATE TABLE IF NOT EXISTS mollywood_bookings (
   created_at timestamp with time zone DEFAULT now()
 );
 
+-- 4. MOLLEYWOOD CMS CONTENT TABLE
+CREATE TABLE IF NOT EXISTS mollywood_cms_content (
+  id text PRIMARY KEY,
+  content jsonb NOT NULL,
+  updated_at timestamp with time zone DEFAULT now()
+);
+
 -- Enable RLS & setup policies for anonymous access
 ALTER TABLE mollywood_users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE mollywood_orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE mollywood_bookings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE mollywood_cms_content ENABLE ROW LEVEL SECURITY;
 
 -- Simple policies allowing insert and select from the app
 CREATE POLICY "Allow public select" ON mollywood_users FOR SELECT USING (true);
@@ -86,4 +94,7 @@ CREATE POLICY "Allow public insert orders" ON mollywood_orders FOR INSERT WITH C
 
 CREATE POLICY "Allow public select bookings" ON mollywood_bookings FOR SELECT USING (true);
 CREATE POLICY "Allow public insert bookings" ON mollywood_bookings FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Allow public select cms" ON mollywood_cms_content FOR SELECT USING (true);
+CREATE POLICY "Allow public upsert cms" ON mollywood_cms_content FOR ALL USING (true);
 `;

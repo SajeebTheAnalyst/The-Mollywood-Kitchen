@@ -707,7 +707,7 @@ export const OFFERS_DATA: OfferItem[] = [
   {
     id: 'o1',
     title: "Today's Special Combo Deal",
-    tagline: "Chef's Signature Special - Free Appetizer",
+    tagline: "Owner's Signature Special - Free Appetizer",
     discount: "FREE APPETIZER INCLUDED",
     description: "Purchase our signature Mutton Biriyani or Beef Kala Bhuna and receive a complimentary portion of Ghee Rice or French Fries.",
     badge: "Limited Quantities Available",

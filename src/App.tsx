@@ -8,7 +8,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import MenuSection from './components/MenuSection';
 import MenuDetailModal from './components/MenuDetailModal';
-import ChefsSpecialAndAbout from './components/ChefsSpecialAndAbout';
+import OwnersSpecialAndAbout from './components/ChefsSpecialAndAbout';
 import OffersSection from './components/OffersSection';
 import GallerySection from './components/GallerySection';
 import ContactAndReservation from './components/ContactAndReservation';
@@ -22,7 +22,7 @@ import LoginView from './admin/LoginView';
 import AdminLayout from './admin/AdminLayout';
 
 function AppContent() {
-  const { currentView, customerUser } = useStore();
+  const { currentView, customerUser, isLoggedIn, setView } = useStore();
   const [activeTab, setActiveTab] = useState<string>('home');
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -109,6 +109,11 @@ function AppContent() {
   }
 
   if (currentView === 'admin-dashboard') {
+    // Force login if not authorized
+    if (!isLoggedIn) {
+      setView('admin-login');
+      return <LoginView />;
+    }
     return <AdminLayout />;
   }
 
@@ -139,8 +144,8 @@ function AppContent() {
         onQuickAddToCart={(item, spice, qty) => handleAddToCart(item, spice, qty)}
       />
 
-      {/* 4. CHEF'S SIGNATURE SPECIALS - Stories and review sliders */}
-      <ChefsSpecialAndAbout 
+      {/* 4. OWNER'S SIGNATURE SPECIALS - Stories and review sliders */}
+      <OwnersSpecialAndAbout 
         onSelectMenuItem={(item) => setSelectedItem(item)} 
       />
 

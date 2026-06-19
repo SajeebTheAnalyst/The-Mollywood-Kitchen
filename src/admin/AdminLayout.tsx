@@ -261,7 +261,7 @@ export default function AdminLayout() {
             />
             <div className="hidden sm:flex flex-col">
               <span className="text-[10px] font-black text-zinc-200 leading-none truncate max-w-[120px]">{profileSettings.ownerName || 'S. S. Shuvo'}</span>
-              <span className="text-[8px] font-mono text-gold font-bold tracking-wider uppercase mt-1">Lead Chef</span>
+              <span className="text-[8px] font-mono text-gold font-bold tracking-wider uppercase mt-1">Lead Owner</span>
             </div>
             <span className="h-2 w-2 rounded-full bg-emerald-500 border border-black shadow" title="Session authorized" />
           </div>

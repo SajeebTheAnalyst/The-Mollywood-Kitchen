@@ -142,56 +142,124 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [reservations, setReservations] = useState<AdminReservation[]>([]);
-  const [heroSettings, setHeroSettings] = useState<HeroSettings>(initialData.heroSettings);
-  const [aboutSettings, setAboutSettings] = useState<AboutSettings>(initialData.aboutSettings);
-  const [contactSettings, setContactSettings] = useState<ContactSettings>(initialData.contactSettings);
-  const [websiteSettings, setWebsiteSettings] = useState<WebsiteSettings>(initialData.websiteSettings);
-  const [profileSettings, setProfileSettings] = useState<ProfileSettings>(initialData.profileSettings);
+  const [heroSettings, setHeroSettings] = useState<HeroSettings>(() => ({
+    restaurantName: 'Mollywood Kitchen',
+    headline: 'Authentic Bengali Cuisine',
+    subheading: 'Experience the rich heritage of Rangpur flavors in every bite.',
+    heroImage: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=1200',
+    buttonText: 'View Menu',
+    buttonLink: '#menu',
+    backgroundImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=1200'
+  }));
+  const [aboutSettings, setAboutSettings] = useState<AboutSettings>(() => ({
+    story: 'Established in the heart of Pirganj...',
+    mission: 'To serve authentic flavors.',
+    vision: 'Becoming the landmarks of Bengali taste.',
+    founders: 'S. S. Shuvo',
+    images: []
+  }));
+  const [contactSettings, setContactSettings] = useState<ContactSettings>(() => ({
+    restaurantName: 'Mollywood Kitchen',
+    address: 'Pirganj, Rangpur',
+    phone: '',
+    whatsapp: '',
+    email: '',
+    googleMapUrl: '',
+    facebook: '',
+    instagram: '',
+    openingHours: '10 AM - 10 PM'
+  }));
+  const [websiteSettings, setWebsiteSettings] = useState<WebsiteSettings>(() => ({
+    logo: '',
+    favicon: '',
+    primaryColor: '#d4af37',
+    secondaryColor: '#000000',
+    footerText: 'Authentic Bengali Restaurant',
+    copyright: '© 2026 Mollywood Kitchen',
+    seoTitle: 'Mollywood Kitchen | Authentic Bengali Restaurant',
+    seoDescription: 'Experience authentic Bengali cuisine at Mollywood Kitchen.',
+    seoKeywords: 'Bengali food, restaurant, Pirganj',
+    ogImage: ''
+  }));
+  const [profileSettings, setProfileSettings] = useState<ProfileSettings>(() => ({
+    ownerName: 'S. S. Shuvo',
+    email: 'iamsojib582@gmail.com',
+    profilePhoto: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150'
+  }));
 
-  // Initialize and load from localstorage or json
-  useEffect(() => {
-    // 1. Auth Status check
-    const storedAuth = localStorage.getItem('mollywood_isLoggedIn');
-    if (storedAuth === 'true') {
-      setIsLoggedIn(true);
-    }
-
-    // 2. Load lists
-    const loadState = <T,>(key: string, backup: T): T => {
-      const data = localStorage.getItem(key);
-      try {
-        return data ? JSON.parse(data) : backup;
-      } catch {
-        return backup;
+  const fetchSupabaseContent = async () => {
+    try {
+      const { data, error } = await supabase.from('mollywood_cms_content').select('*');
+      if (error) throw error;
+      
+      if (data && data.length > 0) {
+        data.forEach(item => {
+          switch (item.id) {
+            case 'menu': setMenuItems(item.content); break;
+            case 'offers': setOffers(item.content); break;
+            case 'reviews': setReviews(item.content); break;
+            case 'gallery': setGalleryItems(item.content); break;
+            case 'hero': setHeroSettings(item.content); break;
+            case 'about': setAboutSettings(item.content); break;
+            case 'contact': setContactSettings(item.content); break;
+            case 'website': setWebsiteSettings(item.content); break;
+            case 'profile': setProfileSettings(item.content); break;
+          }
+        });
+      } else {
+        // DB is empty, seed it with hardcoded data once
+        await seedSupabase();
       }
+    } catch (err) {
+      console.error('Error fetching Supabase content:', err);
+    }
+  };
+
+  const seedSupabase = async () => {
+    const { MENU_ITEMS, OFFERS_DATA, REVIEWS_DATA, GALLERY_ITEMS } = await import('../data');
+    const initialContent = [
+      { id: 'menu', content: MENU_ITEMS },
+      { id: 'offers', content: OFFERS_DATA },
+      { id: 'reviews', content: REVIEWS_DATA },
+      { id: 'gallery', content: GALLERY_ITEMS },
+      { id: 'hero', content: heroSettings },
+      { id: 'about', content: aboutSettings },
+      { id: 'contact', content: contactSettings },
+      { id: 'website', content: websiteSettings },
+      { id: 'profile', content: profileSettings },
+    ];
+    
+    for (const item of initialContent) {
+      await supabase.from('mollywood_cms_content').upsert([item]);
+    }
+  };
+
+  const syncToSupabase = async (id: string, content: any) => {
+    try {
+      await supabase.from('mollywood_cms_content').upsert([{ id, content, updated_at: new Date().toISOString() }]);
+    } catch (err) {
+      console.error(`Error syncing ${id} to Supabase:`, err);
+    }
+  };
+
+  // Initialize and load
+  useEffect(() => {
+    // 1. Auth Status check - use Supabase session
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session && session.user.email === 'iamsojib582@gmail.com') {
+        setIsLoggedIn(true);
+      }
+      fetchSupabaseContent();
     };
 
-    setMenuItems(loadState<MenuItem[]>('mollywood_menuItems', initialData.menuItems as MenuItem[]));
-    setOffers(loadState<OfferItem[]>('mollywood_offers', initialData.offers as OfferItem[]));
-    setReviews(loadState<ReviewItem[]>('mollywood_reviews', initialData.reviews as ReviewItem[]));
-    setGalleryItems(loadState<GalleryItem[]>('mollywood_galleryItems', initialData.gallery as GalleryItem[]));
-    setReservations(loadState<AdminReservation[]>('mollywood_reservations', initialData.reservations as AdminReservation[]));
-    setHeroSettings(loadState<HeroSettings>('mollywood_heroSettings', initialData.heroSettings));
-    setAboutSettings(loadState<AboutSettings>('mollywood_aboutSettings', initialData.aboutSettings));
-    setContactSettings(loadState<ContactSettings>('mollywood_contactSettings', initialData.contactSettings));
-    setWebsiteSettings(loadState<WebsiteSettings>('mollywood_websiteSettings', initialData.websiteSettings));
-    setProfileSettings(loadState<ProfileSettings>('mollywood_profileSettings', initialData.profileSettings));
-
-    // Load customer user if present
-    const savedCustomer = localStorage.getItem('mollywood_customerUser');
-    if (savedCustomer) {
-      try {
-        setCustomerUser(JSON.parse(savedCustomer));
-      } catch (e) {
-        // Safe check
-      }
-    }
+    checkSession();
 
     // Support direct URL hash checking e.g. #admin routing support on layout load
-    const handleHashChange = () => {
+    const handleHashChange = async () => {
       if (window.location.hash === '#admin') {
-        const storedAuth = localStorage.getItem('mollywood_isLoggedIn');
-        if (storedAuth === 'true') {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session && session.user.email === 'iamsojib582@gmail.com') {
           setView('admin-dashboard');
         } else {
           setView('admin-login');
@@ -204,11 +272,38 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     window.addEventListener('hashchange', handleHashChange);
     handleHashChange(); // Run once on startup
 
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session && session.user.email === 'iamsojib582@gmail.com') {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('hashchange', handleHashChange);
+    };
   }, []);
 
   // Passive Client-Side Analytics (Bounce status & Duration)
   useEffect(() => {
+    // Dynamically sync SEO metadata from store to document
+    if (websiteSettings) {
+      document.title = websiteSettings.seoTitle || 'Mollywood Kitchen | Authentic Bengali Restaurant';
+      
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', websiteSettings.seoDescription || 'Experience authentic Bengali cuisine.');
+      }
+      
+      const faviconLink = document.querySelector('link[rel="icon"]');
+      if (faviconLink && websiteSettings.favicon) {
+        faviconLink.setAttribute('href', websiteSettings.favicon);
+      }
+    }
+
     if (!localStorage.getItem('mollywood_session_start_time')) {
       localStorage.setItem('mollywood_session_start_time', Date.now().toString());
     }
@@ -303,14 +398,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     };
     const next = [newItem, ...menuItems];
     setMenuItems(next);
-    persist('mollywood_menuItems', next);
+    syncToSupabase('menu', next);
     showToast(`Added "${newItem.name}" to menu successfully!`, 'success');
   };
 
   const editMenuItem = (item: MenuItem) => {
     const next = menuItems.map(x => x.id === item.id ? item : x);
     setMenuItems(next);
-    persist('mollywood_menuItems', next);
+    syncToSupabase('menu', next);
     showToast(`Updated "${item.name}" details.`, 'success');
   };
 
@@ -318,7 +413,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     const item = menuItems.find(x => x.id === id);
     const next = menuItems.filter(x => x.id !== id);
     setMenuItems(next);
-    persist('mollywood_menuItems', next);
+    syncToSupabase('menu', next);
     showToast(`Deleted "${item?.name || 'item'}" from menu.`, 'success');
   };
 
@@ -332,7 +427,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     };
     const next = [duplicated, ...menuItems];
     setMenuItems(next);
-    persist('mollywood_menuItems', next);
+    syncToSupabase('menu', next);
     showToast(`Duplicated "${target.name}" successfully!`, 'success');
   };
 
@@ -344,14 +439,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     };
     const next = [newOffer, ...offers];
     setOffers(next);
-    persist('mollywood_offers', next);
+    syncToSupabase('offers', next);
     showToast(`Created offer Promo: ${newOffer.title}`, 'success');
   };
 
   const editOffer = (offer: OfferItem) => {
     const next = offers.map(x => x.id === offer.id ? offer : x);
     setOffers(next);
-    persist('mollywood_offers', next);
+    syncToSupabase('offers', next);
     showToast(`Updated offer "${offer.title}" successfully.`, 'success');
   };
 
@@ -359,7 +454,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     const target = offers.find(x => x.id === id);
     const next = offers.filter(x => x.id !== id);
     setOffers(next);
-    persist('mollywood_offers', next);
+    syncToSupabase('offers', next);
     showToast(`Deleted offer "${target?.title || 'promo'}"`, 'success');
   };
 
@@ -371,21 +466,21 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     };
     const next = [newReview, ...reviews];
     setReviews(next);
-    persist('mollywood_reviews', next);
+    syncToSupabase('reviews', next);
     showToast(`Added customer review by "${newReview.name}"!`, 'success');
   };
 
   const editReview = (review: ReviewItem) => {
     const next = reviews.map(x => x.id === review.id ? review : x);
     setReviews(next);
-    persist('mollywood_reviews', next);
+    syncToSupabase('reviews', next);
     showToast(`Saved review edits.`, 'success');
   };
 
   const deleteReview = (id: string) => {
     const next = reviews.filter(x => x.id !== id);
     setReviews(next);
-    persist('mollywood_reviews', next);
+    syncToSupabase('reviews', next);
     showToast(`Removed review record.`, 'success');
   };
 
@@ -397,14 +492,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     };
     const next = [newItem, ...galleryItems];
     setGalleryItems(next);
-    persist('mollywood_galleryItems', next);
+    syncToSupabase('gallery', next);
     showToast(`New image uploaded to ${newItem.category} gallery!`, 'success');
   };
 
   const deleteGalleryItem = (id: string) => {
     const next = galleryItems.filter(x => x.id !== id);
     setGalleryItems(next);
-    persist('mollywood_galleryItems', next);
+    syncToSupabase('gallery', next);
     showToast(`Removed gallery image.`, 'success');
   };
 
@@ -460,32 +555,31 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   // ==================== STATIC SETTINGS WRITERS ====================
   const updateHeroSettings = (settings: HeroSettings) => {
     setHeroSettings(settings);
-    persist('mollywood_heroSettings', settings);
+    syncToSupabase('hero', settings);
     showToast('Hero section parameters updated instantly!', 'success');
   };
 
   const updateAboutSettings = (settings: AboutSettings) => {
     setAboutSettings(settings);
-    persist('mollywood_aboutSettings', settings);
+    syncToSupabase('about', settings);
     showToast('About section parameters saved.', 'success');
   };
 
   const updateContactSettings = (settings: ContactSettings) => {
     setContactSettings(settings);
-    persist('mollywood_contactSettings', settings);
+    syncToSupabase('contact', settings);
     showToast('Contact info & hours updated.', 'success');
   };
 
   const updateWebsiteSettings = (settings: WebsiteSettings) => {
     setWebsiteSettings(settings);
-    persist('mollywood_websiteSettings', settings);
+    syncToSupabase('website', settings);
     showToast('Website colors, favicon, logo and SEO updated.', 'success');
   };
 
   const updateProfileSettings = (settings: ProfileSettings) => {
     setProfileSettings(settings);
-    persist('mollywood_profileSettings', settings);
-    localStorage.setItem('mollywood_admin_email', settings.email);
+    syncToSupabase('profile', settings);
     showToast('Owner profile details updated successfully.', 'success');
   };
 

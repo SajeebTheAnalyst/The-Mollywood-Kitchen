@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Play, ArrowLeft, ArrowRight, Star, Flame, ShoppingCart, Film } from 'lucide-react';
 import { MenuItem } from '../types';
-import { MENU_ITEMS } from '../data';
+import { useStore } from '../context/StoreContext';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface HeroProps {
@@ -15,8 +15,9 @@ export default function Hero({
   onBookTable,
   onSelectMenuItem
 }: HeroProps) {
+  const { menuItems, heroSettings } = useStore();
   // Get popular showstopper dishes to map to the highlight reel slider
-  const highlightDishes = MENU_ITEMS.filter(it => it.popular).slice(0, 5);
+  const highlightDishes = menuItems.filter(it => it.popular).slice(0, 5);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const nextSlide = () => {
@@ -74,19 +75,19 @@ export default function Hero({
             {/* Slogan & Heading */}
             <div className="space-y-1">
               <span className="font-heading text-xs font-bold tracking-[0.4em] text-zinc-400 block uppercase">
-                SERVED FRESH EVERY DAY
+                {heroSettings.restaurantName || "MOLLYWOOD KITCHEN"}
               </span>
               <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-black text-white leading-[1.1] tracking-tight">
-                Authentic Bengali & <br />
-                <span className="text-gold-metallic text-glow-gold drop-shadow-xl font-normal block italic sm:inline">Indian Flavours,</span> <br className="hidden sm:inline" />
+                {heroSettings.headline.split('&')[0]} & <br />
+                <span className="text-gold-metallic text-glow-gold drop-shadow-xl font-normal block italic sm:inline">{heroSettings.headline.split('&')[1] || "Indian Flavours,"}</span> <br className="hidden sm:inline" />
                 <span className="bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent italic font-normal">
-                  Served Fresh Every Day
+                  {heroSettings.subheading}
                 </span>
               </h1>
             </div>
 
             <p className="font-sans text-sm md:text-base text-zinc-400 max-w-xl leading-relaxed font-light">
-              Welcome to <span className="text-gold font-semibold">Mollywood Kitchen</span>, your neighborhood destination in Pirganj for delicious Bengali, Indian, Chinese, and fast-food favorites. Whether you're dining with family, celebrating with friends, or grabbing a quick meal, we serve fresh food with quality ingredients and warm hospitality.
+              {heroSettings.subheading}
             </p>
 
             {/* Premium CTA Buttons */}
@@ -97,7 +98,7 @@ export default function Hero({
                 whileTap={{ scale: 0.95 }}
                 className="relative group overflow-hidden px-8 py-4 rounded-full bg-gradient-to-r from-accent-red to-accent-red-hover hover:from-gold hover:to-gold-dark text-white hover:text-neutral-950 font-bold tracking-widest text-xs uppercase transition-all duration-500 shadow-xl shadow-accent-red/20 hover:shadow-gold/25 flex items-center space-x-2 cursor-pointer"
               >
-                <span>Explore Menu</span>
+                <span>{heroSettings.buttonText || "Explore Menu"}</span>
               </motion.button>
 
               <motion.button
@@ -154,7 +155,7 @@ export default function Hero({
                 className="relative z-10 w-64 h-64 sm:w-80 sm:h-80 rounded-full flex items-center justify-center shadow-2xl shadow-gold/10"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&q=80&w=800"
+                  src={heroSettings.heroImage || "https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&q=80&w=800"}
                   alt="Spotlight Dish"
                   className="rounded-full w-full h-full object-cover scale-[0.94] border-4 border-zinc-900 shadow-inner hover:scale-[0.98] transition-transform duration-500"
                   style={{ transform: `rotate(${activeIndex * 25}deg)` }}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useStore } from '../context/StoreContext';
 import { Lock, Mail, Eye, EyeOff, ShieldAlert, Sparkles, AlertTriangle } from 'lucide-react';
 import { motion } from 'motion/react';
+import { supabase } from '../lib/supabase';
 
 export default function LoginView() {
   const { setIsLoggedIn, setView, showToast, profileSettings, updateProfileSettings } = useStore();
@@ -28,63 +29,71 @@ export default function LoginView() {
     }
   }, [isBlocked, setView]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    setTimeout(() => {
-      if (!isSetupComplete) {
-        // ONE-TIME SECURE INITIALIZATION SETUP
-        if (!email.trim() || !email.includes('@')) {
-          setError('Please write a valid email address.');
-          setLoading(false);
-          return;
-        }
-        if (password.length < 5) {
-          setError('For security, your password must be at least 5 characters.');
-          setLoading(false);
-          return;
-        }
+    const authorizedEmail = 'iamsojib582@gmail.com';
 
-        // Save persistent values
-        localStorage.setItem('mollywood_admin_email', email.trim().toLowerCase());
-        localStorage.setItem('mollywood_admin_password', password);
-        localStorage.setItem('mollywood_admin_setup_complete', 'true');
+    if (email.trim().toLowerCase() !== authorizedEmail) {
+      setError('You are not authorized to access the admin panel.');
+      setIsBlocked(true);
+      setLoading(false);
+      showToast('Unauthorized access attempt.', 'error');
+      return;
+    }
 
-        // Update display profile info in store
-        updateProfileSettings({
-          ...profileSettings,
-          email: email.trim().toLowerCase()
-        });
+    try {
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password: password
+      });
 
-        setIsSetupComplete(true);
+      if (authError) {
+        setError(authError.message === 'Invalid login credentials' 
+          ? 'Invalid email or password. Access denied.' 
+          : authError.message);
+        showToast('Login failed.', 'error');
+      } else if (data.user) {
         setIsLoggedIn(true);
         setView('admin-dashboard');
-        showToast('Secure one-time admin setup completed! Welcome.', 'success');
-      } else {
-        // STANDARD LOGIN GATING
-        const configuredEmail = (localStorage.getItem('mollywood_admin_email') || 'owner@mollywoodkitchen.com').trim().toLowerCase();
-        const configuredPassword = localStorage.getItem('mollywood_admin_password') || 'admin123';
-
-        const enteredEmail = email.trim().toLowerCase();
-
-        if (enteredEmail !== configuredEmail) {
-          // Gate Block Trigger!
-          setIsBlocked(true);
-          setError('UNAUTHORIZED visitor detected. Access blocked! Redirecting...');
-          showToast('Access Blocked - Redirecting to dining website.', 'error');
-        } else if (password === configuredPassword) {
-          setIsLoggedIn(true);
-          setView('admin-dashboard');
-          showToast('Welcome back, Chief Administration Officer!', 'success');
-        } else {
-          setError('Invalid password. Device access logs updated.');
-          showToast('Access denied - invalid credentials.', 'error');
-        }
+        showToast('Welcome back, Owner Shuvo!', 'success');
       }
+    } catch (err: any) {
+      setError('An unexpected error occurred during authentication.');
+    } finally {
       setLoading(false);
-    }, 1200);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email || !email.includes('@')) {
+      showToast('Please enter your authorized email first.', 'error');
+      return;
+    }
+    
+    if (email.trim().toLowerCase() !== 'iamsojib582@gmail.com') {
+      showToast('Password reset is only available for the authorized owner.', 'error');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+        redirectTo: `${window.location.origin}/#admin-reset`,
+      });
+      
+      if (resetError) {
+        showToast(resetError.message, 'error');
+      } else {
+        showToast('Reset email sent! Please check your inbox.', 'success');
+      }
+    } catch (err) {
+      showToast('Failed to send reset email.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -175,6 +184,13 @@ export default function LoginView() {
                 <label className="font-mono text-[10px] uppercase font-bold tracking-wider text-zinc-400">
                   {isSetupComplete ? 'Secret Password' : 'Setup Master Password'}
                 </label>
+                <button 
+                  type="button" 
+                  onClick={handleForgotPassword}
+                  className="text-[9px] font-mono text-gold hover:text-white uppercase tracking-tighter"
+                >
+                  Forgot Key?
+                </button>
               </div>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500">

@@ -664,7 +664,7 @@ export default function MenuManagementView() {
                           onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
                           className="accent-gold h-4 w-4 rounded border-zinc-900 bg-black"
                         />
-                        <span>Mark as signature "Popular Chef's Dish" ★</span>
+                        <span>Mark as signature "Popular Owner's Dish" ★</span>
                       </label>
                       <label className="flex items-center gap-2 text-zinc-300 text-xs cursor-pointer">
                         <input

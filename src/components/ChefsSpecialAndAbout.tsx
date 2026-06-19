@@ -4,16 +4,16 @@ import { useStore } from '../context/StoreContext';
 import { MenuItem } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 
-interface ChefsSpecialProps {
+interface OwnersSpecialProps {
   onSelectMenuItem: (item: MenuItem) => void;
 }
 
-export default function ChefsSpecialAndAbout({ onSelectMenuItem }: ChefsSpecialProps) {
-  const { menuItems, reviews } = useStore();
+export default function OwnersSpecialAndAbout({ onSelectMenuItem }: OwnersSpecialProps) {
+  const { menuItems, reviews, aboutSettings } = useStore();
   const [activeReviewIdx, setActiveReviewIdx] = useState(0);
 
-  // Get the two premium fish dishes for Chef's Special
-  const chefSpecialDishes = menuItems.filter(it => it.category === 'bengali').slice(0, 2);
+  // Get the two premium fish dishes for Owner's Special
+  const ownerSpecialDishes = menuItems.filter(it => it.category === 'bengali').slice(0, 2);
 
   // Ensure index remains in bounds when reviews list changes
   const activeReview = reviews.length > 0 ? reviews[activeReviewIdx % reviews.length] : null;
@@ -52,11 +52,11 @@ export default function ChefsSpecialAndAbout({ onSelectMenuItem }: ChefsSpecialP
             <span>OUR SIGNATURE RECIPES</span>
           </div>
           <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-widest leading-none">
-            CHEF’S SIGNATURE SPECIALS
+            OWNER’S SIGNATURE SPECIALS
           </h2>
           <div className="h-1 w-24 bg-gradient-to-r from-gold via-accent-red to-gold mx-auto rounded-full" />
         </div>        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {chefSpecialDishes.map((dish, i) => (
+          {ownerSpecialDishes.map((dish, i) => (
             <motion.div 
               key={dish.id}
               onClick={() => onSelectMenuItem(dish)}
@@ -119,15 +119,15 @@ export default function ChefsSpecialAndAbout({ onSelectMenuItem }: ChefsSpecialP
                 <span>OUR CORE STRENGTHS</span>
               </div>
               <h2 className="font-heading text-2xl sm:text-4xl font-black text-white tracking-widest leading-tight">
-                WHY GUESTS LOVE OUR KITCHEN
+                {aboutSettings.story ? "ABOUT MOLLYWOOD KITCHEN" : "WHY GUESTS LOVE OUR KITCHEN"}
               </h2>
               <p className="font-sans text-xs sm:text-sm text-zinc-400 leading-relaxed font-light">
-                We believe dining should make you feel right at home. We combine premium fresh ingredients, classic homestyle recipes, and cozy table setups to ensure a satisfying experience.
+                {aboutSettings.story || "We believe dining should make you feel right at home. We combine premium fresh ingredients, classic homestyle recipes, and cozy table setups to ensure a satisfying experience."}
               </p>
               
               <div className="border-l-2 border-gold pl-4 italic text-xs text-zinc-400 font-light mt-4">
-                "Providing clean, delicious, and pocket-friendly meals for everyone in Rangpur." 
-                <p className="text-[10px] font-bold font-mono tracking-wider text-gold not-italic mt-1.5">— Mollywood Kitchen Family</p>
+                "{aboutSettings.mission || "Providing clean, delicious, and pocket-friendly meals for everyone in Rangpur."}" 
+                <p className="text-[10px] font-bold font-mono tracking-wider text-gold not-italic mt-1.5">— {aboutSettings.founders || "Mollywood Kitchen Family"}</p>
               </div>
             </div>
 

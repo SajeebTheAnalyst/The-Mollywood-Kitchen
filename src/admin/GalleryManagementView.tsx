@@ -226,7 +226,7 @@ export default function GalleryManagementView() {
                   >
                     <option value="Ambiance">Ambiance Room Frame</option>
                     <option value="Dishes">Garnished Food Dishes</option>
-                    <option value="Kitchen">Busy Kitchen & Chefs</option>
+                    <option value="Kitchen">Busy Kitchen & Owners</option>
                   </select>
                 </div>
                 <div className="space-y-1">

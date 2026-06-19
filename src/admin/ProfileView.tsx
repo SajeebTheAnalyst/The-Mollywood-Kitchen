@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useStore, ProfileSettings } from '../context/StoreContext';
 import { Save, User, Key, Eye, EyeOff, ShieldAlert, Sparkles, CheckCircle, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { supabase } from '../lib/supabase';
 
 export default function ProfileView() {
   const { profileSettings, updateProfileSettings, showToast } = useStore();
@@ -68,37 +69,61 @@ export default function ProfileView() {
   };
 
   // Explicit verification handler
-  const handleAuthorizeAndExecute = () => {
-    const activePasskey = localStorage.getItem('mollywood_admin_password') || 'admin123';
+  const handleAuthorizeAndExecute = async () => {
+    // verification dialogue handler using real Supabase auth
+    const { data: { session } } = await supabase.auth.getSession();
     
-    if (authPasswordInput !== activePasskey) {
-      setAuthError('Incorrect master password. Verification credentials rejected.');
-      showToast('Authorization Mismatch - Changes discarded.', 'error');
+    if (!session) {
+      showToast('No active session found. Please re-login.', 'error');
       return;
     }
 
-    // Passkey approved -> apply the appropriate action
-    if (pendingAction === 'profile') {
-      updateProfileSettings(localSettings);
-      localStorage.setItem('mollywood_admin_email', localSettings.email.trim().toLowerCase());
-      showToast('Identity parameters and root email successfully synchronized!', 'success');
-    } else if (pendingAction === 'password') {
-      localStorage.setItem('mollywood_admin_password', newPassword);
-      setOldPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-      showToast('Master admin password updated successfully!', 'success');
-    }
+    try {
+      // Re-authenticate to ensure user still has access
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email: session.user.email!,
+        password: authPasswordInput
+      });
 
-    // Clean states and close
-    setIsAuthModalOpen(false);
-    setAuthPasswordInput('');
-    setPendingAction(null);
-    setAuthError(null);
+      if (authError) {
+        setAuthError('Incorrect master password. Verification credentials rejected.');
+        showToast('Authorization Mismatch - Changes discarded.', 'error');
+        return;
+      }
+
+      // Passkey approved -> apply the appropriate action
+      if (pendingAction === 'profile') {
+        updateProfileSettings(localSettings);
+        
+        // Update Supabase Auth email if it changed (Note: usually requires confirmation)
+        if (localSettings.email !== session.user.email) {
+          const { error: emailError } = await supabase.auth.updateUser({ email: localSettings.email });
+          if (emailError) throw emailError;
+        }
+        
+        showToast('Identity parameters and root email successfully synchronized!', 'success');
+      } else if (pendingAction === 'password') {
+        const { error: passError } = await supabase.auth.updateUser({ password: newPassword });
+        if (passError) throw passError;
+        
+        setOldPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        showToast('Master admin password updated successfully!', 'success');
+      }
+
+      // Clean states and close
+      setIsAuthModalOpen(false);
+      setAuthPasswordInput('');
+      setPendingAction(null);
+      setAuthError(null);
+    } catch (err: any) {
+      showToast(`Error updating credentials: ${err.message}`, 'error');
+    }
   };
 
   const avatarChoices = [
-    { gender: 'Chef / Male', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200' },
+    { gender: 'Owner / Male', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200' },
     { gender: 'Owner / Alternate', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200' }
   ];
 
@@ -130,7 +155,7 @@ export default function ProfileView() {
               className="h-16 w-16 rounded-full object-cover border border-gold/40 shadow-lg bg-zinc-900"
             />
             <div className="space-y-1.5 text-center sm:text-left">
-              <span className="text-[10px] font-mono font-bold text-gold uppercase bg-gold/10 px-2 py-0.5 rounded border border-gold/20">Executive Lead Chef</span>
+              <span className="text-[10px] font-mono font-bold text-gold uppercase bg-gold/10 px-2 py-0.5 rounded border border-gold/20">Executive Lead Owner</span>
               <h4 className="text-sm font-bold text-zinc-100">{localSettings.ownerName || 'S. S. Shuvo'}</h4>
               <p className="text-[10px] text-zinc-500 font-mono tracking-wider">{localSettings.email || 'owner@mollywoodkitchen.com'}</p>
             </div>
