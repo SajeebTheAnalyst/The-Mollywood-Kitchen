@@ -60,31 +60,30 @@ export default function MenuSection({
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-center space-y-4 mb-16"
         >
-          <div className="inline-flex items-center space-x-1.5 bg-zinc-900 border border-gold/20 px-3 py-1 rounded-full text-[10px] font-bold text-gold tracking-widest uppercase">
-            <Sparkles className="h-3 w-3" />
-            <span>Mouthwatering Selection</span>
+          <div className="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-sm text-[10px] font-bold text-text-secondary tracking-[0.3em] uppercase">
+            <Sparkles className="h-3 w-3 text-gold" />
+            <span>Signature Collection</span>
           </div>
-          <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-widest leading-none">
-            OUR FRESH MENU
+          <h2 className="font-heading text-4xl sm:text-5xl md:text-6xl font-black text-text-primary tracking-tight leading-none uppercase">
+            Our <span className="text-gold italic font-normal">Kitchen</span> Menu
           </h2>
-          <div className="h-1 w-24 bg-gradient-to-r from-gold via-accent-red to-gold mx-auto rounded-full" />
-          <p className="font-sans text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto font-light leading-relaxed">
+          <p className="font-sans text-sm sm:text-base text-text-secondary max-w-xl mx-auto font-light leading-relaxed">
             Discover our rich variety of freshly prepared Bengali, Indian, Chinese, and fast-food favorites cooked with premium ingredients and authentic spices.
           </p>
         </motion.div>
 
         {/* Category Navigation - Highly Responsive, Centered Flex-Wrap */}
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8 w-full">
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-10 w-full">
           {categories.map((c) => (
             <motion.button
               key={c.id}
               onClick={() => setSelectedCategory(c.id)}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              className={`py-2.5 px-3 sm:px-5 rounded-xl text-[11px] sm:text-xs font-black tracking-wider uppercase transition-all duration-300 cursor-pointer border ${
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className={`py-3 px-6 rounded-sm text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer border ${
                 selectedCategory === c.id
-                  ? 'bg-gradient-to-r from-gold to-gold-dark text-black border-gold shadow-lg shadow-gold/10 scale-[1.02]'
-                  : 'bg-zinc-950/80 text-zinc-400 border-zinc-900 hover:text-white hover:border-zinc-700'
+                  ? 'bg-gold text-black border-gold shadow-xl shadow-gold/10'
+                  : 'bg-transparent text-text-secondary border-white/10 hover:text-text-primary hover:border-white/30'
               }`}
             >
               {c.label}
@@ -151,30 +150,27 @@ export default function MenuSection({
                   transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   key={item.id}
                   id={`menu-card-${item.id}`}
-                  className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-zinc-950/80 border border-zinc-900/80 hover:border-gold/30 hover:bg-zinc-900/30 transition-all duration-500 p-4 sm:p-5 card-cinematic-bg "
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-sm bg-zinc-950 border border-white/5 hover:border-gold/30 hover:bg-zinc-900/50 transition-all duration-500 p-4"
                 >
                 
                 {/* Visual Thumbnail Plate Header */}
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-zinc-900 mb-4 cursor-pointer" onClick={() => onSelectMenuItem(item)}>
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm bg-zinc-900 mb-4 cursor-pointer" onClick={() => onSelectMenuItem(item)}>
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="h-full w-full object-cover group-hover:scale-[1.04] transition-transform duration-700 pointer-events-none"
+                    className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none"
                     referrerPolicy="no-referrer"
                   />
                   
-                  {/* Gradients to keep clean overlay on photo edges */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/70 via-transparent to-transparent opacity-80 pointer-events-none" />
-
                   {/* Rating Badge */}
-                  <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-sm border border-zinc-800/80 py-1 px-2 rounded-lg flex items-center space-x-1">
-                    <Star className="h-3.5 w-3.5 fill-gold text-gold" />
-                    <span className="text-[11px] font-mono font-bold text-white">{item.rating}</span>
+                  <div className="absolute top-3 left-3 bg-black/80 backdrop-blur-sm px-2 py-1 rounded-sm flex items-center space-x-1">
+                    <Star className="h-3 w-3 fill-gold text-gold" />
+                    <span className="text-[10px] font-bold text-white tracking-widest">{item.rating}</span>
                   </div>
 
                   {/* Spice Level Overlay */}
                   {item.spiceLevel > 0 && (
-                    <div className={`absolute bottom-3 left-3 px-2 py-0.8 rounded text-[9px] font-bold tracking-wide uppercase flex items-center space-x-1 ${getSpiceStyle(item.spiceLevel)}`}>
+                    <div className={`absolute bottom-3 left-3 px-2 py-1 rounded-sm text-[8px] font-bold tracking-[0.2em] uppercase flex items-center space-x-1 ${getSpiceStyle(item.spiceLevel)}`}>
                       <Flame className="h-3 w-3" />
                       <span>{getSpiceLabel(item.spiceLevel)}</span>
                     </div>
@@ -182,59 +178,50 @@ export default function MenuSection({
 
                   {/* Popular Badge */}
                   {item.popular && (
-                    <span className="absolute top-3 right-3 bg-gradient-to-r from-gold to-gold-dark text-neutral-900 text-[9px] font-black px-2.5 py-0.8 rounded tracking-widest uppercase shadow-lg">
-                      POPULAR
+                    <span className="absolute top-3 right-3 bg-gold text-black text-[8px] font-black px-2 py-1 rounded-sm tracking-[0.3em] uppercase">
+                      Signature
                     </span>
                   )}
                 </div>
 
                 {/* Card description layout details */}
-                <div className="space-y-2.5 flex-1 flex flex-col justify-between">
+                <div className="space-y-4 flex-1 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-heading text-sm md:text-base font-bold text-zinc-100 group-hover:text-gold tracking-wide uppercase truncate">
-                        {item.name}
-                      </h3>
-                    </div>
-                    <p className="font-sans text-xs text-zinc-400 leading-relaxed font-light line-clamp-2 mt-1 min-h-[32px]">
+                    <h3 className="font-heading text-base font-bold text-text-primary group-hover:text-gold tracking-widest uppercase truncate transition-colors">
+                      {item.name}
+                    </h3>
+                    <p className="font-sans text-xs text-text-secondary leading-relaxed font-light line-clamp-2 mt-2">
                       {item.description}
                     </p>
                   </div>
 
                   {/* Actions & pricing footer */}
-                  <div className="flex items-center justify-between pt-3 border-t border-zinc-900">
-                    <span className="font-mono text-base font-black text-gold">
+                  <div className="flex items-center justify-between pt-4 border-t border-white/5">
+                    <span className="font-heading text-lg font-bold text-gold">
                       ৳{item.price.toLocaleString()}
                     </span>
 
                     {/* Quick detail selector CTA */}
-                    <div className="flex items-center space-x-1.5">
+                    <div className="flex items-center space-x-3">
                       <button
                         onClick={() => onSelectMenuItem(item)}
-                        className="px-3.5 py-2.5 rounded-lg border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-[10px] font-bold uppercase tracking-wider transition-colors"
+                        className="text-text-secondary hover:text-white text-[9px] font-bold uppercase tracking-[0.2em] transition-colors underline underline-offset-4"
                       >
                         Details
                       </button>
                       
-                      {/* High speed instant checkout action (Default: Spice layer 1 / medium defaults) */}
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                         onClick={() => {
                           onQuickAddToCart(item, item.spiceLevel, 1);
-                          // Trigger mini success bubble
-                          const card = document.getElementById(`menu-card-${item.id}`);
-                          if (card) {
-                            card.classList.add('ring-1', 'ring-emerald-500/80');
-                            setTimeout(() => card.classList.remove('ring-1', 'ring-emerald-500/80'), 1000);
-                          }
                         }}
-                        className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-950 border border-zinc-900 text-zinc-400 hover:bg-accent-red hover:text-white hover:border-accent-red transition-all duration-300"
-                        title="Quick add (Standard spice)"
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-gold/10 border border-gold/20 text-gold hover:bg-gold hover:text-black transition-all duration-300 shadow-lg shadow-gold/5"
                       >
-                        <ShoppingCart className="h-4 w-4" />
-                      </button>
+                        <ShoppingCart className="h-4.5 w-4.5" />
+                      </motion.button>
                     </div>
                   </div>
-
                 </div>
 
               </motion.div>

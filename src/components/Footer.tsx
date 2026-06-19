@@ -52,21 +52,23 @@ export default function Footer({ setActiveTab }: FooterProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 border-b border-zinc-900 pb-12 items-center">
           
           {/* Logo brand */}
-          <div className="lg:col-span-5 text-left space-y-4">
-            <div className="flex items-center space-x-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-gold/40 bg-zinc-950 overflow-hidden">
+          <div className="lg:col-span-5 text-left space-y-6">
+            <div className="flex items-center space-x-3">
+              <div className="flex h-14 w-14 items-center justify-center overflow-hidden">
                 {websiteSettings.logo ? (
-                  <img src={websiteSettings.logo} alt="Logo" className="h-full w-full object-cover" />
+                  <img src={websiteSettings.logo} alt="Mollywood Kitchen Logo" className="h-full w-full object-contain" />
                 ) : (
-                  <Utensils className="h-4.5 w-4.5 text-gold" />
+                  <div className="h-10 w-10 border border-gold rounded-full flex items-center justify-center">
+                    <Utensils className="h-4.5 w-4.5 text-gold" />
+                  </div>
                 )}
               </div>
-              <div className="flex flex-col">
-                <span className="font-heading text-base font-black tracking-widest text-gold-metallic">
-                  {websiteSettings.footerText || "MOLLYWOOD KITCHEN"}
+              <div className="flex flex-col border-l border-white/10 pl-3">
+                <span className="font-heading text-xl font-bold tracking-[.2em] text-gold leading-none uppercase">
+                  Mollywood
                 </span>
-                <span className="font-sans text-[10px] font-bold tracking-[0.35em] text-zinc-400 leading-none uppercase">
-                  {contactSettings.restaurantName ? contactSettings.restaurantName.split(' ')[1] || "KITCHEN" : "KITCHEN"}
+                <span className="font-sans text-[9px] font-bold tracking-[.5em] text-text-secondary leading-none uppercase mt-1">
+                  Kitchen
                 </span>
               </div>
             </div>
@@ -81,10 +83,10 @@ export default function Footer({ setActiveTab }: FooterProps) {
 
           {/* Newsletter Box */}
           <div className="lg:col-span-6 w-full text-left space-y-3">
-            <h4 className="text-xs font-bold text-zinc-200 tracking-wider uppercase font-mono">
+            <h4 className="text-xs font-bold text-text-secondary tracking-wider uppercase font-mono">
               SUBSCRIBE TO OUR NEWSLETTER
             </h4>
-            <p className="text-[11px] text-zinc-500 font-light">
+            <p className="text-[11px] text-text-secondary font-light">
               Get recipes specials, family weekend fest announcements, and special promo discounts straight to your inbox.
             </p>
 

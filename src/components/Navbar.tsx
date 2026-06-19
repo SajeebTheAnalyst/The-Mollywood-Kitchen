@@ -101,26 +101,27 @@ export default function Navbar({
           {/* Logo Brand Custom Wordmark */}
           <motion.div 
             onClick={() => handleNavClick('home')} 
-            className="flex cursor-pointer items-center space-x-2"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
+            className="flex cursor-pointer items-center space-x-3"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             transition={{ type: 'spring', stiffness: 450, damping: 25 }}
           >
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-full border border-gold/40 bg-zinc-950 p-1 shadow-md shadow-gold/10 overflow-hidden">
+            <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden">
               {websiteSettings.logo ? (
-                <img src={websiteSettings.logo} alt="Logo" className="h-full w-full object-cover" />
+                <img src={websiteSettings.logo} alt="Mollywood Kitchen Logo" className="h-full w-full object-contain" />
               ) : (
-                <Film className="h-5 w-5 text-gold animate-pulse" />
+                <div className="h-10 w-10 border border-gold rounded-full flex items-center justify-center">
+                  <Film className="h-5 w-5 text-gold animate-pulse" />
+                </div>
               )}
-              <div className="absolute -inset-0.5 rounded-full border border-accent-red/30 animate-ping opacity-25 pointer-events-none" />
             </div>
             
-            <div className="flex flex-col">
-              <span className="font-heading text-lg font-black tracking-widest text-gold-metallic leading-none drop-shadow-sm uppercase">
-                {websiteSettings.footerText ? websiteSettings.footerText.split(' ')[0] : "THE MOLLYWOOD"}
+            <div className="flex flex-col border-l border-white/10 pl-3">
+              <span className="font-heading text-xl font-bold tracking-[.2em] text-gold leading-none uppercase">
+                Mollywood
               </span>
-              <span className="font-sans text-xs font-bold tracking-[0.35em] text-white leading-none uppercase">
-                {contactSettings.restaurantName ? contactSettings.restaurantName.split(' ')[1] || "KITCHEN" : "KITCHEN"}
+              <span className="font-sans text-[9px] font-bold tracking-[.5em] text-text-secondary leading-none uppercase mt-1">
+                Kitchen
               </span>
             </div>
           </motion.div>
