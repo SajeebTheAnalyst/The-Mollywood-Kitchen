@@ -28,7 +28,7 @@ export default function Hero({
           <div className="absolute bottom-[10%] left-[-5%] w-[30rem] h-[30rem] rounded-full bg-gold/5 blur-[100px]" />
         </div>
 
-        <div className="mx-auto max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10">
+        <div className="mx-auto max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 lg:gap-0 items-center z-10">
           {/* Left Content */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
@@ -62,28 +62,16 @@ export default function Hero({
               </div>
             </div>
 
-            {/* Review Section Placeholder */}
-            <div className="flex flex-col space-y-2 pt-4">
-              <span className="text-[10px] font-bold tracking-[0.2em] text-text-secondary uppercase">
-                Reviews
-              </span>
-              <div className="flex items-center space-x-1">
-                <div className="flex -space-x-3 mr-4">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-10 w-10 rounded-full border-2 border-bg-premium overflow-hidden bg-zinc-800">
-                      <img src={`https://i.pravatar.cc/100?u=r${i}`} alt="Reviewer" className="h-full w-full object-cover" />
-                    </div>
-                  ))}
-                  <div className="h-10 w-10 rounded-full border-2 border-bg-premium bg-zinc-900 flex items-center justify-center text-[10px] font-bold text-zinc-400">
-                    45+
-                  </div>
-                </div>
-                <div className="flex space-x-1">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} className="h-4 w-4 text-gold fill-current" />
-                  ))}
-                </div>
+            {/* Review Section (Simplified) */}
+            <div className="flex flex-col space-y-2">
+              <div className="flex space-x-1">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star key={s} className="h-4 w-4 text-gold fill-current" />
+                ))}
               </div>
+              <span className="text-[11px] font-bold tracking-[0.2em] text-text-secondary uppercase">
+                Top Rated Dining
+              </span>
             </div>
           </motion.div>
 
@@ -92,7 +80,7 @@ export default function Hero({
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1 }}
-            className="lg:col-span-6 flex justify-center lg:justify-end"
+            className="lg:col-span-6 flex justify-center lg:justify-start"
           >
             <div className="relative w-full max-w-[350px] lg:max-w-[700px] aspect-square rounded-full border-[1.5rem] lg:border-[2.5rem] border-white/5 overflow-hidden shadow-2xl flex-shrink-0">
               <img
@@ -107,12 +95,11 @@ export default function Hero({
       </section>
 
       {/* 2. FEATURED ITEMS SECTION (Below Hero) */}
-      <section className="relative z-20 bg-bg-premium py-20 lg:py-32 px-4 sm:px-6 lg:px-8 border-t border-white/5">
+      <section className="relative z-20 bg-bg-premium py-20 lg:py-32 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col space-y-12">
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center">
               <span className="text-[10px] tracking-[0.4em] text-text-secondary uppercase whitespace-nowrap">Signature Selection</span>
-              <div className="h-[1px] w-full bg-white/10" />
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 overflow-x-auto lg:overflow-visible pb-10 lg:pb-0 no-scrollbar snap-x">
