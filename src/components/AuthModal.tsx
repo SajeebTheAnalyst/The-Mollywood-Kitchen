@@ -11,7 +11,7 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
-  const { showToast, signUpCustomer } = useStore();
+  const { showToast, signUpCustomer, logInCustomer } = useStore();
   const [authTab, setAuthTab] = useState<'signup' | 'login'>('signup');
   const [authName, setAuthName] = useState('');
   const [authEmail, setAuthEmail] = useState('');
@@ -35,6 +35,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           options: { data: { full_name: authName } },
         });
         if (error) throw error;
+        signUpCustomer(authName || authEmail.split('@')[0], authEmail);
         showToast('Successfully signed up! Please verify your email.', 'success');
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -42,6 +43,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           password: authPassword,
         });
         if (error) throw error;
+        logInCustomer(authEmail.split('@')[0], authEmail);
         showToast('Successfully logged in!', 'success');
       }
       onClose();
@@ -52,9 +54,24 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     }
   };
 
-  const handleOAuth = async (provider: 'google' | 'facebook' | 'instagram') => {
-    // This is placeholder logic, requires Supabase provider configuration.
-    showToast(`OAuth ${provider} not fully configured in preview.`);
+  const handleOAuth = async (provider: 'google' | 'facebook') => {
+    try {
+      setAuthLoading(true);
+      
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: window.location.origin + '/auth/callback'
+        }
+      });
+      
+      if (error) throw error;
+      
+    } catch (error: any) {
+      showToast(`OAuth Error: ${error.message}`, 'error');
+    } finally {
+      setAuthLoading(false);
+    }
   };
 
   if (!mounted) return null;
@@ -199,7 +216,6 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             <div className="space-y-3 relative z-10">
               <button onClick={() => handleOAuth('google')} type="button" className="w-full py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-bold hover:-translate-y-[3px] hover:shadow-[0_0_12px_1px_rgba(212,175,55,0.4)] hover:border-gold/30 transition-all duration-300 ease-out">Continue with Google</button>
               <button onClick={() => handleOAuth('facebook')} type="button" className="w-full py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-bold hover:-translate-y-[3px] hover:shadow-[0_0_12px_1px_rgba(212,175,55,0.4)] hover:border-gold/30 transition-all duration-300 ease-out">Continue with Facebook</button>
-              <button onClick={() => handleOAuth('instagram')} type="button" className="w-full py-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white text-sm font-bold hover:-translate-y-[3px] hover:shadow-[0_0_12px_1px_rgba(212,175,55,0.4)] hover:border-gold/30 transition-all duration-300 ease-out">Continue with Instagram</button>
             </div>
           </motion.div>
         </>
