@@ -205,17 +205,23 @@ export default function Hero({
       {/* 2. FEATURED ITEMS SECTION (Below Hero) */}
       <section className="relative z-20 bg-bg-premium py-20 lg:py-32 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col space-y-12">
+          <div className="flex flex-col">
             <div className="flex items-center justify-between mb-8">
               <span className="text-[10px] tracking-[0.4em] text-text-secondary uppercase whitespace-nowrap">Signature Selection</span>
             </div>
             
-              <div className="relative w-full group py-4">
+            <div className="relative w-full overflow-hidden py-4">
+              <style dangerouslySetInnerHTML={{__html: `
+                .hide-scrollbar::-webkit-scrollbar {
+                  display: none;
+                }
+              `}} />
+
               {/* Left Navigation Arrow */}
               {highlightDishes.length > 4 && (
                 <button 
                   onClick={() => scroll('left')} 
-                  className="absolute top-1/2 -translate-y-1/2 -left-4 md:-left-6 z-10 w-12 h-12 bg-black/70 border border-white/10 text-white rounded-full flex items-center justify-center hover:bg-gold hover:text-black transition-all shadow-xl opacity-0 group-hover:opacity-100"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/80 border border-gold/40 text-white flex items-center justify-center cursor-pointer hover:scale-110 shadow-lg transition-all"
                 >
                   <ArrowLeft className="h-5 w-5" />
                 </button>
@@ -223,7 +229,7 @@ export default function Hero({
 
               <div 
                 ref={scrollRef}
-                className="flex overflow-x-auto gap-6 sm:gap-8 snap-x scroll-smooth no-scrollbar px-4 md:px-8 py-4"
+                className="flex overflow-x-auto scroll-smooth snap-x snap-mandatory gap-4 hide-scrollbar px-1 py-4"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
                 {highlightDishes.map((dish) => (
@@ -231,14 +237,19 @@ export default function Hero({
                     key={dish.id}
                     whileHover={{ y: -8 }}
                     onClick={() => onSelectMenuItem(dish)}
-                    className="shrink-0 w-[280px] sm:w-[320px] lg:w-[360px] bg-zinc-900/40 backdrop-blur-md rounded-3xl p-6 border border-white/5 cursor-pointer flex flex-col shadow-2xl snap-center relative overflow-hidden group/card"
+                    className="flex-shrink-0 snap-start w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(25%-0.75rem)] bg-zinc-950 border border-zinc-900 rounded-3xl p-5 sm:p-6 cursor-pointer flex flex-col shadow-2xl relative overflow-hidden group/card"
                   >
-                    <div className="aspect-[4/3] w-full rounded-2xl overflow-hidden mb-6 bg-zinc-950 flex items-center justify-center border border-white/5 relative">
-                      <img src={dish.image} alt={dish.name} className="h-full w-full object-cover transition-transform duration-700 group-hover/card:scale-105 opacity-90 group-hover/card:opacity-100" />
+                    <div className="aspect-[4/3] w-full rounded-2xl overflow-hidden mb-6 bg-zinc-900 flex items-center justify-center border border-zinc-800/60 relative">
+                      <img 
+                        src={dish.image} 
+                        alt={dish.name} 
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover/card:scale-105 opacity-90 group-hover/card:opacity-100" 
+                        referrerPolicy="no-referrer"
+                      />
                     </div>
                     <div className="flex-1 flex flex-col justify-between">
                       <div className="space-y-3">
-                        <h4 className="text-xl sm:text-2xl font-heading font-bold text-white leading-tight">{dish.name}</h4>
+                        <h4 className="text-lg sm:text-xl font-heading font-bold text-white leading-tight group-hover/card:text-gold transition-colors duration-300">{dish.name}</h4>
                         <p className="text-xs sm:text-sm text-zinc-400 line-clamp-2 leading-relaxed">{dish.description || 'Premium House Specialty'}</p>
                       </div>
                       <div className="flex items-center justify-between mt-8">
@@ -256,7 +267,7 @@ export default function Hero({
               {highlightDishes.length > 4 && (
                 <button 
                   onClick={() => scroll('right')} 
-                  className="absolute top-1/2 -translate-y-1/2 -right-4 md:-right-6 z-10 w-12 h-12 bg-black/70 border border-white/10 text-white rounded-full flex items-center justify-center hover:bg-gold hover:text-black transition-all shadow-xl opacity-0 group-hover:opacity-100"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/80 border border-gold/40 text-white flex items-center justify-center cursor-pointer hover:scale-110 shadow-lg transition-all"
                 >
                   <ArrowRight className="h-5 w-5" />
                 </button>

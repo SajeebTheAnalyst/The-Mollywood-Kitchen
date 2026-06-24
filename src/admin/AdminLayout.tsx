@@ -57,7 +57,7 @@ export default function AdminLayout() {
   // Unified items list
   const navigationItems: SidebarItem[] = [
     { id: 'dashboard', label: 'Overview Dashboard', icon: LayoutDashboard, component: DashboardView },
-    { id: 'signature', label: 'Signature Selection', icon: Star, component: SignatureManagementView },
+    { id: 'signature', label: 'Signature Panel', icon: Star, component: SignatureManagementView },
     { id: 'supabase', label: 'Supabase Database', icon: Database, component: SupabaseSettingsView },
     { id: 'menu', label: 'Recipes Catalog', icon: UtensilsCrossed, component: MenuManagementView },
     { id: 'offers', label: 'Specials & Coupons', icon: Tag, component: OffersManagementView },
