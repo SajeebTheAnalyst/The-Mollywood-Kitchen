@@ -73,7 +73,8 @@ export default function MenuManagementView() {
     specialty: '',
     popular: false,
     featured: false,
-    available: true
+    available: true,
+    is_special: false
   });
 
   // Load editing state details on edit click
@@ -92,7 +93,8 @@ export default function MenuManagementView() {
       specialty: 'Cozy and home-cooked savory taste',
       popular: false,
       featured: false,
-      available: true
+      available: true,
+      is_special: false
     });
     setIsFormOpen(true);
   };
@@ -121,7 +123,8 @@ export default function MenuManagementView() {
       specialty: item.specialty || '',
       popular: item.popular || false,
       featured: item.popular && item.price > 200, // mock featured mapping
-      available: true
+      available: true,
+      is_special: item.is_special || false
     });
     setIsFormOpen(true);
   };
@@ -172,6 +175,7 @@ export default function MenuManagementView() {
       spiceLevel: formData.spiceLevel,
       specialty: formData.specialty.trim() || 'Cozy savory specialty',
       popular: formData.popular,
+      is_special: formData.is_special,
       rating: 5
     };
 
@@ -668,6 +672,15 @@ export default function MenuManagementView() {
                           className="accent-gold h-4 w-4 rounded border-zinc-900 bg-black"
                         />
                         <span>Mark as signature "Popular Owner's Dish" ★</span>
+                      </label>
+                      <label className="flex items-center gap-2 text-zinc-300 text-xs cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.is_special}
+                          onChange={(e) => setFormData({ ...formData, is_special: e.target.checked })}
+                          className="accent-gold h-4 w-4 rounded border-zinc-900 bg-black"
+                        />
+                        <span>Mark as "Special Food" (Glow Animation) 🌟</span>
                       </label>
                       <label className="flex items-center gap-2 text-zinc-300 text-xs cursor-pointer">
                         <input

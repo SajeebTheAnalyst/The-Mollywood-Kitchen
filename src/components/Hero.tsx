@@ -20,34 +20,23 @@ export default function Hero({
   const [highlightDishes, setHighlightDishes] = useState<MenuItem[]>([]);
 
   useEffect(() => {
-    const fetchSpecialDishes = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('menu_items')
-          .select('*')
-          .eq('is_special', true)
-          .order('created_at', { ascending: false })
-          .limit(4);
-
-        if (!error && data && data.length > 0) {
-          setHighlightDishes(data);
-        } else {
-          setHighlightDishes(menuItems.filter(it => it.popular).slice(0, 4));
-        }
-      } catch (err) {
-        setHighlightDishes(menuItems.filter(it => it.popular).slice(0, 4));
-      }
-    };
-    
-    fetchSpecialDishes();
+    // Dynamically filter items where is_special is true
+    const specialDishes = menuItems.filter(it => it.is_special);
+    if (specialDishes.length > 0) {
+      // Sort to mimic "latest" or just take first 4
+      setHighlightDishes(specialDishes.slice(0, 4));
+    } else {
+      // Fallback if no special dishes are marked
+      setHighlightDishes(menuItems.filter(it => it.popular).slice(0, 4));
+    }
   }, [menuItems]);
 
   return (
     <>
       <style>{`
         @keyframes pulseGlow {
-          0%, 100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.2); border-color: rgba(212, 175, 55, 0.4); }
-          50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.6); border-color: rgba(212, 175, 55, 1); }
+          0%, 100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.2) !important; border-color: rgba(212, 175, 55, 0.4) !important; }
+          50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.6) !important; border-color: rgba(212, 175, 55, 1) !important; }
         }
         .special-card-glow {
           animation: pulseGlow 3s infinite ease-in-out;

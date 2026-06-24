@@ -10,6 +10,7 @@ export interface MenuItem {
   ingredients: string[];
   spiceLevel: number; // 0 = none, 1 = mild, 2 = medium, 3 = spicy
   specialty: string;
+  is_special?: boolean;
 }
 
 export interface OfferItem {
