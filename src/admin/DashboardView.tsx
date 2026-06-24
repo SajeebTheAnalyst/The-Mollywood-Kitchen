@@ -33,21 +33,21 @@ export default function DashboardView({ onSetActiveSection }: DashboardViewProps
   } = useStore();
 
   // Calculations
-  const totalMenu = menuItems.length;
-  const activeOffers = offers.length;
-  const totalReservations = reservations.length;
-  const totalGallery = galleryItems.length;
+  const totalMenu = (menuItems || []).length;
+  const activeOffers = (offers || []).length;
+  const totalReservations = (reservations || []).length;
+  const totalGallery = (galleryItems || []).length;
 
   // Let's filter today's reservations
   const todayStr = new Date().toISOString().split('T')[0];
-  const todaysReservations = reservations.filter(r => r.date === todayStr || r.date === '2026-06-18');
+  const todaysReservations = (reservations || []).filter(r => r.date === todayStr || r.date === '2026-06-18');
   const countTodayReservations = todaysReservations.length;
 
   // Recent 4 reservations
-  const recentReservations = reservations.slice(0, 4);
+  const recentReservations = (reservations || []).slice(0, 4);
 
   // Recent 3 menu additions
-  const recentMenu = menuItems.slice(0, 3);
+  const recentMenu = (menuItems || []).slice(0, 3);
 
   const stats = [
     {
@@ -120,9 +120,9 @@ export default function DashboardView({ onSetActiveSection }: DashboardViewProps
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">REAL-TIME OPERATIONAL ANALYTICS</span>
           </div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-bold text-white tracking-wide mt-1">Hello, {profileSettings.ownerName}</h1>
+          <h1 className="font-heading text-2xl sm:text-3xl font-bold text-white tracking-wide mt-1">Hello, {profileSettings?.ownerName || 'Lead Owner'}</h1>
           <p className="text-xs text-zinc-400 mt-1 font-light">
-            You have full cloud visibility over {contactSettings.restaurantName} database.
+            You have full cloud visibility over {contactSettings?.restaurantName || 'the'} database.
           </p>
         </div>
 

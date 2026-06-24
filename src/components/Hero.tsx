@@ -210,41 +210,41 @@ export default function Hero({
               <span className="text-[10px] tracking-[0.4em] text-text-secondary uppercase whitespace-nowrap">Signature Selection</span>
             </div>
             
-            <div className="relative w-full group">
+              <div className="relative w-full group py-4">
               {/* Left Navigation Arrow */}
               {highlightDishes.length > 4 && (
                 <button 
                   onClick={() => scroll('left')} 
-                  className="absolute top-1/2 -translate-y-1/2 left-0 z-10 w-12 h-12 bg-black/70 text-white rounded-full flex items-center justify-center hover:scale-110 transition opacity-0 group-hover:opacity-100"
+                  className="absolute top-1/2 -translate-y-1/2 -left-4 md:-left-6 z-10 w-12 h-12 bg-black/70 border border-white/10 text-white rounded-full flex items-center justify-center hover:bg-gold hover:text-black transition-all shadow-xl opacity-0 group-hover:opacity-100"
                 >
-                  <ArrowLeft className="h-6 w-6" />
+                  <ArrowLeft className="h-5 w-5" />
                 </button>
               )}
 
               <div 
                 ref={scrollRef}
-                className="flex overflow-x-auto gap-4 snap-x scroll-smooth no-scrollbar"
+                className="flex overflow-x-auto gap-6 sm:gap-8 snap-x scroll-smooth no-scrollbar px-4 md:px-8 py-4"
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
                 {highlightDishes.map((dish) => (
                   <motion.div
                     key={dish.id}
-                    whileHover={{ y: -10 }}
+                    whileHover={{ y: -8 }}
                     onClick={() => onSelectMenuItem(dish)}
-                    className="shrink-0 min-w-[280px] w-[calc(100%-1rem)] sm:w-[calc(50%-1rem)] md:w-[calc(33.33%-1rem)] lg:w-[calc(25%-1rem)] bg-zinc-900/40 backdrop-blur-md rounded-[2.5rem] p-6 border border-white/5 cursor-pointer flex flex-col shadow-2xl snap-center h-full"
+                    className="shrink-0 w-[280px] sm:w-[320px] lg:w-[360px] bg-zinc-900/40 backdrop-blur-md rounded-3xl p-6 border border-white/5 cursor-pointer flex flex-col shadow-2xl snap-center relative overflow-hidden group/card"
                   >
-                    <div className="aspect-square w-full rounded-[2rem] overflow-hidden mb-6 bg-zinc-950 group-hover:bg-zinc-900">
-                      <img src={dish.image} alt={dish.name} className="h-full w-full object-contain transition-transform duration-700 hover:scale-110" />
+                    <div className="aspect-[4/3] w-full rounded-2xl overflow-hidden mb-6 bg-zinc-950 flex items-center justify-center border border-white/5 relative">
+                      <img src={dish.image} alt={dish.name} className="h-full w-full object-cover transition-transform duration-700 group-hover/card:scale-105 opacity-90 group-hover/card:opacity-100" />
                     </div>
                     <div className="flex-1 flex flex-col justify-between">
-                      <div className="space-y-2">
-                        <h4 className="text-xl font-bold text-white line-clamp-1">{dish.name}</h4>
-                        <p className="text-sm text-zinc-400 line-clamp-2 italic">{dish.description || 'Premium House Specialty'}</p>
+                      <div className="space-y-3">
+                        <h4 className="text-xl sm:text-2xl font-heading font-bold text-white leading-tight">{dish.name}</h4>
+                        <p className="text-xs sm:text-sm text-zinc-400 line-clamp-2 leading-relaxed">{dish.description || 'Premium House Specialty'}</p>
                       </div>
                       <div className="flex items-center justify-between mt-8">
-                        <span className="text-2xl font-bold text-accent-red font-mono">৳{dish.price}</span>
-                        <button className="h-12 w-12 rounded-full bg-accent-red flex items-center justify-center text-white shadow-lg transition-all hover:scale-110 active:scale-95 shadow-accent-red/20">
-                          <ShoppingCart className="h-5 w-5" />
+                        <span className="text-xl sm:text-2xl font-mono text-gold tracking-tighter">৳{dish.price}</span>
+                        <button className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-gold/10 text-gold flex items-center justify-center transition-all hover:bg-gold hover:text-black group-hover/card:scale-105 active:scale-95 border border-gold/20">
+                          <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
                         </button>
                       </div>
                     </div>
@@ -256,9 +256,9 @@ export default function Hero({
               {highlightDishes.length > 4 && (
                 <button 
                   onClick={() => scroll('right')} 
-                  className="absolute top-1/2 -translate-y-1/2 right-0 z-10 w-12 h-12 bg-black/70 text-white rounded-full flex items-center justify-center hover:scale-110 transition opacity-0 group-hover:opacity-100"
+                  className="absolute top-1/2 -translate-y-1/2 -right-4 md:-right-6 z-10 w-12 h-12 bg-black/70 border border-white/10 text-white rounded-full flex items-center justify-center hover:bg-gold hover:text-black transition-all shadow-xl opacity-0 group-hover:opacity-100"
                 >
-                  <ArrowRight className="h-6 w-6" />
+                  <ArrowRight className="h-5 w-5" />
                 </button>
               )}
             </div>

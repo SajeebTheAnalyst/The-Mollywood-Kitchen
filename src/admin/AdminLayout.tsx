@@ -258,12 +258,12 @@ export default function AdminLayout() {
           {/* User status capsule */}
           <div className="flex items-center gap-3 bg-zinc-950/80 border border-zinc-900 p-1.5 pr-3 rounded-full hover:border-gold/30 transition-all select-none">
             <img 
-              src={profileSettings.profilePhoto || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150'} 
+              src={profileSettings?.profilePhoto || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150'} 
               alt="Avatar Profile" 
               className="h-7 w-7 rounded-full object-cover shrink-0 bg-zinc-900 border border-zinc-800" 
             />
             <div className="hidden sm:flex flex-col">
-              <span className="text-[10px] font-black text-zinc-200 leading-none truncate max-w-[120px]">{profileSettings.ownerName}</span>
+              <span className="text-[10px] font-black text-zinc-200 leading-none truncate max-w-[120px]">{profileSettings?.ownerName || 'Lead Owner'}</span>
               <span className="text-[8px] font-mono text-gold font-bold tracking-wider uppercase mt-1">Lead Owner</span>
             </div>
             <span className="h-2 w-2 rounded-full bg-emerald-500 border border-black shadow" title="Session authorized" />
