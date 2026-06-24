@@ -341,25 +341,43 @@ export default function OffersManagementView() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Campaign Subhead</label>
-                  <input
-                    type="text"
-                    value={formData.tagline}
-                    onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
-                    placeholder="e.g. Spend flat 1000 BDT or above and claim dessert."
-                    className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none"
-                  />
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Campaign Subhead</label>
+                    <input
+                      type="text"
+                      value={formData.tagline}
+                      onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
+                      placeholder="e.g. Spend flat 1000 BDT or above and claim dessert."
+                      className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Campaign Photo URL</label>
+                    <input
+                      type="url"
+                      value={formData.image}
+                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                      placeholder="Paste unsplash graphic link or equivalent..."
+                      className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono"
+                    />
+                  </div>
                 </div>
+                {/* Live Preview */}
                 <div className="space-y-1">
-                  <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Campaign Photo URL</label>
-                  <input
-                    type="url"
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    placeholder="Paste unsplash graphic link or equivalent..."
-                    className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono"
-                  />
+                  <span className="text-[9px] font-mono uppercase font-bold text-zinc-500 block">Live Photo Preview</span>
+                  <div className="w-full h-32 rounded-xl bg-zinc-950 border border-zinc-900 flex items-center justify-center overflow-hidden p-2">
+                    {formData.image ? (
+                      <img 
+                        src={formData.image} 
+                        alt="Preview" 
+                        className="h-full w-full object-contain" 
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                    ) : (
+                      <span className="text-zinc-600 text-xs italic">No image provided</span>
+                    )}
+                  </div>
                 </div>
               </div>
 

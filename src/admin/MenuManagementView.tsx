@@ -696,15 +696,6 @@ export default function MenuManagementView() {
                       <label className="flex items-center gap-2 text-zinc-300 text-xs cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={formData.is_special}
-                          onChange={(e) => setFormData({ ...formData, is_special: e.target.checked })}
-                          className="accent-gold h-4 w-4 rounded border-zinc-900 bg-black"
-                        />
-                        <span>Mark as "Special Food" (Glow Animation) 🌟</span>
-                      </label>
-                      <label className="flex items-center gap-2 text-zinc-300 text-xs cursor-pointer">
-                        <input
-                          type="checkbox"
                           checked={formData.featured}
                           onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                           className="accent-gold h-4 w-4 rounded border-zinc-900 bg-black"

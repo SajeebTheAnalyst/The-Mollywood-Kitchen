@@ -36,7 +36,7 @@ import ContactInfoView from './ContactInfoView';
 import WebsiteSettingsView from './WebsiteSettingsView';
 import ProfileView from './ProfileView';
 import SupabaseSettingsView from './SupabaseSettingsView';
-import OrdersManagementView from './OrdersManagementView';
+import SignatureManagementView from './SignatureManagementView';
 
 interface SidebarItem {
   id: string;
@@ -56,7 +56,7 @@ export default function AdminLayout() {
   // Unified items list
   const navigationItems: SidebarItem[] = [
     { id: 'dashboard', label: 'Overview Dashboard', icon: LayoutDashboard, component: DashboardView },
-    { id: 'orders', label: 'Order Tracker', icon: CalendarDays, component: OrdersManagementView },
+    { id: 'signature', label: 'Signature Selection', icon: Star, component: SignatureManagementView },
     { id: 'supabase', label: 'Supabase Database', icon: Database, component: SupabaseSettingsView },
     { id: 'menu', label: 'Recipes Catalog', icon: UtensilsCrossed, component: MenuManagementView },
     { id: 'offers', label: 'Specials & Coupons', icon: Tag, component: OffersManagementView },

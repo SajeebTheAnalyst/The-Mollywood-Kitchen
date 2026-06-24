@@ -13,8 +13,7 @@ export default function OffersSection() {
     setTimeout(() => setCopiedCode(null), 1500);
   };
 
-  // Only render active elements
-  const activeOffers = offers.filter(o => o.active);
+  const activeOffers = offers.filter(o => o.isActive !== false);
 
   return (
     <section id="offers" className="py-20 lg:py-28 bg-black/95 border-t border-zinc-900 scroll-mt-10">
@@ -49,49 +48,59 @@ export default function OffersSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: idx * 0.15 }}
-              className="relative overflow-hidden rounded-sm bg-zinc-950 border border-white/5 hover:border-gold/30 transition-all duration-500 p-6 flex flex-col md:flex-row gap-8 items-center shadow-2xl"
+              className="relative overflow-hidden rounded-[2rem] bg-zinc-950 border border-gold/10 hover:border-gold/30 transition-all duration-500 flex flex-col md:flex-row shadow-2xl"
             >
               
               {/* Visual Thumbnail Banner */}
-              <div className="relative w-full md:w-48 h-56 md:h-full min-h-[200px] rounded-sm overflow-hidden bg-zinc-900 flex-shrink-0">
+              <div className="relative w-full md:w-5/12 h-64 md:h-full min-h-[250px] bg-zinc-900 flex-shrink-0 p-4">
                 <img
                   src={offer.image}
                   alt={offer.title}
-                  className="h-full w-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                  className="h-full w-full object-contain"
                   referrerPolicy="no-referrer"
                 />
               </div>
 
               {/* Offer Text Configurations */}
-              <div className="flex-1 w-full flex flex-col justify-between space-y-4">
+              <div className="flex-1 w-full p-8 md:p-10 flex flex-col justify-between space-y-6 bg-zinc-950/90 z-10">
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
-                    <span className="text-[10px] font-bold px-3 py-1 bg-gold text-black rounded-sm tracking-widest uppercase">
-                      {offer.badge}
+                    <span className="text-[10px] font-black px-3 py-1 bg-accent-red text-white rounded-full tracking-widest uppercase shadow-xl">
+                      {offer.badge || 'SPECIAL OFFER'}
                     </span>
-                    <span className="text-[9px] font-bold text-text-secondary tracking-widest uppercase">
-                      {offer.category}
+                    <span className="text-[9px] font-bold text-zinc-500 tracking-widest uppercase">
+                      {offer.category || 'PROMO'}
                     </span>
                   </div>
 
-                  <h3 className="font-heading text-2xl font-bold text-text-primary tracking-widest uppercase leading-tight">
+                  <h3 className="font-heading text-2xl md:text-3xl font-black text-gold tracking-widest uppercase leading-tight line-clamp-2">
                     {offer.title}
                   </h3>
                   
-                  <div className="text-3xl font-heading font-black text-gold tracking-wider leading-none">
-                    {offer.discount}
+                  <div className="flex flex-col">
+                     <span className="text-zinc-500 line-through text-sm font-mono decoration-red-500/50">
+                        Before: ৳{offer.beforePrice || 400}
+                     </span>
+                     <span className="font-heading text-3xl font-black text-accent-red mt-1">
+                        Now ৳{offer.nowPrice || 280}
+                     </span>
                   </div>
 
-                  <p className="font-sans text-xs text-text-secondary font-light leading-relaxed">
+                  <p className="font-sans text-xs text-zinc-300 font-light leading-relaxed">
                     {offer.description}
                   </p>
+                  
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-gold flex items-center gap-2 pt-2">
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                    Expires: {offer.endDate || 'Limited Time'}
+                  </div>
                 </div>
 
                 {/* Promo Coupon copy bar */}
-                <div className="border-t border-white/5 pt-6 flex items-center justify-between gap-4">
+                <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex flex-col space-y-1">
-                    <span className="text-[9px] text-text-secondary font-bold tracking-[0.2em] uppercase leading-none">Promotion Code</span>
-                    <span className="font-mono text-sm font-black text-text-primary uppercase tracking-widest">{offer.code}</span>
+                    <span className="text-[9px] text-zinc-500 font-bold tracking-[0.2em] uppercase leading-none">Promotion Code</span>
+                    <span className="font-mono text-lg font-black text-white uppercase tracking-widest">{offer.code}</span>
                   </div>
 
                   {/* Copy trigger button */}
@@ -99,21 +108,21 @@ export default function OffersSection() {
                     onClick={() => handleCopyCode(offer.code)}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`px-5 py-2.5 rounded-sm text-[10px] font-bold tracking-widest uppercase transition-all duration-300 flex items-center space-x-2 border cursor-pointer ${
+                    className={`px-6 py-3 rounded-xl text-[10px] font-bold tracking-widest uppercase transition-all duration-300 flex items-center space-x-2 border cursor-pointer shrink-0 ${
                       copiedCode === offer.code
-                        ? 'bg-emerald-500 border-emerald-500 text-black'
-                        : 'bg-transparent border-white/10 text-text-secondary hover:border-gold hover:text-gold'
+                        ? 'bg-emerald-500 border-emerald-500 text-black shadow-lg shadow-emerald-500/20'
+                        : 'bg-white border-white text-black hover:bg-zinc-200 shadow-lg'
                     }`}
                   >
                     {copiedCode === offer.code ? (
                       <>
-                        <Check className="h-3.5 w-3.5" />
+                        <Check className="h-4 w-4" />
                         <span>Copied</span>
                       </>
                     ) : (
                       <>
-                        <Ticket className="h-3.5 w-3.5" />
-                        <span>Claim Code</span>
+                        <Ticket className="h-4 w-4" />
+                        <span>{offer.buttonText || 'CLAIM CODE'}</span>
                       </>
                     )}
                   </motion.button>

@@ -76,6 +76,14 @@
   background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, var(--color-bg-premium) 70%, #000000 100%);
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .card-cinematic-bg {
   background: linear-gradient(145deg, #121212 0%, #0a0a0a 100%);
   border: 1px solid rgba(212, 175, 55, 0.1);

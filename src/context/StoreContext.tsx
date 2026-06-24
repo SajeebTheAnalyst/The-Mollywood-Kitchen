@@ -145,11 +145,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   // Core CMS datasets
   const [menuItems, setMenuItems] = useState<MenuItem[]>(() => {
-    const saved = localStorage.getItem('mollywood_menu');
+    const saved = localStorage.getItem('mollywood_menu_v2');
     return saved ? JSON.parse(saved) : initialData.menuItems as MenuItem[];
   });
   const [offers, setOffers] = useState<OfferItem[]>(() => {
-    const saved = localStorage.getItem('mollywood_offers');
+    const saved = localStorage.getItem('mollywood_offers_v2');
     return saved ? JSON.parse(saved) : initialData.offers as OfferItem[];
   });
   const [reviews, setReviews] = useState<ReviewItem[]>(() => {

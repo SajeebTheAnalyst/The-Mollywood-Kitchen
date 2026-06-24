@@ -43,15 +43,6 @@ export default function Hero({
 
   return (
     <>
-      <style>{`
-        @keyframes pulseGlow {
-          0%, 100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.2) !important; border-color: rgba(212, 175, 55, 0.4) !important; }
-          50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.6) !important; border-color: rgba(212, 175, 55, 1) !important; }
-        }
-        .special-card-glow {
-          animation: pulseGlow 3s infinite ease-in-out;
-        }
-      `}</style>
       {/* 1. HERO SECTION (Top Half) */}
       <section className="relative min-h-[90vh] lg:h-[85vh] flex flex-col justify-center overflow-hidden bg-bg-premium pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         {/* Background Elements */}
@@ -215,49 +206,61 @@ export default function Hero({
       <section className="relative z-20 bg-bg-premium py-20 lg:py-32 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col space-y-12">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-8">
               <span className="text-[10px] tracking-[0.4em] text-text-secondary uppercase whitespace-nowrap">Signature Selection</span>
-              
-              {highlightDishes.length > 4 && (
-                <div className="flex space-x-2">
-                  <button onClick={() => scroll('left')} className="p-2 rounded-full border border-white/10 hover:bg-white/5 text-white transition-colors">
-                    <ArrowLeft className="h-5 w-5" />
-                  </button>
-                  <button onClick={() => scroll('right')} className="p-2 rounded-full border border-white/10 hover:bg-white/5 text-white transition-colors">
-                    <ArrowRight className="h-5 w-5" />
-                  </button>
-                </div>
-              )}
             </div>
             
-            <div 
-              ref={scrollRef}
-              className="flex overflow-x-auto gap-8 pb-10 lg:pb-4 no-scrollbar snap-x scroll-smooth"
-            >
-              {highlightDishes.map((dish) => (
-                <motion.div
-                  key={dish.id}
-                  whileHover={{ y: -15 }}
-                  onClick={() => onSelectMenuItem(dish)}
-                  className="special-card-glow bg-zinc-900/40 backdrop-blur-md rounded-[2.5rem] p-6 border border-white/5 group cursor-pointer flex flex-col shadow-2xl snap-center min-w-[280px] w-[280px] sm:min-w-[320px] sm:w-[320px] shrink-0 h-full"
+            <div className="relative w-full group">
+              {/* Left Navigation Arrow */}
+              {highlightDishes.length > 4 && (
+                <button 
+                  onClick={() => scroll('left')} 
+                  className="absolute top-1/2 -translate-y-1/2 left-0 z-10 w-12 h-12 bg-black/70 text-white rounded-full flex items-center justify-center hover:scale-110 transition opacity-0 group-hover:opacity-100"
                 >
-                  <div className="aspect-square w-full rounded-[2rem] overflow-hidden mb-6 bg-zinc-950">
-                    <img src={dish.image} alt={dish.name} className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-110" />
-                  </div>
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div className="space-y-2">
-                      <h4 className="text-xl font-bold text-white line-clamp-1">{dish.name}</h4>
-                      <p className="text-sm text-zinc-400 line-clamp-2 italic">{dish.description || 'Premium House Specialty'}</p>
+                  <ArrowLeft className="h-6 w-6" />
+                </button>
+              )}
+
+              <div 
+                ref={scrollRef}
+                className="flex overflow-x-auto gap-4 snap-x scroll-smooth no-scrollbar"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {highlightDishes.map((dish) => (
+                  <motion.div
+                    key={dish.id}
+                    whileHover={{ y: -10 }}
+                    onClick={() => onSelectMenuItem(dish)}
+                    className="shrink-0 min-w-[280px] w-[calc(100%-1rem)] sm:w-[calc(50%-1rem)] md:w-[calc(33.33%-1rem)] lg:w-[calc(25%-1rem)] bg-zinc-900/40 backdrop-blur-md rounded-[2.5rem] p-6 border border-white/5 cursor-pointer flex flex-col shadow-2xl snap-center h-full"
+                  >
+                    <div className="aspect-square w-full rounded-[2rem] overflow-hidden mb-6 bg-zinc-950 group-hover:bg-zinc-900">
+                      <img src={dish.image} alt={dish.name} className="h-full w-full object-contain transition-transform duration-700 hover:scale-110" />
                     </div>
-                    <div className="flex items-center justify-between mt-8">
-                      <span className="text-2xl font-bold text-accent-red font-mono">৳{dish.price}</span>
-                      <button className="h-12 w-12 rounded-full bg-accent-red flex items-center justify-center text-white shadow-lg transition-all hover:scale-110 active:scale-95 shadow-accent-red/20">
-                        <ShoppingCart className="h-5 w-5" />
-                      </button>
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div className="space-y-2">
+                        <h4 className="text-xl font-bold text-white line-clamp-1">{dish.name}</h4>
+                        <p className="text-sm text-zinc-400 line-clamp-2 italic">{dish.description || 'Premium House Specialty'}</p>
+                      </div>
+                      <div className="flex items-center justify-between mt-8">
+                        <span className="text-2xl font-bold text-accent-red font-mono">৳{dish.price}</span>
+                        <button className="h-12 w-12 rounded-full bg-accent-red flex items-center justify-center text-white shadow-lg transition-all hover:scale-110 active:scale-95 shadow-accent-red/20">
+                          <ShoppingCart className="h-5 w-5" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Right Navigation Arrow */}
+              {highlightDishes.length > 4 && (
+                <button 
+                  onClick={() => scroll('right')} 
+                  className="absolute top-1/2 -translate-y-1/2 right-0 z-10 w-12 h-12 bg-black/70 text-white rounded-full flex items-center justify-center hover:scale-110 transition opacity-0 group-hover:opacity-100"
+                >
+                  <ArrowRight className="h-6 w-6" />
+                </button>
+              )}
             </div>
           </div>
         </div>
