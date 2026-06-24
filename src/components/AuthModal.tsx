@@ -61,11 +61,16 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
+          skipBrowserRedirect: !!window.location.ancestorOrigins?.length || window.self !== window.top,
           redirectTo: window.location.origin
         }
       });
       
       if (error) throw error;
+      
+      if (data?.url) {
+        window.open(data.url, '_blank', 'width=500,height=600');
+      }
       
     } catch (error: any) {
       showToast(`OAuth Error: ${error.message}`, 'error');

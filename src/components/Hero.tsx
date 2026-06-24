@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Play, ArrowLeft, ArrowRight, Star, Flame, ShoppingCart, Film, Leaf } from 'lucide-react';
 import { MenuItem } from '../types';
 import { useStore } from '../context/StoreContext';
 import { motion, AnimatePresence } from 'motion/react';
+import { supabase } from '../lib/supabase';
 
 interface HeroProps {
   onExploreMenu: () => void;
@@ -16,10 +17,42 @@ export default function Hero({
   onSelectMenuItem
 }: HeroProps) {
   const { menuItems, heroSettings } = useStore();
-  const highlightDishes = menuItems.filter(it => it.popular).slice(0, 4);
+  const [highlightDishes, setHighlightDishes] = useState<MenuItem[]>([]);
+
+  useEffect(() => {
+    const fetchSpecialDishes = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('menu_items')
+          .select('*')
+          .eq('is_special', true)
+          .order('created_at', { ascending: false })
+          .limit(4);
+
+        if (!error && data && data.length > 0) {
+          setHighlightDishes(data);
+        } else {
+          setHighlightDishes(menuItems.filter(it => it.popular).slice(0, 4));
+        }
+      } catch (err) {
+        setHighlightDishes(menuItems.filter(it => it.popular).slice(0, 4));
+      }
+    };
+    
+    fetchSpecialDishes();
+  }, [menuItems]);
 
   return (
     <>
+      <style>{`
+        @keyframes pulseGlow {
+          0%, 100% { box-shadow: 0 0 5px rgba(212, 175, 55, 0.2); border-color: rgba(212, 175, 55, 0.4); }
+          50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.6); border-color: rgba(212, 175, 55, 1); }
+        }
+        .special-card-glow {
+          animation: pulseGlow 3s infinite ease-in-out;
+        }
+      `}</style>
       {/* 1. HERO SECTION (Top Half) */}
       <section className="relative min-h-[90vh] lg:h-[85vh] flex flex-col justify-center overflow-hidden bg-bg-premium pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         {/* Background Elements */}
@@ -193,7 +226,7 @@ export default function Hero({
                   key={dish.id}
                   whileHover={{ y: -15 }}
                   onClick={() => onSelectMenuItem(dish)}
-                  className="bg-zinc-900/40 backdrop-blur-md rounded-[2.5rem] p-6 border border-white/5 group cursor-pointer flex flex-col shadow-2xl snap-center min-w-[280px] sm:min-w-0 h-full"
+                  className="special-card-glow bg-zinc-900/40 backdrop-blur-md rounded-[2.5rem] p-6 border border-white/5 group cursor-pointer flex flex-col shadow-2xl snap-center min-w-[280px] sm:min-w-0 h-full"
                 >
                   <div className="aspect-square w-full rounded-[2rem] overflow-hidden mb-6">
                     <img src={dish.image} alt={dish.name} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
