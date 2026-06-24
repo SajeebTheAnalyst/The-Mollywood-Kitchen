@@ -20,7 +20,8 @@ import {
   X,
   UserCheck,
   Home,
-  Database
+  Database,
+  Star
 } from 'lucide-react';
 
 // Import all subviews dynamically

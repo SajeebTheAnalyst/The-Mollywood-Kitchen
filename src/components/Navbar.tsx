@@ -252,8 +252,7 @@ export default function Navbar({
                             onClick={async () => {
                               if (!customerUser) {
                                 showToast("Please Sign Up or Log In to place an online order!", "error");
-                                setAuthTab('signup');
-                                setIsCustomerModalOpen(true);
+                                setIsAuthModalOpen(true);
                                 return;
                               }
 
