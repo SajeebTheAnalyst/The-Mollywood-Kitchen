@@ -19,15 +19,25 @@ export default function Hero({
   const { menuItems, heroSettings } = useStore();
   const [highlightDishes, setHighlightDishes] = useState<MenuItem[]>([]);
 
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const { current } = scrollRef;
+      const scrollAmount = 350; // approximate width of card + gap
+      current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   useEffect(() => {
     // Dynamically filter items where is_special is true
     const specialDishes = menuItems.filter(it => it.is_special);
     if (specialDishes.length > 0) {
-      // Sort to mimic "latest" or just take first 4
-      setHighlightDishes(specialDishes.slice(0, 4));
+      // Show all special dishes in carousel
+      setHighlightDishes(specialDishes);
     } else {
       // Fallback if no special dishes are marked
-      setHighlightDishes(menuItems.filter(it => it.popular).slice(0, 4));
+      setHighlightDishes(menuItems.filter(it => it.popular));
     }
   }, [menuItems]);
 
@@ -205,20 +215,34 @@ export default function Hero({
       <section className="relative z-20 bg-bg-premium py-20 lg:py-32 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col space-y-12">
-            <div className="flex items-center">
+            <div className="flex items-center justify-between">
               <span className="text-[10px] tracking-[0.4em] text-text-secondary uppercase whitespace-nowrap">Signature Selection</span>
+              
+              {highlightDishes.length > 4 && (
+                <div className="flex space-x-2">
+                  <button onClick={() => scroll('left')} className="p-2 rounded-full border border-white/10 hover:bg-white/5 text-white transition-colors">
+                    <ArrowLeft className="h-5 w-5" />
+                  </button>
+                  <button onClick={() => scroll('right')} className="p-2 rounded-full border border-white/10 hover:bg-white/5 text-white transition-colors">
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
+              )}
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 overflow-x-auto lg:overflow-visible pb-10 lg:pb-0 no-scrollbar snap-x">
+            <div 
+              ref={scrollRef}
+              className="flex overflow-x-auto gap-8 pb-10 lg:pb-4 no-scrollbar snap-x scroll-smooth"
+            >
               {highlightDishes.map((dish) => (
                 <motion.div
                   key={dish.id}
                   whileHover={{ y: -15 }}
                   onClick={() => onSelectMenuItem(dish)}
-                  className="special-card-glow bg-zinc-900/40 backdrop-blur-md rounded-[2.5rem] p-6 border border-white/5 group cursor-pointer flex flex-col shadow-2xl snap-center min-w-[280px] sm:min-w-0 h-full"
+                  className="special-card-glow bg-zinc-900/40 backdrop-blur-md rounded-[2.5rem] p-6 border border-white/5 group cursor-pointer flex flex-col shadow-2xl snap-center min-w-[280px] w-[280px] sm:min-w-[320px] sm:w-[320px] shrink-0 h-full"
                 >
-                  <div className="aspect-square w-full rounded-[2rem] overflow-hidden mb-6">
-                    <img src={dish.image} alt={dish.name} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="aspect-square w-full rounded-[2rem] overflow-hidden mb-6 bg-zinc-950">
+                    <img src={dish.image} alt={dish.name} className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-110" />
                   </div>
                   <div className="flex-1 flex flex-col justify-between">
                     <div className="space-y-2">

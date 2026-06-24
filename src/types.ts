@@ -23,6 +23,13 @@ export interface OfferItem {
   category: 'today' | 'weekend' | 'combo' | 'family' | 'student';
   image: string;
   code: string;
+  startDate?: string;
+  endDate?: string;
+  buttonText?: string;
+  buttonLink?: string;
+  isActive?: boolean;
+  beforePrice?: number;
+  nowPrice?: number;
 }
 
 export interface ReviewItem {

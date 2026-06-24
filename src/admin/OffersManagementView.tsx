@@ -40,7 +40,9 @@ export default function OffersManagementView() {
     endDate: '2026-07-18',
     buttonText: 'CLAIM NOW',
     buttonLink: '#menu',
-    isActive: true
+    isActive: true,
+    beforePrice: 400,
+    nowPrice: 280
   });
 
   const handleOpenCreateForm = () => {
@@ -58,7 +60,9 @@ export default function OffersManagementView() {
       endDate: '2026-08-18',
       buttonText: 'EXPLORE MEAL',
       buttonLink: '#menu',
-      isActive: true
+      isActive: true,
+      beforePrice: 400,
+      nowPrice: 280
     });
     setIsFormOpen(true);
   };
@@ -74,11 +78,13 @@ export default function OffersManagementView() {
       category: offer.category || 'today',
       image: offer.image,
       code: offer.code,
-      startDate: '2026-06-18',
-      endDate: '2026-09-18',
-      buttonText: 'ORDER ONLINE',
-      buttonLink: '#menu',
-      isActive: true
+      startDate: offer.startDate || '2026-06-18',
+      endDate: offer.endDate || '2026-09-18',
+      buttonText: offer.buttonText || 'ORDER ONLINE',
+      buttonLink: offer.buttonLink || '#menu',
+      isActive: offer.isActive ?? true,
+      beforePrice: offer.beforePrice || 400,
+      nowPrice: offer.nowPrice || 280
     });
     setIsFormOpen(true);
   };
@@ -95,7 +101,14 @@ export default function OffersManagementView() {
       badge: formData.badge.trim(),
       category: formData.category,
       image: formData.image || 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=600',
-      code: formData.code.trim().toUpperCase()
+      code: formData.code.trim().toUpperCase(),
+      startDate: formData.startDate,
+      endDate: formData.endDate,
+      buttonText: formData.buttonText,
+      buttonLink: formData.buttonLink,
+      isActive: formData.isActive,
+      beforePrice: formData.beforePrice,
+      nowPrice: formData.nowPrice
     };
 
     if (editingOffer) {
@@ -346,6 +359,27 @@ export default function OffersManagementView() {
                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                     placeholder="Paste unsplash graphic link or equivalent..."
                     className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Before Price</label>
+                  <input
+                    type="number"
+                    value={formData.beforePrice}
+                    onChange={(e) => setFormData({ ...formData, beforePrice: Number(e.target.value) })}
+                    className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Now Price</label>
+                  <input
+                    type="number"
+                    value={formData.nowPrice}
+                    onChange={(e) => setFormData({ ...formData, nowPrice: Number(e.target.value) })}
+                    className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none"
                   />
                 </div>
               </div>

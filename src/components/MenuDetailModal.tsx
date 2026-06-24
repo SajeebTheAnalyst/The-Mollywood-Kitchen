@@ -55,7 +55,7 @@ export default function MenuDetailModal({
   ];
 
   return (
-    <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
+    <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/30 p-4 backdrop-blur-sm">
       <div 
         className="relative w-full max-w-4xl overflow-hidden rounded-sm bg-zinc-950 border border-white/5 shadow-[0_0_100px_rgba(0,0,0,0.8)] animate-scaleUp max-h-[90vh] flex flex-col lg:flex-row"
         onClick={(e) => e.stopPropagation()}
@@ -70,14 +70,13 @@ export default function MenuDetailModal({
         </button>
 
         {/* Left half: Giant food image panel */}
-        <div className="relative w-full lg:w-5/12 h-64 lg:h-auto min-h-[300px]">
+        <div className="relative w-full lg:w-5/12 h-64 lg:h-auto min-h-[300px] bg-zinc-900">
           <img
             src={item.image}
             alt={item.name}
-            className="absolute inset-0 h-full w-full object-cover grayscale opacity-80"
+            className="absolute inset-0 h-full w-full object-contain"
             referrerPolicy="no-referrer"
           />
-          <div className="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-zinc-950 via-zinc-950/20 to-transparent pointer-events-none" />
           
           {/* Rating elements overlay */}
           <div className="absolute bottom-6 left-6 z-10 flex flex-col space-y-1 bg-black/40 px-4 py-3 rounded-sm backdrop-blur-sm border border-white/5">

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Award, Star, Quote, Sparkles, Film, Heart, Compass, ShieldCheck, Check } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Award, Star, Quote, Sparkles, Heart, ShieldCheck, Check, ArrowLeft, ArrowRight, Tag, Clock } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { MenuItem } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
@@ -9,11 +9,20 @@ interface OwnersSpecialProps {
 }
 
 export default function OwnersSpecialAndAbout({ onSelectMenuItem }: OwnersSpecialProps) {
-  const { menuItems, reviews, aboutSettings } = useStore();
+  const { offers, reviews, aboutSettings } = useStore();
   const [activeReviewIdx, setActiveReviewIdx] = useState(0);
 
-  // Get the two premium fish dishes for Owner's Special
-  const ownerSpecialDishes = menuItems.filter(it => it.category === 'bengali').slice(0, 2);
+  const activeOffers = offers.filter(o => o.isActive !== false);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const { current } = scrollRef;
+      const scrollAmount = current.clientWidth * 0.8;
+      current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   // Ensure index remains in bounds when reviews list changes
   const activeReview = reviews.length > 0 ? reviews[activeReviewIdx % reviews.length] : null;
@@ -42,74 +51,99 @@ export default function OwnersSpecialAndAbout({ onSelectMenuItem }: OwnersSpecia
   return (
     <div className="bg-black text-white py-12 space-y-24">
       
-      {/* 1. CHEFS SPECIAL FEATURE STORY BLOCK */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        
-        {/* Sub Header */}
-        <div className="text-center space-y-4 mb-20">
-          <div className="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-sm text-[10px] font-bold text-text-secondary tracking-[0.3em] uppercase">
-            <Award className="h-3.5 w-3.5 text-gold" />
-            <span>Masterpiece Recipes</span>
+      {/* 1. SPECIAL OFFERS SECTION */}
+      {activeOffers.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          
+          <div className="text-center space-y-4 mb-20 relative">
+            <div className="inline-flex items-center space-x-2 bg-accent-red/10 border border-accent-red/20 px-4 py-1.5 rounded-sm text-[10px] font-bold text-accent-red tracking-[0.3em] uppercase">
+              <Tag className="h-3.5 w-3.5 text-accent-red" />
+              <span>Limited Time Promos</span>
+            </div>
+            <h2 className="font-heading text-4xl sm:text-5xl md:text-6xl font-black text-text-primary tracking-tight leading-none uppercase">
+              Special <span className="text-accent-red italic font-normal">Offers</span>
+            </h2>
+
+            {activeOffers.length > 1 && (
+              <div className="absolute right-0 bottom-0 flex space-x-2">
+                <button onClick={() => scroll('left')} className="p-3 rounded-full border border-white/10 hover:bg-white/5 text-white transition-colors">
+                  <ArrowLeft className="h-5 w-5" />
+                </button>
+                <button onClick={() => scroll('right')} className="p-3 rounded-full border border-white/10 hover:bg-white/5 text-white transition-colors">
+                  <ArrowRight className="h-5 w-5" />
+                </button>
+              </div>
+            )}
           </div>
-          <h2 className="font-heading text-4xl sm:text-5xl md:text-6xl font-black text-text-primary tracking-tight leading-none uppercase">
-            Owner's <span className="text-gold italic font-normal">Signature</span>
-          </h2>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {ownerSpecialDishes.map((dish, i) => (
-            <motion.div 
-              key={dish.id}
-              onClick={() => onSelectMenuItem(dish)}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="group cursor-pointer overflow-hidden rounded-sm bg-zinc-950 border border-white/5 hover:border-gold/30 transition-all duration-500 flex flex-col md:flex-row shadow-2xl"
-            >
-              <div className="relative w-full md:w-1/2 h-64 md:h-full min-h-[280px] overflow-hidden bg-zinc-900">
-                <img 
-                  src={dish.image} 
-                  alt={dish.name} 
-                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700 grayscale"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-zinc-950 via-zinc-950/20 to-transparent pointer-events-none" />
-                
+          <div 
+            ref={scrollRef}
+            className="flex overflow-x-auto gap-8 pb-10 no-scrollbar snap-x scroll-smooth"
+          >
+            {activeOffers.map((offer, i) => (
+              <motion.div 
+                key={offer.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="group w-full min-w-[100%] lg:min-w-[800px] snap-center overflow-hidden rounded-[2rem] bg-zinc-950 border border-gold/20 hover:border-gold/50 transition-all duration-500 flex flex-col md:flex-row shadow-[0_0_40px_rgba(212,175,55,0.1)] relative"
+              >
                 {/* Visual badge */}
-                <div className="absolute top-4 left-4 z-10 bg-gold text-black px-3 py-1 rounded-sm text-[9px] font-bold uppercase tracking-widest">
-                  Heritage Dish
+                <div className="absolute top-6 left-6 z-20 bg-accent-red text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl flex items-center gap-2">
+                  <Tag className="h-3 w-3" />
+                  {offer.badge || 'PROMO DEAL'}
                 </div>
-              </div>
 
-              <div className="w-full md:w-1/2 p-8 flex flex-col justify-between space-y-6 text-left">
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-1">
-                    {[...Array(5)].map((_, idx) => (
-                      <Star key={idx} className="h-3 w-3 fill-gold text-gold" />
-                    ))}
-                    <span className="text-[10px] text-text-secondary font-bold tracking-widest ml-2">{dish.rating}</span>
+                <div className="relative w-full md:w-3/5 h-80 md:h-[450px] overflow-hidden bg-zinc-900">
+                  <img 
+                    src={offer.image} 
+                    alt={offer.title} 
+                    className="h-full w-full object-contain p-4 group-hover:scale-105 transition-transform duration-700 bg-black/40"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-zinc-950 via-zinc-950/20 to-transparent pointer-events-none" />
+                </div>
+
+                <div className="w-full md:w-2/5 p-8 md:p-12 flex flex-col justify-center space-y-6 text-left bg-zinc-950/90 relative z-10 -mt-10 md:mt-0 rounded-t-3xl md:rounded-t-none">
+                  <div className="space-y-4">
+                    <h3 className="font-heading text-3xl font-black text-gold tracking-widest uppercase line-clamp-2 leading-tight">
+                      {offer.title}
+                    </h3>
+                    <p className="text-sm text-zinc-300 font-light leading-relaxed">
+                      {offer.description}
+                    </p>
                   </div>
-                  <h3 className="font-heading text-xl font-bold text-text-primary tracking-widest uppercase transition-colors group-hover:text-gold">
-                    {dish.name}
-                  </h3>
-                  <p className="text-xs text-text-secondary font-light leading-relaxed">
-                    {dish.description}
-                  </p>
-                </div>
 
-                <div className="border-t border-white/5 pt-6 flex items-center justify-between">
-                  <span className="font-heading text-xl font-black text-gold">৳{dish.price.toLocaleString()}</span>
-                  <span className="text-[9px] font-bold text-text-secondary group-hover:text-gold transition-colors uppercase tracking-[0.2em]">
-                    Details &rarr;
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                  {offer.code && (
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-3 inline-block w-fit">
+                      <span className="text-[10px] text-zinc-400 uppercase tracking-widest block mb-1">Use Code</span>
+                      <span className="font-mono text-lg font-bold text-white tracking-widest">{offer.code}</span>
+                    </div>
+                  )}
 
-      </section>
+                  <div className="border-t border-white/10 pt-6 space-y-4">
+                    <div className="flex flex-col">
+                      <span className="text-zinc-500 line-through text-sm font-mono decoration-red-500/50">
+                        Before: ৳{offer.beforePrice || 400}
+                      </span>
+                      <span className="font-heading text-4xl font-black text-accent-red mt-1">
+                        Now ৳{offer.nowPrice || 280}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-gold text-xs font-bold tracking-widest uppercase mt-4">
+                      <Clock className="h-4 w-4" />
+                      <span>{offer.endDate ? `Valid until ${offer.endDate}` : 'Limited Time Offer'}</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+        </section>
+      )}
 
       {/* 2. WHY CHOOSE MOLLYWOOD KITCHEN */}
       <section className="bg-zinc-950/50 border-y border-white/5 py-32">

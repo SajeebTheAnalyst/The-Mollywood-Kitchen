@@ -622,8 +622,13 @@ export default function MenuManagementView() {
                   <div className="space-y-1">
                     <label className="text-[10px] font-mono uppercase font-bold text-zinc-400 flex justify-between items-center">
                       <span>Photo URL</span>
-                      <span className="text-gold/50 text-[9px] lowercase">recommend: 1000x560px (16:9)</span>
                     </label>
+                    <div className="text-[10px] text-zinc-500 mb-2 leading-relaxed bg-zinc-900/50 p-2 rounded-lg border border-zinc-800">
+                      <span className="font-bold text-zinc-300 block mb-1">Upload Size Instructions:</span>
+                      • <strong>Hero Image:</strong> 1200x1200px<br />
+                      • <strong>Featured/Signature/Menu Item:</strong> 800x800px<br />
+                      • <strong>Gallery:</strong> 1200x800px
+                    </div>
                     <input
                       type="url"
                       value={formData.image}
@@ -632,6 +637,21 @@ export default function MenuManagementView() {
                       className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono"
                     />
                   </div>
+
+                  {/* Image Preview Block */}
+                  {formData.image && (
+                    <div className="space-y-1">
+                      <span className="text-[9px] font-mono uppercase font-bold text-zinc-500 block">Live Preview (object-contain)</span>
+                      <div className="w-full h-40 rounded-xl bg-zinc-950 border border-zinc-900 flex items-center justify-center overflow-hidden p-2">
+                        <img 
+                          src={formData.image} 
+                          alt="Preview" 
+                          className="h-full w-full object-contain" 
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   {/* Preset quick image selection area */}
                   <div className="space-y-1">
