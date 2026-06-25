@@ -31,7 +31,7 @@ export default function WebsiteSettingsView() {
 
   const handleRestoreDefaults = () => {
     setLocalSettings({
-      logo: "/src/assets/images/mollywood_logo_1781858834142.jpg",
+      logo: "/mollywood_logo.jpg",
       favicon: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=32",
       primaryColor: "#F59E0B",
       secondaryColor: "#8B0101",
@@ -123,7 +123,7 @@ export default function WebsiteSettingsView() {
             <div className="space-y-1">
               <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Header Brand Logo URL</label>
               <input
-                type="url"
+                type="text"
                 required
                 value={localSettings.logo}
                 onChange={(e) => setLocalSettings({ ...localSettings, logo: e.target.value })}
@@ -133,7 +133,7 @@ export default function WebsiteSettingsView() {
             <div className="space-y-1">
               <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Favicon Shortcut icon URL</label>
               <input
-                type="url"
+                type="text"
                 required
                 value={localSettings.favicon}
                 onChange={(e) => setLocalSettings({ ...localSettings, favicon: e.target.value })}

@@ -178,7 +178,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   });
   const [websiteSettings, setWebsiteSettings] = useState<WebsiteSettings>(() => {
     const saved = localStorage.getItem('mollywood_website');
-    return saved ? JSON.parse(saved) : initialData.websiteSettings;
+    let parsed = saved ? JSON.parse(saved) : initialData.websiteSettings;
+    if (parsed && (!parsed.logo || parsed.logo.includes('mollywood_logo_1781858834142.jpg') || parsed.logo.includes('assets/images'))) {
+      parsed = { ...parsed, logo: '/mollywood_logo.jpg' };
+      localStorage.setItem('mollywood_website', JSON.stringify(parsed));
+    }
+    return parsed;
   });
   const [profileSettings, setProfileSettings] = useState<ProfileSettings>(() => {
     const saved = localStorage.getItem('mollywood_profile');
@@ -317,90 +322,6 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         return { ...item, is_special: false };
       }
       return item;
-    });
-
-    // 2. Ensure we have 4-5 premium authentic signature items: Kacchi Biryani, Beef Kala Bhuna, Tandoori Chicken Platter, Mutton Rezala
-    const requiredSpecials = [
-      {
-        id: "sig1",
-        name: "Premium Kacchi Biryani",
-        price: 350,
-        description: "Slow-cooked fragrant basmati rice with tender marinated mutton pieces, potatoes, and exotic spices.",
-        is_special: true,
-        category: "indian",
-        image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600",
-        rating: 5.0,
-        popular: true,
-        ingredients: ["Basmati Rice", "Mutton", "Potatoes", "Saffron"],
-        spiceLevel: 2,
-        specialty: "Our legendary signature dish cooked in traditional dum."
-      },
-      {
-        id: "sig_beef_kala_bhuna",
-        name: "Beef Kala Bhuna",
-        price: 380,
-        description: "Traditional slow-cooked dark beef caramelized to perfection with special Radhuni spices.",
-        is_special: true,
-        category: "bengali",
-        image: "https://images.unsplash.com/photo-1603360946369-fa9902792685?auto=format&fit=crop&q=80&w=600",
-        rating: 4.9,
-        popular: true,
-        ingredients: ["Beef", "Kala Bhuna Masala", "Onions", "Mustard Oil"],
-        spiceLevel: 3,
-        specialty: "Legendary dark roast slow beef classic."
-      },
-      {
-        id: "sig_tandoori_chicken",
-        name: "Tandoori Chicken Platter",
-        price: 320,
-        description: "Juicy tandoori chicken cooked in clay oven, served with mint chutney and fresh lachha onion.",
-        is_special: true,
-        category: "indian",
-        image: "https://images.unsplash.com/photo-1598103442097-8b743e2b95c6?auto=format&fit=crop&q=80&w=600",
-        rating: 4.8,
-        popular: true,
-        ingredients: ["Chicken", "Yogurt", "Tandoori Spices"],
-        spiceLevel: 2,
-        specialty: "Incredibly tender, melt-in-the-mouth grilled classic."
-      },
-      {
-        id: "sig_mutton_rezala",
-        name: "Mutton Rezala",
-        price: 360,
-        description: "Rich, aromatic mutton curry in a smooth yogurt, cashew nut paste, and fragrant spice gravy.",
-        is_special: true,
-        category: "bengali",
-        image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600",
-        rating: 4.9,
-        popular: true,
-        ingredients: ["Mutton", "Yogurt", "Cashew Paste", "Spices"],
-        spiceLevel: 1,
-        specialty: "Royal aromatic curry."
-      }
-    ];
-
-    // Reset non-required specials to false to purge other items like tea, tehari, etc. from signature
-    const requiredNames = requiredSpecials.map(r => r.name.toLowerCase());
-    next = next.map(item => {
-      const isRequired = requiredNames.includes(item.name.toLowerCase());
-      if (item.is_special && !isRequired) {
-        changed = true;
-        return { ...item, is_special: false };
-      }
-      return item;
-    });
-
-    requiredSpecials.forEach(reqItem => {
-      const existingIdx = next.findIndex(item => item.name.toLowerCase() === reqItem.name.toLowerCase());
-      if (existingIdx > -1) {
-        if (!next[existingIdx].is_special) {
-          next[existingIdx] = { ...next[existingIdx], is_special: true };
-          changed = true;
-        }
-      } else {
-        next.push(reqItem);
-        changed = true;
-      }
     });
 
     if (changed) {
