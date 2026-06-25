@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { CalendarDays, Clock, Phone, MapPin, Mail, Ticket, CheckCircle2, Star, Sliders, Play, Award, Film } from 'lucide-react';
+import { CalendarDays, Clock, Phone, MapPin, Mail, Ticket, CheckCircle2, Star, Sliders, Play, Award, Film, Sparkles, Heart, ShieldCheck } from 'lucide-react';
 import { Reservation } from '../types';
 import { useStore } from '../context/StoreContext';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function ContactAndReservation() {
-  const { addReservation, contactSettings, websiteSettings } = useStore();
+  const { addReservation, contactSettings, websiteSettings, aboutSettings } = useStore();
   const [formData, setFormData] = useState<Reservation>({
     name: '',
     phone: '',
@@ -85,9 +85,75 @@ export default function ContactAndReservation() {
     { days: 'Sunday', times: '11:30 AM – 10:00 PM', footnote: 'Sunday Family Feast Special' },
   ];
 
+  const benefits = [
+    {
+      id: 1,
+      icon: <Heart className="h-6 w-6 text-gold" />,
+      title: 'Warm & Cozy Setting',
+      desc: 'Our dining area is tidy, spacious, and perfect for families, student groups, and travelers passing through Pirganj.'
+    },
+    {
+      id: 2,
+      icon: <Sparkles className="h-6 w-6 text-gold" />,
+      title: 'Rich Authentic Flavors',
+      desc: 'Carefully curated dishes balancing authentic Bengali comfort stews and premium-cooked Indian and Chinese specialties.'
+    },
+    {
+      id: 3,
+      icon: <ShieldCheck className="h-6 w-6 text-gold" />,
+      title: 'Affordable & Welcoming',
+      desc: 'We are committed to serving premium quality food at budget-friendly rates with pleasant and efficient hospitality.'
+    }
+  ];
+
   return (
     <section id="contact" className="py-20 lg:py-28 bg-black cinematic-gradient-bg border-t border-zinc-900 scroll-mt-10">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">        {/* Section Header */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        
+        {/* WHY CHOOSE MOLLYWOOD KITCHEN / ABOUT */}
+        <div className="border-b border-white/5 pb-24 mb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            {/* Benefits left board (5 Columns) */}
+            <div className="lg:col-span-5 space-y-8 text-left">
+              <div className="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-sm text-[10px] font-bold text-text-secondary tracking-[0.3em] uppercase">
+                <Sparkles className="h-3 w-3 text-gold" />
+                <span>Our Heritage</span>
+              </div>
+              <h2 className="font-heading text-4xl sm:text-5xl font-black text-text-primary tracking-tight leading-tight uppercase">
+                {aboutSettings?.story ? "About Mollywood" : "Dining with Distinction"}
+              </h2>
+              <p className="font-sans text-sm sm:text-base text-text-secondary leading-relaxed font-light">
+                {aboutSettings?.story || "We believe dining should make you feel right at home. We combine premium fresh ingredients, classic homestyle recipes, and cozy table setups to ensure a satisfying experience."}
+              </p>
+              
+              <div className="border-l border-gold pl-6 py-2 italic text-sm text-text-secondary font-light mt-8">
+                "{aboutSettings?.mission || "Providing clean, delicious, and pocket-friendly meals for everyone in Rangpur."}" 
+                <p className="text-[10px] font-bold tracking-[0.3em] text-gold not-italic mt-4 uppercase">— {aboutSettings?.founders || "Mollywood Kitchen Family"}</p>
+              </div>
+            </div>
+
+            {/* Benefits grid details (7 Columns) */}
+            <div className="lg:col-span-1" />
+            <div className="lg:col-span-6 space-y-8">
+              {benefits.map((b) => (
+                <div 
+                  key={b.id} 
+                  className="p-8 rounded-sm bg-black/40 border border-white/5 flex items-start space-x-6 hover:border-gold/20 transition-all duration-500"
+                >
+                  <div className="p-4 rounded-sm bg-white/5 border border-white/10 flex-shrink-0">
+                    {b.icon}
+                  </div>
+                  <div className="flex-1 min-w-0 text-left">
+                    <h4 className="font-heading text-lg font-bold text-text-primary tracking-widest uppercase">{b.title}</h4>
+                    <p className="text-xs text-text-secondary font-light mt-2 leading-relaxed">{b.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Section Header */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}

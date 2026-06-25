@@ -1,46 +1,21 @@
-import React, { useState } from 'react';
-import { Award, Star, Quote, Sparkles, Film, Heart, Compass, ShieldCheck, Check } from 'lucide-react';
+import React from 'react';
+import { Award, Star } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { MenuItem } from '../types';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 interface OwnersSpecialProps {
   onSelectMenuItem: (item: MenuItem) => void;
 }
 
 export default function OwnersSpecialAndAbout({ onSelectMenuItem }: OwnersSpecialProps) {
-  const { menuItems, reviews, aboutSettings } = useStore();
-  const [activeReviewIdx, setActiveReviewIdx] = useState(0);
+  const { menuItems } = useStore();
 
   // Get the two premium fish dishes for Owner's Special
   const ownerSpecialDishes = menuItems.filter(it => it.category === 'bengali').slice(0, 2);
 
-  // Ensure index remains in bounds when reviews list changes
-  const activeReview = reviews.length > 0 ? reviews[activeReviewIdx % reviews.length] : null;
-
-  const benefits = [
-    {
-      id: 1,
-      icon: <Heart className="h-6 w-6 text-gold" />,
-      title: 'Warm & Cozy Setting',
-      desc: 'Our dining area is tidy, spacious, and perfect for families, student groups, and travelers passing through Pirganj.'
-    },
-    {
-      id: 2,
-      icon: <Sparkles className="h-6 w-6 text-gold" />,
-      title: 'Rich Authentic Flavors',
-      desc: 'Carefully curated dishes balancing authentic Bengali comfort stews and premium-cooked Indian and Chinese specialties.'
-    },
-    {
-      id: 3,
-      icon: <ShieldCheck className="h-6 w-6 text-gold" />,
-      title: 'Affordable & Welcoming',
-      desc: 'We are committed to serving premium quality food at budget-friendly rates with pleasant and efficient hospitality.'
-    }
-  ];
-
   return (
-    <div className="bg-black text-white py-12 space-y-24">
+    <div className="bg-black text-white py-12">
       
       {/* 1. CHEFS SPECIAL FEATURE STORY BLOCK */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -108,54 +83,6 @@ export default function OwnersSpecialAndAbout({ onSelectMenuItem }: OwnersSpecia
           ))}
         </div>
 
-      </section>
-
-      {/* 2. WHY CHOOSE MOLLYWOOD KITCHEN */}
-      <section className="bg-zinc-950/50 border-y border-white/5 py-32">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            {/* Benefits left board (5 Columns) */}
-            <div className="lg:col-span-5 space-y-8 text-left">
-              <div className="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-sm text-[10px] font-bold text-text-secondary tracking-[0.3em] uppercase">
-                <Sparkles className="h-3 w-3 text-gold" />
-                <span>Our Heritage</span>
-              </div>
-              <h2 className="font-heading text-4xl sm:text-5xl font-black text-text-primary tracking-tight leading-tight uppercase">
-                {aboutSettings.story ? "About Mollywood" : "Dining with Distinction"}
-              </h2>
-              <p className="font-sans text-sm sm:text-base text-text-secondary leading-relaxed font-light">
-                {aboutSettings.story || "We believe dining should make you feel right at home. We combine premium fresh ingredients, classic homestyle recipes, and cozy table setups to ensure a satisfying experience."}
-              </p>
-              
-              <div className="border-l border-gold pl-6 py-2 italic text-sm text-text-secondary font-light mt-8">
-                "{aboutSettings.mission || "Providing clean, delicious, and pocket-friendly meals for everyone in Rangpur."}" 
-                <p className="text-[10px] font-bold tracking-[0.3em] text-gold not-italic mt-4 uppercase">— {aboutSettings.founders || "Mollywood Kitchen Family"}</p>
-              </div>
-            </div>
-
-            {/* Benefits grid details (7 Columns) */}
-            <div className="lg:col-span-1" />
-            <div className="lg:col-span-6 space-y-8">
-              {benefits.map((b) => (
-                <div 
-                  key={b.id} 
-                  className="p-8 rounded-sm bg-black/40 border border-white/5 flex items-start space-x-6 hover:border-gold/20 transition-all duration-500"
-                >
-                  <div className="p-4 rounded-sm bg-white/5 border border-white/10 flex-shrink-0">
-                    {b.icon}
-                  </div>
-                  <div className="flex-1 min-w-0 text-left">
-                    <h4 className="font-heading text-lg font-bold text-text-primary tracking-widest uppercase">{b.title}</h4>
-                    <p className="text-xs text-text-secondary font-light mt-2 leading-relaxed">{b.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-          </div>
-
-        </div>
       </section>
     </div>
   );
