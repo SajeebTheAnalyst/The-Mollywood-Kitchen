@@ -105,6 +105,12 @@ function AppContent() {
   };
 
   // Switch display grids depending on logged context
+  useEffect(() => {
+    if (currentView === 'admin-dashboard' && !isLoggedIn) {
+      setView('admin-login');
+    }
+  }, [currentView, isLoggedIn, setView]);
+
   if (currentView === 'admin-login') {
     return <LoginView />;
   }
@@ -112,7 +118,6 @@ function AppContent() {
   if (currentView === 'admin-dashboard') {
     // Force login if not authorized
     if (!isLoggedIn) {
-      setView('admin-login');
       return <LoginView />;
     }
     return <AdminLayout />;

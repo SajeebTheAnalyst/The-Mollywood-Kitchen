@@ -81,6 +81,7 @@ interface StoreContextProps {
   
   // States
   menuItems: MenuItem[];
+  signatureItems: MenuItem[];
   offers: OfferItem[];
   reviews: ReviewItem[];
   galleryItems: GalleryItem[];
@@ -96,6 +97,12 @@ interface StoreContextProps {
   editMenuItem: (item: MenuItem) => void;
   deleteMenuItem: (id: string) => void;
   duplicateMenuItem: (id: string) => void;
+
+  // Signature CRUD
+  addSignatureItem: (item: Omit<MenuItem, 'id'>) => Promise<void>;
+  editSignatureItem: (item: MenuItem) => Promise<void>;
+  deleteSignatureItem: (id: string) => Promise<void>;
+  toggleSignatureItem: (item: MenuItem) => Promise<void>;
   
   // Offers CRUD
   addOffer: (offer: Omit<OfferItem, 'id'>) => void;
@@ -189,6 +196,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem('mollywood_profile');
     return saved ? JSON.parse(saved) : initialData.profileSettings;
   });
+  const [signatureItems, setSignatureItems] = useState<MenuItem[]>(() => {
+    const saved = localStorage.getItem('mollywood_signatures');
+    return saved ? JSON.parse(saved) : (initialData.menuItems as MenuItem[]).filter(item => item.is_special);
+  });
 
   const fetchSupabaseContent = async () => {
     try {
@@ -213,6 +224,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
             case 'contact': setContactSettings(item.content); persist('mollywood_contact', item.content); break;
             case 'website': setWebsiteSettings(item.content); persist('mollywood_website', item.content); break;
             case 'profile': setProfileSettings(item.content); persist('mollywood_profile', item.content); break;
+            case 'signatures': setSignatureItems(item.content); persist('mollywood_signatures', item.content); break;
           }
         });
       }
@@ -232,6 +244,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         .upsert([{ id, content, updated_at: new Date().toISOString() }], { onConflict: 'id' });
         
       if (error) {
+        if (error.message.includes('Could not find the table')) {
+          console.warn(`Supabase table missing for ${id}. Using local storage only.`);
+          return true; // Still "succeeded" locally
+        }
         console.error(`Supabase Cloud Sync failed for ${id}:`, error.message);
         return false;
       }
@@ -487,7 +503,76 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     const next = [duplicated, ...menuItems];
     setMenuItems(next);
     syncToSupabase('menu', next);
-    showToast(`Duplicated "${target.name}" successfully!`, 'success');
+    showToast(`Deleted "${target.name}" successfully!`, 'success');
+  };
+
+  // ==================== SIGNATURE CRUD INTERFACES ====================
+  const addSignatureItem = async (item: Omit<MenuItem, 'id'>) => {
+    const newItem: MenuItem = {
+      ...item,
+      id: 'sig_' + Date.now()
+    };
+    const next = [newItem, ...signatureItems];
+    const success = await syncToSupabase('signatures', next);
+    if (success) {
+      setSignatureItems(next);
+      showToast(`Added "${newItem.name}" to signature selection successfully!`, 'success');
+    } else {
+      showToast(`Added "${newItem.name}" to local cache, but database sync failed.`, 'error');
+    }
+  };
+
+  const editSignatureItem = async (item: MenuItem) => {
+    const next = signatureItems.map(x => x.id === item.id ? item : x);
+    const success = await syncToSupabase('signatures', next);
+    if (success) {
+      setSignatureItems(next);
+      showToast(`Updated signature details for "${item.name}".`, 'success');
+    } else {
+      showToast(`Updated "${item.name}" locally, but database sync failed.`, 'error');
+    }
+  };
+
+  const deleteSignatureItem = async (id: string) => {
+    const item = signatureItems.find(x => x.id === id);
+    const next = signatureItems.filter(x => x.id !== id);
+    const success = await syncToSupabase('signatures', next);
+    if (success) {
+      setSignatureItems(next);
+      showToast(`Deleted "${item?.name || 'item'}" from signatures.`, 'success');
+    } else {
+      showToast(`Deleted "${item?.name || 'item'}" locally, but database sync failed.`, 'error');
+    }
+  };
+
+  const toggleSignatureItem = async (item: MenuItem) => {
+    const existingIdx = signatureItems.findIndex(x => x.name.toLowerCase() === item.name.toLowerCase());
+    let next = [...signatureItems];
+    if (existingIdx > -1) {
+      const name = next[existingIdx].name;
+      next.splice(existingIdx, 1);
+      const success = await syncToSupabase('signatures', next);
+      if (success) {
+        setSignatureItems(next);
+        showToast(`Removed "${name}" from signatures.`, 'success');
+      } else {
+        showToast(`Failed to update database for "${name}".`, 'error');
+      }
+    } else {
+      const newItem: MenuItem = {
+        ...item,
+        id: item.id.startsWith('sig_') ? item.id : 'sig_' + item.id,
+        is_special: true
+      };
+      next = [newItem, ...next];
+      const success = await syncToSupabase('signatures', next);
+      if (success) {
+        setSignatureItems(next);
+        showToast(`Added "${item.name}" to signatures.`, 'success');
+      } else {
+        showToast(`Failed to update database for "${item.name}".`, 'error');
+      }
+    }
   };
 
   // ==================== OFFERS CRUD INTERFACES ====================
@@ -652,6 +737,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         adminEmail,
         
         menuItems,
+        signatureItems,
         offers,
         reviews,
         galleryItems,
@@ -666,6 +752,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         editMenuItem,
         deleteMenuItem,
         duplicateMenuItem,
+        
+        addSignatureItem,
+        editSignatureItem,
+        deleteSignatureItem,
+        toggleSignatureItem,
         
         addOffer,
         editOffer,

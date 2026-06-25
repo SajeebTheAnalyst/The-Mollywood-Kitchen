@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { MenuItem } from '../types';
 
 export default function SignatureManagementView() {
-  const { menuItems, addMenuItem, editMenuItem, deleteMenuItem, showToast } = useStore();
+  const { menuItems, signatureItems, addSignatureItem, editSignatureItem, deleteSignatureItem, toggleSignatureItem, showToast } = useStore();
   
   // Local form state
   const [formData, setFormData] = useState({
@@ -18,11 +18,6 @@ export default function SignatureManagementView() {
   
   const [isEditing, setIsEditing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  // Filter active special signature dishes
-  const signatureItems = menuItems.filter(item => item.is_special);
-  // Available regular items to toggle
-  const regularItems = menuItems.filter(item => !item.is_special);
 
   // Handle text input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -48,7 +43,7 @@ export default function SignatureManagementView() {
   };
 
   // Save or Update Product
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim()) {
       showToast('Please enter a dish name', 'error');
@@ -63,10 +58,9 @@ export default function SignatureManagementView() {
     const imageToUse = formData.image || 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600';
 
     if (isEditing && formData.id) {
-      // Find the item first to preserve other fields like category, rating, popular, etc.
-      const existing = menuItems.find(it => it.id === formData.id);
+      const existing = signatureItems.find(it => it.id === formData.id);
       if (existing) {
-        editMenuItem({
+        await editSignatureItem({
           ...existing,
           name: formData.name.trim(),
           price: priceNum,
@@ -74,12 +68,25 @@ export default function SignatureManagementView() {
           image: imageToUse,
           is_special: true
         });
-        showToast(`"${formData.name}" updated successfully!`, 'success');
+      } else {
+        // If it was somehow not found, add it
+        await addSignatureItem({
+          name: formData.name.trim(),
+          price: priceNum,
+          description: formData.description.trim(),
+          image: imageToUse,
+          is_special: true,
+          category: 'bengali',
+          rating: 5.0,
+          popular: true,
+          ingredients: ["Aromatic Spices", "Fresh Selection"],
+          spiceLevel: 2,
+          specialty: 'House special signature dish'
+        });
       }
     } else {
       // Add as a brand new special/signature item
-      const newItem: MenuItem = {
-        id: 'sig_' + Date.now(),
+      const newItem: Omit<MenuItem, 'id'> = {
         name: formData.name.trim(),
         price: priceNum,
         description: formData.description.trim(),
@@ -92,7 +99,7 @@ export default function SignatureManagementView() {
         spiceLevel: 2,
         specialty: 'House special signature dish'
       };
-      addMenuItem(newItem);
+      await addSignatureItem(newItem);
     }
 
     // Reset form
@@ -125,12 +132,6 @@ export default function SignatureManagementView() {
     setIsEditing(true);
     // Scroll smoothly to form
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Toggle item's special status directly
-  const toggleSignatureStatus = (item: MenuItem) => {
-    editMenuItem({ ...item, is_special: !item.is_special });
-    showToast(`Signature status updated for "${item.name}"`, 'success');
   };
 
   return (
@@ -313,9 +314,9 @@ export default function SignatureManagementView() {
                         Edit Item
                       </button>
                       <button
-                        onClick={() => {
+                        onClick={async () => {
                           if (confirm(`Are you sure you want to delete "${item.name}"? This deletes it completely.`)) {
-                            deleteMenuItem(item.id);
+                            await deleteSignatureItem(item.id);
                           }
                         }}
                         className="h-10 rounded-xl bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-500/20 hover:border-rose-500 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95"
@@ -331,37 +332,6 @@ export default function SignatureManagementView() {
             </AnimatePresence>
           </div>
         )}
-      </div>
-
-      {/* QUICK ASSIGN SELECTOR FROM OTHER MENU ITEMS */}
-      <div className="space-y-4 pt-8 border-t border-zinc-900">
-        <div>
-          <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-widest">Toggle General Menu Items as Signature</h2>
-          <p className="text-xs text-zinc-500 mt-1">Want to showcase an existing menu item in the Signature row? Simply toggle its status here.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[400px] overflow-y-auto pr-2 no-scrollbar">
-          {regularItems.map(item => (
-            <div 
-              key={item.id} 
-              className="bg-zinc-950/40 border border-zinc-900/60 hover:border-zinc-800 rounded-xl p-4 flex items-center gap-4 transition-all"
-            >
-              <img src={item.image} alt={item.name} className="w-12 h-12 object-cover bg-zinc-900 rounded-lg shrink-0 border border-white/5" />
-              <div className="flex-1 min-w-0">
-                <h3 className="text-xs font-bold text-zinc-300 truncate">{item.name}</h3>
-                <p className="text-[10px] text-zinc-500 mt-0.5">৳{item.price}</p>
-              </div>
-              <button
-                onClick={() => toggleSignatureStatus(item)}
-                className="h-8 px-3 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-black border border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 transition-all active:scale-95 cursor-pointer"
-                title="Promote to Signature"
-              >
-                <Check className="h-3.5 w-3.5" />
-                Add
-              </button>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );

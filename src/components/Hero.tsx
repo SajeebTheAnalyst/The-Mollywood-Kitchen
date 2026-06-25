@@ -16,7 +16,7 @@ export default function Hero({
   onBookTable,
   onSelectMenuItem
 }: HeroProps) {
-  const { menuItems, heroSettings } = useStore();
+  const { menuItems, signatureItems, heroSettings } = useStore();
   const [highlightDishes, setHighlightDishes] = useState<MenuItem[]>([]);
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
@@ -30,16 +30,13 @@ export default function Hero({
   };
 
   useEffect(() => {
-    // Dynamically filter items where is_special is true
-    const specialDishes = menuItems.filter(it => it.is_special);
-    if (specialDishes.length > 0) {
-      // Show all special dishes in carousel
-      setHighlightDishes(specialDishes);
+    if (signatureItems && signatureItems.length > 0) {
+      setHighlightDishes(signatureItems);
     } else {
       // Fallback if no special dishes are marked
       setHighlightDishes(menuItems.filter(it => it.popular));
     }
-  }, [menuItems]);
+  }, [signatureItems, menuItems]);
 
   return (
     <>
