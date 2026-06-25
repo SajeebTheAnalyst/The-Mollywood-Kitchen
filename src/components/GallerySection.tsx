@@ -41,32 +41,32 @@ export default function GallerySection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`group relative overflow-hidden rounded-sm bg-zinc-950 border border-white/5 transition-all duration-700 min-h-[320px] flex flex-col justify-end ${
+                className={`group relative overflow-hidden rounded-xl bg-zinc-950 border border-zinc-900 transition-all duration-500 min-h-[340px] flex flex-col justify-end ${
                   isLarge ? 'sm:col-span-2' : 'sm:col-span-1'
                 }`}
               >
                 
-                {/* Full-bleed high-res image */}
+                {/* Full-bleed high-res image in original brilliant color */}
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="absolute inset-0 h-full w-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-70 group-hover:scale-110 transition-all duration-[2000ms] ease-out pointer-events-none"
+                  className="absolute inset-0 h-full w-full object-cover opacity-95 group-hover:opacity-100 group-hover:scale-105 group-hover:brightness-105 transition-all duration-700 ease-out pointer-events-none"
                   referrerPolicy="no-referrer"
                 />
                 
-                {/* Black Overlay Gradient for title legibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent pointer-events-none" />
+                {/* Soft, light subtle dark overlay for text contrast without darkening the whole image */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
 
                 {/* Content Overlay details */}
-                <div className="p-8 z-10 space-y-2 relative transition-all duration-500">
+                <div className="p-6 sm:p-8 z-10 space-y-2 relative transition-all duration-500">
                   <div className="flex items-center space-x-2">
-                    <span className="text-[9px] font-bold tracking-[0.3em] text-gold uppercase">Gallery 0{index + 1}</span>
+                    <span className="text-[9px] font-bold tracking-[0.3em] text-gold uppercase bg-black/60 backdrop-blur-md px-2 py-0.5 rounded border border-gold/20">{item.category || 'Gallery'} 0{index + 1}</span>
                   </div>
-                  <h3 className="font-heading text-xl font-bold text-text-primary tracking-widest uppercase transition-colors duration-300">
+                  <h3 className="font-heading text-lg sm:text-xl font-bold text-text-primary tracking-wide uppercase transition-colors duration-300 drop-shadow-md">
                     {item.title}
                   </h3>
-                  <p className="font-sans text-xs text-text-secondary font-light leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    {item.subtitle}
+                  <p className="font-sans text-xs text-zinc-300 font-light leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500 drop-shadow-sm">
+                    View authentic captures of {item.title}
                   </p>
                 </div>
 

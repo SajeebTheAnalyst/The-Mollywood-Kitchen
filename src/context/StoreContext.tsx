@@ -218,7 +218,55 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   });
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(() => {
     const saved = localStorage.getItem('mollywood_gallery');
-    return saved ? JSON.parse(saved) : initialData.gallery as GalleryItem[];
+    let loaded = saved ? JSON.parse(saved) : initialData.gallery as GalleryItem[];
+    
+    // Premium 6-piece layout featuring: Food, Interior, Owner, Kitchen
+    const idealGallery: GalleryItem[] = [
+      {
+        id: "gal1",
+        title: "Tandoor Fire Roasting",
+        category: "Kitchen",
+        image: "https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        id: "gal2",
+        title: "Warm Luxury Dining Space",
+        category: "Ambiance",
+        image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        id: "gal3",
+        title: "Royal Aromatic Biryani",
+        category: "Dishes",
+        image: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        id: "gal4",
+        title: "Founder & Owner Sajeeb",
+        category: "Team",
+        image: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        id: "gal5",
+        title: "Vibrant Sizzling Platters",
+        category: "Dishes",
+        image: "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&q=80&w=800"
+      },
+      {
+        id: "gal6",
+        title: "Candlelit Family Enclave",
+        category: "Ambiance",
+        image: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800"
+      }
+    ];
+
+    // Auto-migrate if it is the old 3-item list or has old stale images
+    if (loaded.length <= 3 || loaded.some((item: any) => item.image.includes('photo-1544025162-d76694265947') && item.id === 'gal1')) {
+      localStorage.setItem('mollywood_gallery', JSON.stringify(idealGallery));
+      return idealGallery;
+    }
+    
+    return loaded;
   });
   const [reservations, setReservations] = useState<AdminReservation[]>(() => {
     const saved = localStorage.getItem('mollywood_reservations');
