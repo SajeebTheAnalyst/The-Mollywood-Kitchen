@@ -4,6 +4,15 @@ import { Star, Check, X, Edit2, Trash2, Plus, UploadCloud, Save, Image as ImageI
 import { motion, AnimatePresence } from 'motion/react';
 import { MenuItem } from '../types';
 
+const PRESET_SIGNATURE_IMAGES = [
+  { name: 'Kacchi Biryani', url: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600' },
+  { name: 'Beef Tehari / Ribs', url: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600' },
+  { name: 'Mutton Kala Bhuna / Roasted', url: 'https://images.unsplash.com/photo-1603360946369-fa9902792685?auto=format&fit=crop&q=80&w=600' },
+  { name: 'Chicken Kebab Platter', url: 'https://images.unsplash.com/photo-1598103442097-8b743e2b95c6?auto=format&fit=crop&q=80&w=600' },
+  { name: 'Seafood Mixed Grill', url: 'https://images.unsplash.com/photo-1551218808-94e220e084d2?auto=format&fit=crop&q=80&w=600' },
+  { name: 'Gourmet Bengali Thali', url: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&q=80&w=600' }
+];
+
 export default function SignatureManagementView() {
   const { menuItems, signatureItems, addSignatureItem, editSignatureItem, deleteSignatureItem, toggleSignatureItem, showToast } = useStore();
   
@@ -198,44 +207,87 @@ export default function SignatureManagementView() {
             </div>
           </div>
 
-          {/* Image upload preview box */}
-          <div className="lg:col-span-4 flex flex-col justify-between">
-            <div>
-              <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">Image Upload & Preview</label>
-              
-              <div 
-                onClick={() => fileInputRef.current?.click()}
-                className="relative h-32 bg-zinc-900/40 border border-dashed border-zinc-800 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-gold/40 hover:bg-zinc-900/60 transition-all overflow-hidden group/upload"
-              >
-                {formData.image ? (
-                  <>
-                    <img 
-                      src={formData.image} 
-                      alt="Preview" 
-                      className="w-full h-full object-cover group-hover/upload:opacity-50 transition-all"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/upload:opacity-100 transition-all bg-black/40">
-                      <span className="text-[10px] font-bold text-white uppercase tracking-wider bg-black/60 px-3 py-1.5 rounded-full border border-white/10">Change Image</span>
+          {/* Image Upload, Direct URL, and Presets Section */}
+          <div className="lg:col-span-4 flex flex-col justify-between space-y-4">
+            <div className="space-y-3">
+              <div>
+                <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5 flex justify-between">
+                  <span>Image Upload & Preview</span>
+                  <span className="text-[9px] text-zinc-500 normal-case">Or paste link below</span>
+                </label>
+                
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="relative h-28 bg-zinc-900/40 border border-dashed border-zinc-800 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-gold/40 hover:bg-zinc-900/60 transition-all overflow-hidden group/upload"
+                >
+                  {formData.image ? (
+                    <>
+                      <img 
+                        src={formData.image} 
+                        alt="Preview" 
+                        className="w-full h-full object-cover group-hover/upload:opacity-50 transition-all"
+                        onError={(e) => {
+                          // Fallback placeholder if URL is broken
+                          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600';
+                        }}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/upload:opacity-100 transition-all bg-black/40">
+                        <span className="text-[10px] font-bold text-white uppercase tracking-wider bg-black/60 px-3 py-1.5 rounded-full border border-white/10">Change Image</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center p-4">
+                      <UploadCloud className="h-6 w-6 text-zinc-500 mx-auto mb-1 group-hover/upload:text-gold transition-colors" />
+                      <span className="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Upload File</span>
+                      <span className="block text-[8px] text-zinc-600 mt-0.5">Max size 2MB</span>
                     </div>
-                  </>
-                ) : (
-                  <div className="text-center p-4">
-                    <UploadCloud className="h-6 w-6 text-zinc-500 mx-auto mb-1 group-hover/upload:text-gold transition-colors" />
-                    <span className="block text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Drag & Drop or Click</span>
-                    <span className="block text-[9px] text-zinc-600 mt-0.5">Max size 2MB</span>
-                  </div>
-                )}
+                  )}
+                </div>
+                <input 
+                  ref={fileInputRef}
+                  type="file" 
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden" 
+                />
               </div>
-              <input 
-                ref={fileInputRef}
-                type="file" 
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden" 
-              />
+
+              {/* DIRECT URL INPUT */}
+              <div>
+                <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest mb-1.5">Direct Image URL</label>
+                <input 
+                  type="text" 
+                  name="image"
+                  value={formData.image}
+                  onChange={handleChange}
+                  placeholder="https://images.unsplash.com/... or paste image URL"
+                  className="w-full h-10 bg-zinc-900 border border-zinc-800 text-white rounded-xl px-4 text-xs focus:border-gold/50 focus:outline-none transition-all placeholder:text-zinc-600"
+                />
+              </div>
+
+              {/* PRESETS QUICK SELECT */}
+              <div>
+                <label className="block text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1.5">Or Choose from Delicious Presets</label>
+                <div className="grid grid-cols-6 gap-2">
+                  {PRESET_SIGNATURE_IMAGES.map((preset, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        setFormData(prev => ({ ...prev, image: preset.url }));
+                        showToast(`Selected "${preset.name}" preset image!`, 'success');
+                      }}
+                      className="relative h-9 rounded-lg overflow-hidden border border-zinc-850 hover:border-gold/60 focus:outline-none transition-all group/preset cursor-pointer"
+                      title={preset.name}
+                    >
+                      <img src={preset.url} alt={preset.name} className="w-full h-full object-cover opacity-60 group-hover/preset:opacity-100 transition-opacity" />
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div className="flex gap-2 mt-4 lg:mt-0">
+            <div className="flex gap-2 pt-2">
               <button 
                 type="submit"
                 className="flex-1 h-11 bg-gold hover:bg-amber-400 text-black font-bold text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all active:scale-95 cursor-pointer"
@@ -288,6 +340,9 @@ export default function SignatureManagementView() {
                       src={item.image} 
                       alt={item.name} 
                       className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" 
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600';
+                      }}
                     />
                     <div className="absolute top-3 right-3 bg-black/70 border border-white/10 px-2.5 py-1 rounded-full flex items-center gap-1">
                       <Star className="h-3 w-3 fill-gold text-gold" />

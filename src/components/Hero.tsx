@@ -242,6 +242,9 @@ export default function Hero({
                         alt={dish.name} 
                         className="h-full w-full object-cover transition-transform duration-700 group-hover/card:scale-105 opacity-90 group-hover/card:opacity-100" 
                         referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=600';
+                        }}
                       />
                     </div>
                     <div className="flex-1 flex flex-col justify-between">
