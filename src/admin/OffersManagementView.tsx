@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useStore } from '../context/StoreContext';
 import { OfferItem } from '../types';
 import { 
@@ -15,16 +15,28 @@ import {
   GraduationCap,
   Users,
   Cake,
-  Award
+  Award,
+  UploadCloud,
+  Image as ImageIcon
 } from 'lucide-react';
 
+const PRESET_OFFER_IMAGES = [
+  { name: 'Kacchi Biryani', url: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=800' },
+  { name: 'Mutton Rezala', url: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?auto=format&fit=crop&q=80&w=800' },
+  { name: 'Tandoori Chicken', url: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&q=80&w=800' },
+  { name: 'Mixed Platter', url: 'https://images.unsplash.com/photo-1598103442097-8b743e2b95c6?auto=format&fit=crop&q=80&w=800' },
+  { name: 'Bengali Special', url: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&q=80&w=800' },
+  { name: 'Beef Kala Bhuna', url: 'https://images.unsplash.com/photo-1603360946369-fa9902792685?auto=format&fit=crop&q=80&w=800' }
+];
+
 export default function OffersManagementView() {
-  const { offers, addOffer, editOffer, deleteOffer } = useStore();
+  const { offers, addOffer, editOffer, deleteOffer, showToast } = useStore();
   
   // Modal states
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingOffer, setEditingOffer] = useState<OfferItem | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form states matching types.ts
   const [formData, setFormData] = useState({
@@ -38,8 +50,27 @@ export default function OffersManagementView() {
     endDate: '2026-07-25',
     endTime: '23:00',
     isActive: true,
-    isFeatured: false
+    isFeatured: false,
+    displayOrder: 0,
+    showOnHome: true
   });
+
+  // Handle local file upload & convert to base64 for instant preview
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Image size should be less than 2MB', 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, image: reader.result as string }));
+        showToast('Offer image uploaded successfully!', 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleOpenCreateForm = () => {
     setEditingOffer(null);
@@ -54,7 +85,9 @@ export default function OffersManagementView() {
       endDate: '2026-07-25',
       endTime: '23:00',
       isActive: true,
-      isFeatured: false
+      isFeatured: false,
+      displayOrder: offers.length + 1,
+      showOnHome: true
     });
     setIsFormOpen(true);
   };
@@ -72,7 +105,9 @@ export default function OffersManagementView() {
       endDate: offer.endDate || '2026-07-25',
       endTime: offer.endTime || '23:59',
       isActive: offer.isActive ?? true,
-      isFeatured: offer.isFeatured ?? false
+      isFeatured: offer.isFeatured ?? false,
+      displayOrder: offer.displayOrder ?? 0,
+      showOnHome: offer.showOnHome ?? true
     });
     setIsFormOpen(true);
   };
@@ -92,7 +127,9 @@ export default function OffersManagementView() {
       endDate: formData.endDate,
       endTime: formData.endTime,
       isActive: formData.isActive,
-      isFeatured: formData.isFeatured
+      isFeatured: formData.isFeatured,
+      displayOrder: Number(formData.displayOrder) || 0,
+      showOnHome: formData.showOnHome
     };
 
     if (editingOffer) {
@@ -196,6 +233,10 @@ export default function OffersManagementView() {
                     <Clock className="h-3 w-3 text-red-400" />
                     <span>End: {offer.endDate || 'No Date'} | {offer.endTime || '23:59'}</span>
                   </div>
+                  <div className="flex items-center gap-4 text-zinc-400 border-t border-zinc-900/60 pt-1.5 mt-1">
+                    <span>Order: <strong className="text-gold font-bold">{offer.displayOrder ?? 0}</strong></span>
+                    <span>Show on Home: <strong className="text-gold font-bold">{offer.showOnHome !== false ? 'YES' : 'NO'}</strong></span>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-end gap-2 pt-2">
@@ -283,8 +324,8 @@ export default function OffersManagementView() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1 col-span-1">
                   <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Promo Code</label>
                   <input
                     type="text"
@@ -296,7 +337,7 @@ export default function OffersManagementView() {
                   />
                 </div>
 
-                <div className="space-y-1">
+                <div className="space-y-1 col-span-1">
                   <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Main Category</label>
                   <select
                     value={formData.category}
@@ -309,18 +350,72 @@ export default function OffersManagementView() {
                     <option value="first">First Order Offers</option>
                   </select>
                 </div>
+
+                <div className="space-y-1 col-span-1">
+                  <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Display Order</label>
+                  <input
+                    type="number"
+                    min="0"
+                    required
+                    value={formData.displayOrder}
+                    onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) || 0 })}
+                    placeholder="e.g. 1"
+                    className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono"
+                  />
+                </div>
               </div>
 
-              <div className="space-y-1">
-                <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Offer Image URL</label>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Offer Image</label>
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="inline-flex items-center gap-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-gold font-sans text-[10px] font-bold px-2.5 py-1.5 rounded-lg uppercase tracking-wider transition-all cursor-pointer"
+                  >
+                    <UploadCloud className="h-3 w-3" />
+                    <span>Upload Local File</span>
+                  </button>
+                </div>
                 <input
-                  type="url"
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <input
+                  type="text"
                   required
                   value={formData.image}
                   onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  placeholder="Unsplash Biryani/Mutton/Kebab image link..."
+                  placeholder="Paste Unsplash link OR upload a local file above..."
                   className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono"
                 />
+
+                {/* Preset Choices */}
+                <div className="pt-1">
+                  <span className="block text-[9px] font-mono font-bold text-zinc-500 uppercase tracking-widest mb-1.5">Or Select Premium Food Presets</span>
+                  <div className="grid grid-cols-6 gap-1.5">
+                    {PRESET_OFFER_IMAGES.map((preset, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          setFormData(prev => ({ ...prev, image: preset.url }));
+                          showToast(`Selected "${preset.name}" preset image!`, 'success');
+                        }}
+                        className={`relative h-10 rounded-lg overflow-hidden border transition-all cursor-pointer group/preset ${formData.image === preset.url ? 'border-gold shadow-[0_0_8px_rgba(212,175,55,0.3)]' : 'border-zinc-900 hover:border-zinc-700'}`}
+                        title={preset.name}
+                      >
+                        <img src={preset.url} alt={preset.name} className="w-full h-full object-cover opacity-75 group-hover/preset:opacity-100 transition-opacity" />
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/preset:opacity-100 transition-opacity">
+                          <span className="text-[7px] font-bold text-white uppercase text-center leading-none px-0.5">{preset.name}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Start Date & Start Time */}
@@ -427,6 +522,31 @@ export default function OffersManagementView() {
                   ) : (
                     <span className="flex items-center gap-1.5 font-mono text-zinc-500 text-xs">
                       <span>STANDARD</span>
+                      <ToggleLeft className="h-8 w-8 text-zinc-700" />
+                    </span>
+                  )}
+                </button>
+              </div>
+
+              {/* Show On Homepage Toggle */}
+              <div className="bg-zinc-950 p-4 border border-zinc-900 rounded-xl flex items-center justify-between">
+                <div>
+                  <h4 className="text-xs font-semibold text-zinc-200 font-sans">Show On Homepage</h4>
+                  <p className="text-[10px] text-zinc-500 leading-relaxed font-light mt-0.5">Toggle to display this active promo card in the promotions carousel on the homepage.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, showOnHome: !(formData.showOnHome ?? true) })}
+                  className="text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  {formData.showOnHome !== false ? (
+                    <span className="flex items-center gap-1.5 font-mono text-gold text-xs font-bold">
+                      <span>SHOW</span>
+                      <ToggleRight className="h-8 w-8 text-gold fill-amber-950/40" />
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1.5 font-mono text-zinc-500 text-xs">
+                      <span>HIDE</span>
                       <ToggleLeft className="h-8 w-8 text-zinc-700" />
                     </span>
                   )}

@@ -26,6 +26,8 @@ export interface OfferItem {
   endTime?: string;
   isActive?: boolean;
   isFeatured?: boolean;
+  displayOrder?: number;
+  showOnHome?: boolean;
 }
 
 export interface ReviewItem {

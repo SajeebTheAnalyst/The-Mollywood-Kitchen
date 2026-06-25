@@ -157,7 +157,26 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   });
   const [offers, setOffers] = useState<OfferItem[]>(() => {
     const saved = localStorage.getItem('mollywood_offers');
-    return saved ? JSON.parse(saved) : initialData.offers as OfferItem[];
+    let loaded = saved ? JSON.parse(saved) as OfferItem[] : initialData.offers as OfferItem[];
+    // Self-healing migration: replace any old interior or non-food images with gorgeous food images
+    let modified = false;
+    loaded = loaded.map(o => {
+      if (!o.image || o.image.includes('photo-1555396273') || o.image.includes('photo-1544025162-d76694265947')) {
+        modified = true;
+        if (o.title.toLowerCase().includes('biryani') || o.title.toLowerCase().includes('kacchi')) {
+          return { ...o, image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=800' };
+        } else if (o.title.toLowerCase().includes('tandoori') || o.title.toLowerCase().includes('kebab') || o.title.toLowerCase().includes('first') || o.title.toLowerCase().includes('delight')) {
+          return { ...o, image: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&q=80&w=800' };
+        } else {
+          return { ...o, image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&q=80&w=800' };
+        }
+      }
+      return o;
+    });
+    if (modified) {
+      localStorage.setItem('mollywood_offers', JSON.stringify(loaded));
+    }
+    return loaded;
   });
   const [reviews, setReviews] = useState<ReviewItem[]>(() => {
     const saved = localStorage.getItem('mollywood_reviews');
