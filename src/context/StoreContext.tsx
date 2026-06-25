@@ -221,7 +221,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const syncToSupabase = async (id: string, content: any) => {
+  const syncToSupabase = async (id: string, content: any): Promise<boolean> => {
     // 1. Instantly update local cache as THE primary source of truth
     persist(`mollywood_${id}`, content);
     
@@ -232,10 +232,13 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         .upsert([{ id, content, updated_at: new Date().toISOString() }], { onConflict: 'id' });
         
       if (error) {
-        console.warn(`Supabase Cloud Sync failed for ${id} (Connection/URL issue). Data is safely stored in your browser local storage though.`);
+        console.error(`Supabase Cloud Sync failed for ${id}:`, error.message);
+        return false;
       }
+      return true;
     } catch (err) {
-      console.warn(`Database unreachable. ${id} saved to your browser local storage instead.`);
+      console.error(`Database unreachable for ${id}:`, err);
+      return false;
     }
   };
 
@@ -435,30 +438,42 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   // ==================== MENU CRUD INTERFACES ====================
-  const addMenuItem = (item: Omit<MenuItem, 'id'>) => {
+  const addMenuItem = async (item: Omit<MenuItem, 'id'>) => {
     const newItem: MenuItem = {
       ...item,
       id: 'menu_' + Date.now()
     };
     const next = [newItem, ...menuItems];
-    setMenuItems(next);
-    syncToSupabase('menu', next);
-    showToast(`Added "${newItem.name}" to menu successfully!`, 'success');
+    const success = await syncToSupabase('menu', next);
+    if (success) {
+      setMenuItems(next);
+      showToast(`Added "${newItem.name}" to menu successfully!`, 'success');
+    } else {
+      showToast(`Added "${newItem.name}" to local cache, but database sync failed.`, 'error');
+    }
   };
 
-  const editMenuItem = (item: MenuItem) => {
+  const editMenuItem = async (item: MenuItem) => {
     const next = menuItems.map(x => x.id === item.id ? item : x);
-    setMenuItems(next);
-    syncToSupabase('menu', next);
-    showToast(`Updated "${item.name}" details.`, 'success');
+    const success = await syncToSupabase('menu', next);
+    if (success) {
+      setMenuItems(next);
+      showToast(`Updated "${item.name}" details.`, 'success');
+    } else {
+      showToast(`Updated "${item.name}" locally, but database sync failed.`, 'error');
+    }
   };
 
-  const deleteMenuItem = (id: string) => {
+  const deleteMenuItem = async (id: string) => {
     const item = menuItems.find(x => x.id === id);
     const next = menuItems.filter(x => x.id !== id);
-    setMenuItems(next);
-    syncToSupabase('menu', next);
-    showToast(`Deleted "${item?.name || 'item'}" from menu.`, 'success');
+    const success = await syncToSupabase('menu', next);
+    if (success) {
+      setMenuItems(next);
+      showToast(`Deleted "${item?.name || 'item'}" from menu.`, 'success');
+    } else {
+      showToast(`Deleted "${item?.name || 'item'}" locally, but database sync failed.`, 'error');
+    }
   };
 
   const duplicateMenuItem = (id: string) => {
