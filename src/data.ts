@@ -705,59 +705,57 @@ export const MENU_ITEMS: MenuItem[] = [
 
 export const OFFERS_DATA: OfferItem[] = [
   {
-    id: 'o1',
-    title: "Today's Special Combo Deal",
-    tagline: "Owner's Signature Special - Free Appetizer",
-    discount: "FREE APPETIZER INCLUDED",
-    description: "Purchase our signature Mutton Biriyani or Beef Kala Bhuna and receive a complimentary portion of Ghee Rice or French Fries.",
-    badge: "Limited Quantities Available",
-    category: 'today',
-    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600',
-    code: "FREEAPP"
-  },
-  {
-    id: 'o2',
-    title: "The Weekend Family Feast",
-    tagline: "Unwind with the ultimate delicious feast",
-    discount: "20% OFF ALL ORDERS",
-    description: "Gather with friends or family. Get instant 20% discount on any à la carte food order above ৳1,500. Applicable on Friday, Saturday, and Sunday nights.",
-    badge: "Weekend Prime Time",
-    category: 'weekend',
-    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600',
-    code: "MOLLYWEEKEND"
-  },
-  {
-    id: 'o3',
-    title: "The Gourmet Solo Combo",
-    tagline: "The perfect companion pack for your solo cravings",
-    discount: "SPECIAL PRICE: ৳590",
-    description: "Indulge in a premium combo featuring our delicious Beef Kala Bhuna, paired with a chilled Mango Juice, and finished with delicious Sweet Curd.",
-    badge: "Best Value Solo",
-    category: 'combo',
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&q=80&w=600',
-    code: "SOLOPACK"
-  },
-  {
-    id: 'o4',
-    title: "The Grand Family Feast",
-    tagline: "For groups of 4 hungry foodies",
-    discount: "SAVE ৳1,200 ON FAMILY PASS",
-    description: "The complete dining layout! Includes 2 Starters, 4 Main Course dishes of your choice, sweet dessert pairings, plus unlimited Soft Drinks or Tea for 4 guests.",
-    badge: "Sells out fast!",
-    category: 'family',
-    image: 'https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&q=80&w=600',
-    code: "FAMILYFEAST"
-  },
-  {
-    id: 'o5',
-    title: "The Student Pocket Saver",
-    tagline: "Show your student card to claim budget rates",
-    discount: "15% OFF ALL NOODLES & SNACKS",
-    description: "Take a break from classes! Get an extra 15% discount on all chicken wings, French fries, or Mango Juice combinations. Bring your school student card.",
-    badge: "Student ID Required",
+    id: 'o_stud',
+    title: "Student Biryani & Kacchi Delight",
+    description: "Unlock a flat 15% discount on our legendary Biryani and Kacchi dishes. Bring a valid school, college, or university student ID to claim premium quality food at student-friendly rates.",
     category: 'student',
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=600',
-    code: "CAMPUS15"
+    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=800',
+    code: "CAMPUSBIRI",
+    startDate: "2026-06-01",
+    startTime: "11:00",
+    endDate: "2026-08-31",
+    endTime: "22:00",
+    isActive: true
+  },
+  {
+    id: 'o_fam',
+    title: "Grand Royal Feast Platter",
+    description: "Perfect for family gatherings! Treat your loved ones with a premium platter featuring traditional Kacchi, slow-cooked Mutton Rezala, aromatic Basmati, and cooling Shahi Borhani.",
+    category: 'family',
+    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800',
+    code: "ROYALFAMILY",
+    startDate: "2026-06-01",
+    startTime: "12:00",
+    endDate: "2026-07-31",
+    endTime: "23:00",
+    isActive: true,
+    isFeatured: true
+  },
+  {
+    id: 'o_bday',
+    title: "VIP Birthday Celebration Special",
+    description: "Celebrate your special day with us. Pre-book your birthday dinner and receive a complimentary slow-cooked Mutton Rezala or a premium dessert platter for your table.",
+    category: 'birthday',
+    image: 'https://images.unsplash.com/photo-1603360946369-fa9902792685?auto=format&fit=crop&q=80&w=800',
+    code: "BDAYCELEB",
+    startDate: "2026-06-01",
+    startTime: "12:00",
+    endDate: "2026-09-30",
+    endTime: "23:30",
+    isActive: true
+  },
+  {
+    id: 'o_first',
+    title: "Welcome Guest Tandoori Pass",
+    description: "Enjoy a flat 10% discount on any signature clay-oven Tandoori Chicken, succulent Kebabs, and fresh butter naan on your very first table reservation at Mollywood Kitchen.",
+    category: 'first',
+    image: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?auto=format&fit=crop&q=80&w=800',
+    code: "FIRSTGUEST",
+    startDate: "2026-06-01",
+    startTime: "11:30",
+    endDate: "2026-12-31",
+    endTime: "23:00",
+    isActive: true
   }
 ];
 

@@ -16,20 +16,16 @@ export interface MenuItem {
 export interface OfferItem {
   id: string;
   title: string;
-  tagline: string;
-  discount: string;
   description: string;
-  badge: string;
-  category: 'today' | 'weekend' | 'combo' | 'family' | 'student';
+  category?: 'student' | 'family' | 'birthday' | 'first';
   image: string;
   code: string;
   startDate?: string;
+  startTime?: string;
   endDate?: string;
-  buttonText?: string;
-  buttonLink?: string;
+  endTime?: string;
   isActive?: boolean;
-  beforePrice?: number;
-  nowPrice?: number;
+  isFeatured?: boolean;
 }
 
 export interface ReviewItem {
