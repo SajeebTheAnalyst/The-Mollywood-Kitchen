@@ -28,6 +28,9 @@ export interface OfferItem {
   isFeatured?: boolean;
   displayOrder?: number;
   showOnHome?: boolean;
+  originalPrice?: number;
+  offerPrice?: number;
+  includedItems?: string;
 }
 
 export interface ReviewItem {

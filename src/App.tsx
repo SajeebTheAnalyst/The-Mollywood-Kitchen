@@ -159,7 +159,7 @@ function AppContent() {
       />
 
       {/* 5. SPECIAL OFFERS - Promo coupon passes */}
-      <OffersSection />
+      <OffersSection onAddToCart={handleAddToCart} />
 
       {/* 6. PHOTO GALLERY - Bento modular grids */}
       <GallerySection />

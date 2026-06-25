@@ -161,17 +161,51 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     // Self-healing migration: replace any old interior or non-food images with gorgeous food images
     let modified = false;
     loaded = loaded.map(o => {
-      if (!o.image || o.image.includes('photo-1555396273') || o.image.includes('photo-1544025162-d76694265947')) {
-        modified = true;
-        if (o.title.toLowerCase().includes('biryani') || o.title.toLowerCase().includes('kacchi')) {
-          return { ...o, image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=800' };
-        } else if (o.title.toLowerCase().includes('tandoori') || o.title.toLowerCase().includes('kebab') || o.title.toLowerCase().includes('first') || o.title.toLowerCase().includes('delight')) {
-          return { ...o, image: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&q=80&w=800' };
+      let changed = false;
+      let newObj = { ...o };
+      
+      // Image repair
+      if (!newObj.image || newObj.image.includes('photo-1555396273') || newObj.image.includes('photo-1544025162-d76694265947')) {
+        changed = true;
+        if (newObj.title.toLowerCase().includes('biryani') || newObj.title.toLowerCase().includes('kacchi')) {
+          newObj.image = 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=800';
+        } else if (newObj.title.toLowerCase().includes('tandoori') || newObj.title.toLowerCase().includes('kebab') || newObj.title.toLowerCase().includes('first') || newObj.title.toLowerCase().includes('delight')) {
+          newObj.image = 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?auto=format&fit=crop&q=80&w=800';
         } else {
-          return { ...o, image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&q=80&w=800' };
+          newObj.image = 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&q=80&w=800';
         }
       }
-      return o;
+
+      // Self-healing default values for prices & included items
+      if (newObj.originalPrice === undefined) {
+        changed = true;
+        if (newObj.title.toLowerCase().includes('biryani') || newObj.title.toLowerCase().includes('kacchi')) {
+          newObj.originalPrice = 450;
+          newObj.offerPrice = 380;
+          newObj.includedItems = "Mutton Kacchi Biryani, Borhani, Jorda Dessert";
+        } else if (newObj.title.toLowerCase().includes('first') || newObj.title.toLowerCase().includes('delight')) {
+          newObj.originalPrice = 400;
+          newObj.offerPrice = 320;
+          newObj.includedItems = "Premium Tandoori Chicken, Garlic Naan, Mint Sauce";
+        } else {
+          newObj.originalPrice = 350;
+          newObj.offerPrice = 295;
+          newObj.includedItems = "Beef Kala Bhuna, Ghee Rice, Green Salad";
+        }
+      }
+
+      if (newObj.displayOrder === undefined) {
+        changed = true;
+        newObj.displayOrder = 1;
+      }
+      
+      if (newObj.showOnHome === undefined) {
+        changed = true;
+        newObj.showOnHome = true;
+      }
+
+      if (changed) modified = true;
+      return newObj;
     });
     if (modified) {
       localStorage.setItem('mollywood_offers', JSON.stringify(loaded));

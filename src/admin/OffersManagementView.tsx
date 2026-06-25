@@ -52,7 +52,10 @@ export default function OffersManagementView() {
     isActive: true,
     isFeatured: false,
     displayOrder: 0,
-    showOnHome: true
+    showOnHome: true,
+    originalPrice: '' as string | number,
+    offerPrice: '' as string | number,
+    includedItems: ''
   });
 
   // Handle local file upload & convert to base64 for instant preview
@@ -87,7 +90,10 @@ export default function OffersManagementView() {
       isActive: true,
       isFeatured: false,
       displayOrder: offers.length + 1,
-      showOnHome: true
+      showOnHome: true,
+      originalPrice: '',
+      offerPrice: '',
+      includedItems: ''
     });
     setIsFormOpen(true);
   };
@@ -107,7 +113,10 @@ export default function OffersManagementView() {
       isActive: offer.isActive ?? true,
       isFeatured: offer.isFeatured ?? false,
       displayOrder: offer.displayOrder ?? 0,
-      showOnHome: offer.showOnHome ?? true
+      showOnHome: offer.showOnHome ?? true,
+      originalPrice: offer.originalPrice ?? '',
+      offerPrice: offer.offerPrice ?? '',
+      includedItems: offer.includedItems ?? ''
     });
     setIsFormOpen(true);
   };
@@ -129,7 +138,10 @@ export default function OffersManagementView() {
       isActive: formData.isActive,
       isFeatured: formData.isFeatured,
       displayOrder: Number(formData.displayOrder) || 0,
-      showOnHome: formData.showOnHome
+      showOnHome: formData.showOnHome,
+      originalPrice: formData.originalPrice !== '' ? Number(formData.originalPrice) : undefined,
+      offerPrice: formData.offerPrice !== '' ? Number(formData.offerPrice) : undefined,
+      includedItems: formData.includedItems.trim() || undefined
     };
 
     if (editingOffer) {
@@ -361,6 +373,44 @@ export default function OffersManagementView() {
                     onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) || 0 })}
                     placeholder="e.g. 1"
                     className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono"
+                  />
+                </div>
+              </div>
+
+              {/* Price fields & Included Items row */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1 col-span-1">
+                  <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Original Price (৳)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.originalPrice}
+                    onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
+                    placeholder="e.g. 400 (Optional)"
+                    className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono text-zinc-300"
+                  />
+                </div>
+
+                <div className="space-y-1 col-span-1">
+                  <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Offer Price (৳)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.offerPrice}
+                    onChange={(e) => setFormData({ ...formData, offerPrice: e.target.value })}
+                    placeholder="e.g. 280 (Optional)"
+                    className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-mono text-gold font-bold"
+                  />
+                </div>
+
+                <div className="space-y-1 col-span-1">
+                  <label className="text-[10px] font-mono uppercase font-bold text-zinc-400">Included Items</label>
+                  <input
+                    type="text"
+                    value={formData.includedItems}
+                    onChange={(e) => setFormData({ ...formData, includedItems: e.target.value })}
+                    placeholder="e.g. Biryani, Drinks, Salad"
+                    className="w-full bg-black border border-zinc-900 focus:border-gold/40 rounded-xl px-4 py-2.5 text-xs text-zinc-200 outline-none font-sans"
                   />
                 </div>
               </div>
