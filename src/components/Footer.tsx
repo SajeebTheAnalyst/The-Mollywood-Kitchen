@@ -151,7 +151,7 @@ export default function Footer({ setActiveTab }: FooterProps) {
             </div>
           </div>
 
-          {/* Studio Credentials */}
+          {/* About Us Section */}
           <div className="space-y-4">
             <h4 className="font-heading font-black text-gold tracking-widest text-[11px] uppercase">ABOUT US</h4>
             <div className="space-y-3.5 text-zinc-400 font-light">
