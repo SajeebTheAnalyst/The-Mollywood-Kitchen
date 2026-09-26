@@ -3,13 +3,13 @@ export interface MenuItem {
   name: string;
   price: number;
   description: string;
-  rating: number;
+  rating?: number;
   popular: boolean;
-  category: 'bengali' | 'indian' | 'chinese' | 'snacks-beverages';
+  category: string;
   image: string;
-  ingredients: string[];
-  spiceLevel: number; // 0 = none, 1 = mild, 2 = medium, 3 = spicy
-  specialty: string;
+  ingredients?: string[];
+  spiceLevel?: number; // 0 = none, 1 = mild, 2 = medium, 3 = spicy
+  specialty?: string;
   is_special?: boolean;
 }
 
