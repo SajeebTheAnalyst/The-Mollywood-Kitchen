@@ -1,13 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-heading: "Playfair Display", serif;
-  --font-sans: "DM Sans", sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: "Playfair Display", Georgia, serif;
 
   --color-gold: #d97706;
   --color-gold-secondary: #b45309;
-  --color-bg-premium: #ffffff;
+  --color-bg-premium: #faf8f5;
   --color-text-primary: #0f172a;
   --color-text-secondary: #64748b;
 
@@ -20,13 +21,23 @@
 }
 
 html {
-  background: #ffffff;
+  background: #faf8f5;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: #ffffff;
+  background: #faf8f5;
   color: #0f172a;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
   font-family: var(--font-sans);
 }
 
@@ -40,7 +51,7 @@ button {
 
 ::selection {
   background: #fef3c7;
-  color: #0f172a;
+  color: #92400e;
 }
 
 ::-webkit-scrollbar {
@@ -48,11 +59,11 @@ button {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f8fafc;
+  background: #faf8f5;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #e2dcd5;
   border-radius: 999px;
 }
 
@@ -71,10 +82,18 @@ button {
 
 @layer utilities {
   .text-glow-gold {
-    text-shadow: 0 0 18px rgba(217, 119, 6, 0.2);
+    text-shadow: 0 0 24px rgba(217, 119, 6, 0.35);
   }
 
   .border-gold-glow {
-    box-shadow: 0 12px 30px rgba(217, 119, 6, 0.12);
+    box-shadow: 0 0 25px rgba(217, 119, 6, 0.25);
+  }
+
+  .neon-amber-glow {
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.55);
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
   }
 }
