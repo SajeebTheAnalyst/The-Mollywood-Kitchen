@@ -1,95 +1,80 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800;900&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-heading: "Playfair Display", serif;
-  --font-sans: "Plus Jakarta Sans", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-  
-  --color-gold: #D4AF37;
-  --color-gold-secondary: #C98A2E;
-  --color-bg-premium: #0B0B0B;
-  --color-text-primary: #F8F8F8;
-  --color-text-secondary: #B8B8B8;
-  
-  --color-accent-red: #D22B2B;
-  --color-accent-red-hover: #F23030;
-  --color-cinema-dark: #0a0a0a;
-}
+  --font-sans: "DM Sans", sans-serif;
 
-@layer utilities {
-  .text-glow-gold {
-    text-shadow: 0 0 10px rgba(212, 175, 55, 0.35), 0 0 20px rgba(212, 175, 55, 0.15);
-  }
-  
-  .text-glow-red {
-    text-shadow: 0 0 10px rgba(139, 1, 1, 0.5), 0 0 20px rgba(139, 1, 1, 0.2);
-  }
-  
-  .border-gold-glow {
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
-  }
+  --color-gold: #d97706;
+  --color-gold-secondary: #b45309;
+  --color-bg-premium: #ffffff;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
 
-  /* Gold Metallic Effect Text */
-  .text-gold-metallic {
-    background: linear-gradient(
-      135deg,
-      #aa7c11 0%,
-      #ffd700 25%,
-      #f3ebd1 50%,
-      #d4af37 75%,
-      #916f1a 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+  --color-accent-red: #d97706;
+  --color-accent-red-hover: #b45309;
 }
 
 * {
-  scroll-behavior: smooth;
-  font-family: var(--font-sans);
-  color: var(--color-text-primary);
+  box-sizing: border-box;
 }
 
-/* Scrollbar styling */
+html {
+  background: #ffffff;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: #0f172a;
+  font-family: var(--font-sans);
+}
+
+button, input, textarea, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: #fef3c7;
+  color: #0f172a;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-bg-premium);
+  background: #f8fafc;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #222;
-  border-radius: 4px;
-  border: 1px solid var(--color-gold-secondary);
+  background: #cbd5e1;
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gold-secondary);
-}
-
-/* Background gradient styles */
-.cinematic-gradient-bg {
-  background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, var(--color-bg-premium) 70%, #000000 100%);
+  background: #d97706;
 }
 
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
-.card-cinematic-bg {
-  background: linear-gradient(145deg, #121212 0%, #0a0a0a 100%);
-  border: 1px solid rgba(212, 175, 55, 0.1);
-}
+@layer utilities {
+  .text-glow-gold {
+    text-shadow: 0 0 18px rgba(217, 119, 6, 0.2);
+  }
 
-.card-cinematic-bg:hover {
-  border-color: rgba(212, 175, 55, 0.35);
-  box-shadow: 0 10px 30px -15px rgba(212, 175, 55, 0.15);
+  .border-gold-glow {
+    box-shadow: 0 12px 30px rgba(217, 119, 6, 0.12);
+  }
 }
