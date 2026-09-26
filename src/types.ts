@@ -11,6 +11,13 @@ export interface MenuItem {
   spiceLevel?: number; // 0 = none, 1 = mild, 2 = medium, 3 = spicy
   specialty?: string;
   is_special?: boolean;
+  preparation?: string;
+  nutrition?: {
+    calories?: string;
+    portion?: string;
+    prepTime?: string;
+  };
+  tags?: string[];
 }
 
 export interface OfferItem {
