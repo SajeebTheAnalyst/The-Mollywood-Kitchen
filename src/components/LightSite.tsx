@@ -78,8 +78,8 @@ function TiltCard({ children, className = '' }: { children: React.ReactNode; cla
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const rotX = useTransform(y, [-0.5, 0.5], [8, -8]);
-  const rotY = useTransform(x, [-0.5, 0.5], [-8, 8]);
+  const rotX = useTransform(y, [-0.5, 0.5], [6, -6]);
+  const rotY = useTransform(x, [-0.5, 0.5], [-6, 6]);
   const springRotX = useSpring(rotX, { stiffness: 240, damping: 24 });
   const springRotY = useSpring(rotY, { stiffness: 240, damping: 24 });
 
@@ -130,25 +130,23 @@ function FoodCard({
     <TiltCard className="cursor-pointer h-full">
       <motion.article
         whileHover={{
-          scale: 1.04,
-          rotateX: 3,
-          rotateY: -3,
-          boxShadow: '0 25px 50px -12px rgba(245, 158, 11, 0.28)',
+          y: -8,
+          scale: 1.02,
         }}
-        transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
         onClick={() => onSelect(item)}
-        className="group relative h-full overflow-hidden rounded-[2rem] border border-amber-200/60 bg-white/90 backdrop-blur-md p-4 shadow-md transition-all hover:border-amber-400 hover:shadow-amber-500/20"
+        className="group relative h-full overflow-hidden rounded-3xl border border-amber-200/60 bg-white/95 backdrop-blur-md p-4 shadow-sm transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-xl hover:shadow-amber-500/10 hover:border-amber-400"
         style={{ transformStyle: 'preserve-3d' }}
       >
         {/* Glowing border micro-light */}
-        <div className="pointer-events-none absolute inset-0 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-b from-amber-500/10 via-transparent to-orange-500/10" />
+        <div className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-b from-amber-500/10 via-transparent to-orange-500/10" />
 
         {/* image frame - object contain zero clipping */}
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50/90 via-orange-50/40 to-amber-100/30 p-2 flex items-center justify-center border border-amber-100/80">
           <motion.img
             src={item.image}
             alt={item.name}
-            className="h-full w-full object-contain filter drop-shadow-md transition-transform duration-500 group-hover:scale-105 group-hover:rotate-1"
+            className="h-full w-full object-contain filter drop-shadow-md transition-transform duration-500 group-hover:scale-105"
           />
           {/* category pill */}
           <span className="absolute top-3 left-3 rounded-full bg-white/95 backdrop-blur-md px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-amber-700 shadow-sm border border-amber-200/60">
@@ -185,14 +183,14 @@ function FoodCard({
               Details
             </button>
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.92 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.95 }}
               onClick={(e) => {
                 e.stopPropagation();
                 onAdd(item);
                 if (onFlyCart) onFlyCart(e, item.image);
               }}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 py-2.5 text-xs font-bold text-white shadow-md shadow-amber-500/25 hover:shadow-[0_0_20px_rgba(245,158,11,0.5)] transition-all"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 py-2.5 text-xs font-bold text-white shadow-md shadow-amber-500/20 hover:shadow-lg hover:shadow-amber-500/30 transition-all"
             >
               <ShoppingBag className="h-3.5 w-3.5" /> Order
             </motion.button>
@@ -487,7 +485,7 @@ function Navbar({
   );
 }
 
-/* ─── hero section (wide container & 3D continuous orbit carousel) ── */
+/* ─── hero section (structured 12-col grid & robust orbit carousel) ── */
 function Hero({
   onSelect,
   onAdd,
@@ -512,133 +510,135 @@ function Hero({
   const active = HERO_ITEMS[activeIdx];
 
   return (
-    <section className="relative overflow-hidden min-h-[calc(100vh-78px)] flex items-center py-10 lg:py-16">
-      {/* Full width container with side padding pushing heading far left & carousel far right */}
-      <div className="relative w-full max-w-7xl mx-auto px-6 lg:px-12 grid items-center gap-12 lg:grid-cols-[1.15fr_1.15fr] lg:gap-16">
-        
-        {/* ── Left Column: Luxury Typography & Controls ── */}
+    <section className="relative w-full max-w-7xl mx-auto px-6 lg:px-12 py-12 lg:py-20 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center min-h-[85vh] overflow-hidden">
+      
+      {/* ── Left Column (Text & CTA): lg:col-span-7 ── */}
+      <motion.div
+        initial={{ opacity: 0, x: -30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="lg:col-span-7 flex flex-col justify-center space-y-6 z-10"
+      >
+        {/* Status Badge with Pulsing Animation */}
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-xl z-20"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="inline-flex items-center gap-2 rounded-full border border-amber-300/80 bg-white/90 backdrop-blur-md px-4 py-2 text-xs font-extrabold uppercase tracking-widest text-amber-700 shadow-sm w-fit"
         >
-          {/* Status Badge with Pulsing Animation */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 rounded-full border border-amber-300/80 bg-white/90 backdrop-blur-md px-4 py-2 text-xs font-extrabold uppercase tracking-widest text-amber-700 shadow-sm"
-          >
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
-            </span>
-            Now Open · Koloni Bazar, Pirganj
-          </motion.div>
-
-          {/* Luxury Playfair Display Headline */}
-          <h1 className="mt-6 font-serif font-black text-5xl sm:text-6xl lg:text-8xl tracking-tight bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700 bg-clip-text text-transparent drop-shadow-sm leading-[1.04]">
-            Where Cinema Meets Culinary Magic.
-          </h1>
-
-          {/* Active Dish Spotlight Price & Title */}
-          <div className="mt-5 flex items-baseline gap-3">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                className="flex items-baseline gap-3"
-              >
-                <span className="text-3xl sm:text-4xl font-black text-amber-600 tracking-tight">৳{active.price}.00</span>
-                <span className="text-sm font-bold text-slate-600 bg-white/90 px-3 py-1 rounded-full border border-amber-200/80 shadow-sm font-serif">
-                  ✦ {active.name}
-                </span>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Dynamic Body Paragraph */}
-          <p className="mt-5 text-base sm:text-lg leading-relaxed text-slate-600">
-            Indulge in authentic local delights, street classics, and handcrafted fusion platters at{' '}
-            <strong className="text-slate-800 font-bold">Koloni Bazar, Pirganj, Rangpur</strong>. Pure taste, crafted fresh daily.
-          </p>
-
-          {/* Quantity Stepper & Glowing Buttons */}
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            {/* Quantity Stepper */}
-            <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/95 backdrop-blur-md px-4 py-3 shadow-sm">
-              <button
-                onClick={() => setHeroQty(Math.max(1, heroQty - 1))}
-                className="text-slate-400 hover:text-amber-600 transition"
-              >
-                <Minus className="h-4 w-4" />
-              </button>
-              <span className="w-6 text-center text-sm font-black text-slate-900">{heroQty}</span>
-              <button
-                onClick={() => setHeroQty(heroQty + 1)}
-                className="text-slate-400 hover:text-amber-600 transition"
-              >
-                <Plus className="h-4 w-4" />
-              </button>
-            </div>
-
-            {/* Glowing Order Now CTA with Neon Glow */}
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-                boxShadow: '0 0 30px rgba(245, 158, 11, 0.55)',
-              }}
-              whileTap={{ scale: 0.96 }}
-              onClick={(e) => {
-                onAdd(active, heroQty);
-                if (onFlyCart) onFlyCart(e, active.image);
-              }}
-              className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-7 py-3.5 text-sm font-extrabold text-white shadow-lg shadow-amber-500/25 transition-all"
-            >
-              <ShoppingBag className="h-4 w-4" /> Order Now
-            </motion.button>
-
-            {/* Explore Menu CTA */}
-            <motion.button
-              whileHover={{
-                scale: 1.04,
-                boxShadow: '0 0 25px rgba(217, 119, 6, 0.25)',
-              }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => navigate('/menu')}
-              className="flex items-center gap-2 rounded-2xl border-2 border-slate-900/80 bg-transparent px-6 py-3.5 text-sm font-extrabold text-slate-900 transition hover:bg-slate-900 hover:text-white"
-            >
-              Explore Full Menu <ArrowRight className="h-4 w-4" />
-            </motion.button>
-          </div>
-
-          {/* Micro-animated Badges */}
-          <div className="mt-10 flex items-center gap-6 border-t border-amber-200/60 pt-6">
-            <div className="flex items-center gap-2">
-              <span className="flex h-3 w-3 rounded-full bg-emerald-500 animate-pulse" />
-              <div>
-                <p className="text-xs font-black text-slate-900 uppercase tracking-wider">100% Fresh Daily</p>
-                <p className="text-[11px] text-slate-500">Local Vegetables & Meats</p>
-              </div>
-            </div>
-            <div className="h-8 w-px bg-amber-200/60" />
-            <div>
-              <p className="text-xs font-black text-slate-900 uppercase tracking-wider">Pocket-Friendly</p>
-              <p className="text-[11px] text-slate-500">Starting from BDT 20</p>
-            </div>
-          </div>
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
+          </span>
+          Now Open · Koloni Bazar, Pirganj
         </motion.div>
 
-        {/* ── Right Column: Exact 3D Satellite Orbit Carousel ── */}
-        <div className="relative flex items-center justify-center min-h-[480px] lg:min-h-[600px]">
-          {/* Circular Orbit Curved Arc Dotted Line */}
-          <svg className="absolute w-[460px] sm:w-[560px] h-[460px] sm:h-[560px] pointer-events-none opacity-40">
+        {/* Scaled Balanced Luxury Headline */}
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight text-slate-900 font-serif">
+          Where Cinema Meets{' '}
+          <span className="bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700 bg-clip-text text-transparent">
+            Culinary Magic.
+          </span>
+        </h1>
+
+        {/* Active Dish Spotlight Price & Title Badge */}
+        <div className="flex items-center gap-3">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active.id}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              className="inline-flex items-center gap-2.5 rounded-full px-4 py-2 bg-amber-500/10 text-amber-600 border border-amber-500/20 font-bold"
+            >
+              <span className="text-2xl font-black text-amber-600">৳{active.price}.00</span>
+              <span className="h-4 w-px bg-amber-400/40" />
+              <span className="text-sm font-extrabold text-slate-800 font-serif">{active.name}</span>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Dynamic Body Paragraph */}
+        <p className="text-base md:text-lg text-slate-600 max-w-xl font-medium leading-relaxed">
+          Indulge in authentic local delights, street classics, and handcrafted fusion platters at{' '}
+          <strong className="text-slate-800 font-bold">Koloni Bazar, Pirganj, Rangpur</strong>. Pure taste, crafted fresh daily.
+        </p>
+
+        {/* Quantity Stepper & Glowing Buttons */}
+        <div className="flex flex-wrap items-center gap-4 pt-2">
+          {/* Quantity Stepper */}
+          <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/95 backdrop-blur-md px-4 py-3 shadow-sm">
+            <button
+              onClick={() => setHeroQty(Math.max(1, heroQty - 1))}
+              className="text-slate-400 hover:text-amber-600 transition"
+              aria-label="Decrease quantity"
+            >
+              <Minus className="h-4 w-4" />
+            </button>
+            <span className="w-6 text-center text-sm font-black text-slate-900">{heroQty}</span>
+            <button
+              onClick={() => setHeroQty(heroQty + 1)}
+              className="text-slate-400 hover:text-amber-600 transition"
+              aria-label="Increase quantity"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+          </div>
+
+          {/* Glowing Order Now CTA with Spring Hover */}
+          <motion.button
+            whileHover={{
+              scale: 1.03,
+              boxShadow: '0 10px 25px -5px rgba(245, 158, 11, 0.45)',
+            }}
+            whileTap={{ scale: 0.96 }}
+            onClick={(e) => {
+              onAdd(active, heroQty);
+              if (onFlyCart) onFlyCart(e, active.image);
+            }}
+            className="flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 px-7 py-3.5 text-sm font-extrabold text-white shadow-md shadow-amber-500/20 hover:shadow-lg hover:shadow-amber-500/30 transition-all"
+          >
+            <ShoppingBag className="h-4 w-4" /> Order Now
+          </motion.button>
+
+          {/* Explore Menu CTA */}
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => navigate('/menu')}
+            className="flex items-center gap-2 rounded-2xl border-2 border-slate-900/80 bg-transparent px-6 py-3.5 text-sm font-extrabold text-slate-900 transition hover:bg-slate-900 hover:text-white"
+          >
+            Explore Full Menu <ArrowRight className="h-4 w-4" />
+          </motion.button>
+        </div>
+
+        {/* Micro-animated Badges */}
+        <div className="flex items-center gap-6 border-t border-amber-200/60 pt-6">
+          <div className="flex items-center gap-2">
+            <span className="flex h-3 w-3 rounded-full bg-emerald-500 animate-pulse" />
+            <div>
+              <p className="text-xs font-black text-slate-900 uppercase tracking-wider">100% Fresh Daily</p>
+              <p className="text-[11px] text-slate-500">Local Vegetables & Meats</p>
+            </div>
+          </div>
+          <div className="h-8 w-px bg-amber-200/60" />
+          <div>
+            <p className="text-xs font-black text-slate-900 uppercase tracking-wider">Pocket-Friendly</p>
+            <p className="text-[11px] text-slate-500">Starting from BDT 20</p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* ── Right Column (3D Orbit Carousel): lg:col-span-5 ── */}
+      <div className="lg:col-span-5 relative flex items-center justify-center min-h-[420px] w-full">
+        
+        {/* Orbit Path Container with explicit dimensions and overflow visible */}
+        <div className="w-[340px] h-[340px] sm:w-[440px] sm:h-[440px] absolute inset-0 m-auto pointer-events-none overflow-visible flex items-center justify-center">
+          {/* Circular Dotted Path */}
+          <svg className="w-full h-full pointer-events-none opacity-40">
             <circle
               cx="50%"
               cy="50%"
-              r="44%"
+              r="46%"
               fill="none"
               stroke="#d97706"
               strokeWidth="2"
@@ -646,16 +646,17 @@ function Hero({
             />
           </svg>
 
-          {/* Continuous 3D Orbiting Satellite Dishes */}
+          {/* Continuous 3D Orbiting Satellite Dishes with z-30 */}
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 32, repeat: Infinity, ease: 'linear' }}
-            className="absolute w-[460px] sm:w-[560px] h-[460px] sm:h-[560px] pointer-events-none"
+            transition={{ duration: 34, repeat: Infinity, ease: 'linear' }}
+            className="absolute inset-0 pointer-events-none"
           >
             {HERO_ITEMS.map((item, i) => {
               const total = HERO_ITEMS.length;
               const angle = (i / total) * 2 * Math.PI - Math.PI / 2;
-              const radius = 230; // Orbit radius
+              // Radius matches the 46% circle: ~156px for mobile, ~202px for desktop
+              const radius = window.innerWidth < 640 ? 156 : 202;
               const x = Math.cos(angle) * radius;
               const y = Math.sin(angle) * radius;
               const isSelected = i === activeIdx;
@@ -669,24 +670,24 @@ function Hero({
                     top: '50%',
                     transform: `translate(${x}px, ${y}px) translate(-50%, -50%)`,
                   }}
-                  className="pointer-events-auto"
+                  className="pointer-events-auto z-30"
                 >
                   {/* Counter-rotate the inner dish node so it stays upright! */}
                   <motion.div
                     animate={{ rotate: -360 }}
-                    transition={{ duration: 32, repeat: Infinity, ease: 'linear' }}
+                    transition={{ duration: 34, repeat: Infinity, ease: 'linear' }}
                   >
                     <motion.button
                       onClick={() => {
                         setActiveIdx(i);
                         setHeroQty(1);
                       }}
-                      whileHover={{ scale: 1.25, zIndex: 40 }}
+                      whileHover={{ scale: 1.25, zIndex: 50 }}
                       whileTap={{ scale: 0.95 }}
-                      className={`relative flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center overflow-hidden rounded-full border-2 ${
+                      className={`relative flex w-12 h-12 sm:w-16 sm:h-16 items-center justify-center overflow-hidden rounded-full border-2 ${
                         isSelected
                           ? 'border-amber-500 bg-amber-50 shadow-lg shadow-amber-500/40 ring-4 ring-amber-400/20'
-                          : 'border-white bg-white/95 shadow-md hover:border-amber-300'
+                          : 'border-white bg-white shadow-md hover:border-amber-300'
                       }`}
                       title={item.name}
                     >
@@ -697,57 +698,49 @@ function Hero({
               );
             })}
           </motion.div>
+        </div>
 
-          {/* Main Large Center Dish (Top-view Plate in Circular Glass Frame) */}
-          <div className="relative z-20 flex items-center justify-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={active.id}
-                initial={{ opacity: 0, scale: 0.8, rotate: -15 }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  rotate: 0,
-                  y: [0, -10, 0],
-                }}
-                exit={{ opacity: 0, scale: 0.8, rotate: 15 }}
-                transition={{
-                  opacity: { duration: 0.35 },
-                  scale: { duration: 0.45 },
-                  rotate: { duration: 0.45 },
-                  y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
-                }}
-                onClick={() => onSelect(active)}
-                className="cursor-pointer group flex flex-col items-center"
-              >
-                {/* Large Plate Frame with Glass Shadow */}
-                <div className="relative h-[340px] w-[340px] sm:h-[440px] sm:w-[440px] lg:h-[480px] lg:w-[480px] flex items-center justify-center">
-                  {/* Glowing Natural Drop Shadow */}
-                  <div className="absolute inset-6 rounded-full bg-amber-900/15 blur-2xl transform translate-y-10 group-hover:blur-3xl transition-all" />
+        {/* Main Center Top-View Dish Frame: w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] z-20 */}
+        <div className="w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] relative z-20 drop-shadow-2xl flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active.id}
+              initial={{ opacity: 0, scale: 0.82, rotate: -12 }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                rotate: 0,
+                y: [0, -8, 0],
+              }}
+              exit={{ opacity: 0, scale: 0.82, rotate: 12 }}
+              transition={{
+                opacity: { duration: 0.35 },
+                scale: { duration: 0.45 },
+                rotate: { duration: 0.45 },
+                y: { duration: 4, repeat: Infinity, ease: 'easeInOut' },
+              }}
+              onClick={() => onSelect(active)}
+              className="cursor-pointer group relative w-full h-full flex items-center justify-center"
+            >
+              {/* Glowing Natural Drop Shadow */}
+              <div className="absolute inset-4 rounded-full bg-amber-900/15 blur-2xl transform translate-y-6 group-hover:blur-3xl transition-all" />
 
-                  <img
-                    src={active.image}
-                    alt={active.name}
-                    className="relative z-10 h-full w-full object-contain filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.18)] transition-transform duration-700 group-hover:scale-105"
-                  />
-                </div>
+              <img
+                src={active.image}
+                alt={active.name}
+                className="relative z-10 w-full h-full object-contain filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.18)] transition-transform duration-700 group-hover:scale-105"
+              />
+            </motion.div>
+          </AnimatePresence>
 
-                {/* High z-index (z-50) Dish Name Badge with Glassmorphism */}
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="relative -mt-6 z-50 flex items-center gap-3 rounded-full border border-amber-300/80 bg-white/95 backdrop-blur-xl px-5 py-2.5 shadow-2xl shadow-amber-900/15"
-                >
-                  <span className="flex h-2.5 w-2.5 rounded-full bg-amber-500 animate-pulse" />
-                  <span className="text-xs font-black text-slate-900 font-serif">{active.name}</span>
-                  <span className="text-xs font-black text-amber-600">৳{active.price}</span>
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                    Click to View
-                  </span>
-                </motion.div>
-              </motion.div>
-            </AnimatePresence>
+          {/* Dish Info Pill strictly below orbit boundary: z-40 */}
+          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-40 backdrop-blur-md bg-white/90 shadow-xl border border-amber-500/20 px-5 py-2.5 rounded-full flex items-center gap-3 whitespace-nowrap">
+            <span className="flex h-2.5 w-2.5 rounded-full bg-amber-500 animate-pulse" />
+            <span className="text-xs font-black text-slate-900 font-serif">{active.name}</span>
+            <span className="text-xs font-black text-amber-600">৳{active.price}</span>
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+              Click to View
+            </span>
           </div>
         </div>
       </div>
@@ -937,23 +930,28 @@ function DedicatedMenuDetailView({
                 <button
                   onClick={() => setQty(Math.max(1, qty - 1))}
                   className="text-slate-400 hover:text-amber-600 transition"
+                  aria-label="Decrease"
                 >
                   <Minus className="h-4 w-4" />
                 </button>
                 <span className="w-8 text-center text-base font-black text-slate-900">{qty}</span>
-                <button onClick={() => setQty(qty + 1)} className="text-slate-400 hover:text-amber-600 transition">
+                <button
+                  onClick={() => setQty(qty + 1)}
+                  className="text-slate-400 hover:text-amber-600 transition"
+                  aria-label="Increase"
+                >
                   <Plus className="h-4 w-4" />
                 </button>
               </div>
 
               <motion.button
-                whileHover={{ scale: 1.04, boxShadow: '0 0 30px rgba(245, 158, 11, 0.55)' }}
+                whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={(e) => {
                   onAdd(item, qty);
                   if (onFlyCart) onFlyCart(e, item.image);
                 }}
-                className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 py-4 px-8 text-sm font-black text-white shadow-xl shadow-amber-500/30 hover:from-amber-600 hover:to-orange-600 transition-all"
+                className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 py-4 px-8 text-sm font-black text-white shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/35 transition-all"
               >
                 <ShoppingBag className="h-5 w-5" /> Add {qty} to Order (৳{item.price * qty})
               </motion.button>
@@ -999,10 +997,10 @@ function HomePage({
     <>
       <Hero onSelect={onSelect} onAdd={(item, qty) => onAdd(item, qty)} onFlyCart={onFlyCart} />
 
-      {/* Popular Picks Section */}
-      <section className="px-6 py-20 sm:px-10 sm:py-28 relative z-10">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-12 text-center max-w-2xl mx-auto">
+      {/* Structured Vertical Container for Popular Picks */}
+      <section className="px-6 py-20 sm:px-10 sm:py-24 relative z-10">
+        <div className="mx-auto max-w-7xl space-y-10">
+          <div className="text-center max-w-2xl mx-auto">
             <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-600">Pure Local Flavours</p>
             <h2 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight text-slate-900 font-serif">
               Our Popular Picks
@@ -1012,7 +1010,7 @@ function HomePage({
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {popular.map((item) => (
               <FoodCard
                 key={item.id}
@@ -1024,9 +1022,9 @@ function HomePage({
             ))}
           </div>
 
-          <div className="mt-12 text-center">
+          <div className="pt-4 text-center">
             <motion.button
-              whileHover={{ scale: 1.04, boxShadow: '0 0 25px rgba(245, 158, 11, 0.45)' }}
+              whileHover={{ scale: 1.03, boxShadow: '0 10px 25px -5px rgba(245, 158, 11, 0.4)' }}
               whileTap={{ scale: 0.96 }}
               onClick={() => navigate('/menu')}
               className="inline-flex items-center gap-2 rounded-full border-2 border-amber-500 bg-amber-50/90 px-8 py-4 text-sm font-extrabold text-amber-700 shadow-md shadow-amber-500/15 transition hover:bg-amber-500 hover:text-white"
@@ -1037,9 +1035,9 @@ function HomePage({
         </div>
       </section>
 
-      {/* Modern Table Reservation Callout */}
-      <section className="px-6 py-20 sm:px-10 relative z-10">
-        <div className="mx-auto max-w-7xl relative overflow-hidden rounded-[3rem] border border-slate-800 bg-slate-900 p-8 sm:p-14 text-white shadow-2xl">
+      {/* Structured Responsive Table Reservation Callout */}
+      <section className="px-6 py-12 sm:px-10 relative z-10">
+        <div className="mx-auto max-w-7xl p-8 sm:p-12 bg-slate-900 rounded-3xl text-white shadow-2xl relative overflow-hidden">
           <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-orange-500/10 blur-3xl" />
 
@@ -1057,8 +1055,8 @@ function HomePage({
               </p>
             </div>
             <motion.button
-              whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(245, 158, 11, 0.6)' }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.03, boxShadow: '0 10px 25px -5px rgba(245, 158, 11, 0.5)' }}
+              whileTap={{ scale: 0.96 }}
               onClick={() => navigate('/contact')}
               className="shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-sm font-black text-white shadow-xl shadow-amber-500/30 hover:from-amber-600 hover:to-orange-600 transition-all"
             >
@@ -1400,7 +1398,7 @@ function ContactPage() {
                     />
                   </label>
                   <motion.button
-                    whileHover={{ scale: 1.02, boxShadow: '0 0 25px rgba(245, 158, 11, 0.5)' }}
+                    whileHover={{ scale: 1.02, boxShadow: '0 10px 25px -5px rgba(245, 158, 11, 0.4)' }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
                     className="sm:col-span-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 py-3.5 text-sm font-black text-white shadow-lg shadow-amber-500/25"
@@ -1537,7 +1535,7 @@ function CartDrawer({
               <span className="text-3xl font-black text-slate-900">৳{total}</span>
             </div>
             <motion.button
-              whileHover={{ scale: 1.02, boxShadow: '0 0 25px rgba(245, 158, 11, 0.55)' }}
+              whileHover={{ scale: 1.02, boxShadow: '0 0 25px rgba(245, 158, 11, 0.45)' }}
               whileTap={{ scale: 0.98 }}
               onClick={() => {
                 alert(`Order of ৳${total} placed! Kitchen will prepare fresh items at Koloni Bazar.`);
@@ -1758,7 +1756,7 @@ export default function LightSite() {
   const detailItem = detailItemId ? MENU_ITEMS.find((i) => i.id === detailItemId) : null;
 
   return (
-    <div className="min-h-screen bg-[#faf8f5] text-slate-900 font-sans selection:bg-amber-100 selection:text-amber-900 relative">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-50/50 via-stone-50 to-orange-50/30 text-slate-900 font-sans selection:bg-amber-100 selection:text-amber-900 relative">
       {/* Floating 3D Culinary Elements, Emojis & Ambient Glow Background */}
       <FloatingCulinaryAmbience />
 
